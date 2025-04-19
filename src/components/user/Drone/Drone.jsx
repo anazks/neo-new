@@ -192,7 +192,10 @@ function Drone() {
         
         // Subtle tilting in the direction of movement
         const tiltX = Math.sin(time * 0.5) * 0.1;
+        console.log(tiltX)
+
         const tiltZ = Math.cos(time * 0.3) * 0.1;
+        console.log(tiltZ)
         modelRef.current.rotation.x = -zOffset * 0.3; // Tilt forward/backward with movement
         modelRef.current.rotation.z = -xOffset * 0.3; // Tilt sideways with movement
         modelRef.current.rotation.y = time * 0.1; // Slow continuous rotation

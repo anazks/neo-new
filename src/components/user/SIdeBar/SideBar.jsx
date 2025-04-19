@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../../Context/UserContext';
 import { 
-  FiHome, FiShoppingBag, FiTool, FiLayers, FiHelpCircle, 
+  FiHome, FiShoppingBag, FiHelpCircle, 
   FiUser, FiLogOut, FiX, FiLogIn, FiUserPlus, FiMapPin 
 } from 'react-icons/fi';
 import './Sidebar.css';
 
 function SideBar({ isOpen, onClose }) {
-  const { token, setToken, user, setUser } = useAuth();
+  const { token, setToken, user } = useAuth();
   const navigate = useNavigate();
   
   const handleLogout = () => {

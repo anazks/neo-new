@@ -10,7 +10,7 @@ import Google from '../../../Images/LoginWith/Google.png';
 import logo from '../../../Images/LoginWith/neo_tokyo-logo.png';
 import OtpInput from '../OtpSubmit/otp';
 import { submitOTP } from '../../../Services/userApi';
-import GoogleAuth from '../Google/GoogleAuth';
+// import GoogleAuth from '../Google/GoogleAuth';
 const Login = () => {
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const Login = () => {
   
   const LoginWith = async(data)=>{
     try {
- 
+          console.log(isHovered)
           setGoogleAuth(true)
           navigate('/GoogleAuth')
           console.log(googleAuth,"googleAuth")
@@ -629,6 +629,7 @@ const Login = () => {
   const loadSampleData = () => {
     setFormData(sampleData);
   };
+  console.log(loadSampleData)
 
   return (
     <div className="login-container">

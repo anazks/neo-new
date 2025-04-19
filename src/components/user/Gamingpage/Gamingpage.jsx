@@ -43,7 +43,7 @@ function Gamingpage() {
     setIsGaming(prev => !prev);
     setActiveImageIndex(0);
   };
-
+  console.log(toggleSystemType)
   const nextImage = () => {
     setActiveImageIndex(prev => (prev + 1) % (isGaming ? gamingImages.length : proImages.length));
   };

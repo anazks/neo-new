@@ -14,6 +14,7 @@ const GoogleLoginComponent = () => {
       localStorage.setItem("googleUser", JSON.stringify(decoded));
 
       setGoogleAuth(true);
+      console.log(googleAuth)
       console.log(true, "googleAuth");
     } catch (error) {
       console.log("Login error", error);
