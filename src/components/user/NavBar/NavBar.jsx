@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import { FaUser, FaSignOutAlt, FaShoppingCart, FaBars } from "react-icons/fa";
 import logo from "../../../Images/LoginWith/neo_tokyo-logo.png";
 import "./nav.css";
 import LoginPopup from "../Login/LoginPopup";
@@ -50,6 +50,7 @@ function NavBar() {
 
   // Handle click outside for dropdown
   useEffect(() => {
+    console.log(setScrolled)
     const handleClickOutside = (event) => {
       if (isDropdownOpen && !event.target.closest('.user-dropdown')) {
         setIsDropdownOpen(false);
@@ -105,7 +106,7 @@ function NavBar() {
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <nav className={`navbar ${ scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Left Navigation Links */}
           <div className="nav-links left-links">

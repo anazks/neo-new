@@ -5,7 +5,7 @@ import { FiHome, FiShoppingBag, FiTool, FiLayers, FiHelpCircle, FiUser, FiLogOut
 import './loginPopup.css';
 
 function SideBar({ isOpen, onClose }) {
-  const { token, setToken, user, setUser } = useAuth();
+  const { token, setToken, user } = useAuth();
   const navigate = useNavigate();
   
   const handleLogout = () => {

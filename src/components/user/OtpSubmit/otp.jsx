@@ -5,7 +5,7 @@ import { useAuth } from "../../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const OtpInput = ({ email: propEmail }) => {
-  const { token, setToken, setIsAdmin, isAdmin } = useAuth(); // Consistent casing
+  const {  setToken, setIsAdmin, isAdmin } = useAuth(); // Consistent casing
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
