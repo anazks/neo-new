@@ -1,0 +1,114 @@
+/* PCSpecs.css */
+.pc-specs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #333;
+    background: white;
+    border-radius: 20px;
+  }
+  
+  .pc-specs-header h1 {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+    color: #1a1a1a;
+  }
+  
+  .package-content {
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  .warranty-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+  }
+  
+  .warranty-section h2 {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+  }
+  
+  .warranty-bundles {
+    margin-top: 1rem;
+  }
+  
+  .warranty-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .warranty-buttons button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .warranty-buttons button:hover {
+    transform: scale(1.1);
+    background: #333;
+  }
+  
+  .specs-section h2 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+  }
+  
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .spec-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .spec-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .spec-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+  
+  .spec-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+  
+  .spec-subvalue {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+  }
+  
+  @media (max-width: 768px) {
+    .pc-specs-container {
+      padding: 1rem;
+    }
+  
+    .specs-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .warranty-buttons {
+      flex-wrap: wrap;
+    }
+  }

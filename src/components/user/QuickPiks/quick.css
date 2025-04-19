@@ -1,0 +1,819 @@
+/* Reduced height and adjusted parallax effects */
+
+/* Base styling with reduced height */
+.fullWindow {
+  width: 90vw;
+  height: 95vh; /* Reduced from 100vh */
+  position: relative;
+  overflow: hidden;
+  padding: 1.9rem;
+  border-radius: 30px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+/* Enhanced background blur effect with subtle animation */
+.fullWindow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("../../../Images//city.png"); /* Keep original path */
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  opacity: 0.3;
+  z-index: -1;
+  animation: subtleFloat 20s ease-in-out infinite alternate;
+}
+
+@keyframes subtleFloat {
+  0% {
+    background-position: center;
+  }
+  100% {
+    background-position: center 5%;
+  }
+}
+
+/* Main container */
+.mainBox {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  padding: 1.5rem;
+}
+
+/* Banner section - increased height */
+.banner {
+  width: 100%;
+  min-height: 280px; /* Increased from 250px */
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  margin-bottom: 2rem; /* Reduced from 3rem */
+}
+
+.banner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Enhanced parallax effect for banner */
+.parallax {
+  position: relative;
+  overflow: hidden;
+  z-index: 5; /* Ensure parallax is higher in stacking order */
+}
+
+.imageContainer {
+  width: 100%;
+  min-height: 170px; /* Increased from 150px */
+  border-radius: 15px;
+  background-image: url("../../../Images//city.png"); /* Keep original path */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.imageContainer:hover {
+  transform: scale(1.02);
+}
+
+/* Add subtle glow effect to banner image */
+.glow-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.imageContainer:hover .glow-overlay {
+  opacity: 1;
+}
+
+.subcribe {
+  width: 100%;
+  background: white;
+  opacity: 0.9;
+  color: black;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.subcribe:hover {
+  opacity: 1;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contentsdiv {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.contentsdiv div {
+  width: 90%;
+  margin: 0.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.squad-text {
+  font-size: 10px;
+  font-weight: 600;
+  margin: 0;
+  color: #444;
+  letter-spacing: 1px;
+  transition: letter-spacing 0.3s ease;
+}
+
+.subcribe:hover .squad-text {
+  letter-spacing: 1.5px;
+}
+
+.gaming {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 5px 0;
+  color: #222;
+  transition: transform 0.3s ease;
+}
+
+.subcribe:hover .gaming {
+  transform: translateY(-2px);
+}
+
+.partnership-text {
+  font-size: 10px;
+  margin: 0;
+  color: #444;
+}
+
+.arrow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 98%;
+  padding-right: 10px;
+}
+
+/* Add pulse animation to arrow */
+.arrowText {
+  font-size: 24px;
+  color: #444;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.sub {
+  margin-top: 0.8rem;
+}
+
+.exclusive {
+  margin-bottom: 0.8rem;
+}
+
+.exclusive p {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.subscribe-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 60%;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add ripple effect to button */
+.subscribe-button::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.subscribe-button:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.subscribe-button:hover::after {
+  left: 100%;
+}
+
+.iconsbtn {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.subscribe-button:hover .iconsbtn {
+  transform: translateX(5px);
+}
+
+/* Improved Products Row with better parallelogram sizing and hover effects */
+.product-row-container {
+  position: relative;
+  width: 100%;
+  padding: 1.5rem 0; /* Reduced from 2.5rem */
+  perspective: 1200px;
+  z-index: 1; /* Lower z-index than banner */
+}
+
+/* Add fade-in animation for product row */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.appear {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 25px; /* Increased gap between cards */
+  position: relative;
+  overflow: visible;
+  min-height: 350px; /* Reduced from 400px */
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 1rem 0.5rem;
+}
+
+/* Product row hover state - significantly shrink non-hovered cards */
+.product-row:hover .product-card:not(:hover) {
+  transform: translateY(0) scale(0.75) skewX(-10deg); /* Reduced scale from 0.85 to 0.75 */
+  opacity: 0.7;
+  filter: brightness(0.85);
+  flex: 0.5; /* Significantly reduce size of non-hovered cards */
+}
+
+/* Product card improved styling with parallelogram shape */
+.product-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 0; /* Removed border radius for parallelogram effect */
+  position: relative;
+  padding: 1.8rem 2rem 1.8rem 1.5rem;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  min-height: 320px; /* Reduced from 340px */
+  transform-origin: center;
+  will-change: transform, flex;
+  backdrop-filter: blur(5px);
+  transform: skewX(-10deg); /* Parallelogram skew effect */
+}
+
+/* Fix content alignment inside skewed container */
+.product-content {
+  transform: skewX(10deg); /* Counter-skew to align content properly */
+  z-index: 1;
+  color: #333;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.4s ease;
+}
+
+/* Add subtle glow effect to cards */
+.card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+  opacity: 0;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.product-card.expanded:hover .card-glow {
+  opacity: 1;
+}
+
+/* Default state - first card is expanded and normal size */
+.product-card.expanded {
+  flex: 4;
+  clip-path: polygon(0 0, 100% 0, 96% 75%, 92% 100%, 0 100%, 0 25%); /* Enhanced parallelogram clip path */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) skewX(-10deg); /* Slightly reduced Y translation from -10px */
+  z-index: 10;
+}
+
+/* Non-expanded cards are smaller by default */
+.product-card:not(.expanded) {
+  flex: 0.7; /* Reduced from 0.8 to make them smaller */
+  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); /* Strong parallelogram clip path */
+  cursor: pointer;
+  transform: translateY(0) scale(0.85) skewX(-10deg); /* Reduced scale from 0.9 */
+  z-index: 5;
+  filter: brightness(0.9);
+}
+
+/* Hover effect for non-expanded cards - zoom in without direction change */
+.product-card:not(.expanded):hover {
+  transform: translateY(-6px) scale(1.15) skewX(-10deg); /* Increased scale from 1.08 to 1.15 */
+  flex: 2.2; /* Increased from 2 */
+  filter: brightness(1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  z-index: 20; /* Higher z-index on hover to appear above others */
+}
+
+/* Product details container */
+.product-details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-right: 1rem;
+}
+
+/* Compact product content */
+.product-card:not(.expanded) .product-content {
+  justify-content: space-between;
+}
+
+/* Improved compact product image container - increased image size */
+.compact-product-image {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  transform: scale(1);
+  transition: transform 0.5s ease;
+}
+
+.product-card:not(.expanded):hover .compact-product-image {
+  transform: scale(1.2); /* Increased from 1.1 */
+}
+
+/* Add floating animation to product images */
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.PcName {
+  width: 100%;
+  height: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: all 0.4s ease;
+  transform: translateY(0);
+  padding: 0 0.5rem;
+}
+
+.product-card:not(.expanded):hover .PcName {
+  transform: translateY(-5px);
+}
+
+.PcName span {
+  font-size: 16px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.product-card:not(.expanded):hover .PcName span {
+  color: #000;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for expanded view content with improved animations */
+.subheading-prebuild {
+  font-size: 0.8rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 12px; /* Reduced from 15px */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+/* Add spinning animation for icon */
+.spin-on-hover {
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .spin-on-hover {
+  transform: rotate(360deg);
+}
+
+.product-card.expanded .subheading-prebuild {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.prebuild-icon {
+  font-size: 16px;
+}
+
+.heading {
+  font-size: 26px; /* Reduced from 28px */
+  font-weight: bold;
+  margin: 0 0 6px; /* Reduced from 8px */
+  color: white;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards 0.1s;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.product-card.expanded .heading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.subheading {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 18px; /* Reduced from 22px */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards 0.2s;
+}
+
+.product-card.expanded .subheading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rowCIricle {
+  display: flex;
+  gap: 12px; /* Reduced from 15px */
+  margin: 18px 0; /* Reduced from 22px */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards 0.3s;
+}
+
+.product-card.expanded .rowCIricle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rowCIricle div {
+  width: 20px; /* Reduced from 24px */
+  height: 20px; /* Reduced from 24px */
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.rowCIricle div:hover {
+  transform: scale(1.25);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.pink {
+  background: rgba(221, 124, 116, 1);
+}
+
+.yellow {
+  background: rgba(231, 225, 86, 1);
+}
+
+.blue {
+  background: rgba(80, 85, 211, 1);
+}
+
+.black {
+  background-color: black;
+}
+
+.price {
+  font-size: 22px; /* Reduced from 24px */
+  font-weight: bold;
+  margin: 18px 0; /* Reduced from 22px */
+  color: white;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards 0.4s;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.product-card.expanded .price {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.buyNow-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px; /* Reduced from 12px 24px */
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 14px; /* Reduced from 15px */
+  cursor: pointer;
+  transition: all 0.4s ease;
+  width: auto;
+  margin-top: 16px; /* Reduced from 18px */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards 0.5s;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card.expanded .buyNow-button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Add ripple effect to button */
+.buyNow-button::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.buyNow-button:hover {
+  background-color: #333;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.buyNow-button:hover::after {
+  left: 100%;
+}
+
+.iconsbtn-buynow {
+  font-size: 22px; /* Reduced from 24px */
+  transition: transform 0.4s ease;
+}
+
+.buyNow-button:hover .iconsbtn-buynow {
+  transform: translateX(5px);
+}
+
+.buyNow-button:hover span {
+  opacity: 0.8;
+  transform: translateX(-3px);
+}
+
+/* Fixed positioning of product images to account for skew - increased image size */
+.product-image {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%) skewX(10deg); /* Counter-skew to fix image alignment */
+  height: 290px; /* Increased from 280px */
+  object-fit: contain;
+  transition: all 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  opacity: 0;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+}
+
+/* Improve animation for product image */
+.product-image.animate-in {
+  animation: fadeInRight 0.7s forwards;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(30px) skewX(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0) skewX(10deg);
+  }
+}
+
+.product-card.expanded .product-image {
+  opacity: 1;
+}
+
+.product-card.expanded:hover .product-image {
+  transform: translateY(-50%) scale(1.08) skewX(10deg); /* Increased scale but removed rotation */
+  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.25));
+}
+
+.imgage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: all 0.5s ease;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+}
+
+.product-card:not(.expanded):hover .imgage {
+  transform: scale(1.12) translateY(-5px); /* Increased from 1.08 */
+  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
+}
+
+/* Responsive styles */
+@media (min-width: 768px) {
+  .banner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .imageContainer {
+    width: 60%;
+    height: 220px;
+  }
+
+  .subcribe {
+    width: 40%;
+    height: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .product-row {
+    min-height: 320px; /* Reduced from 340px */
+    gap: 20px;
+  }
+  
+  .product-card {
+    min-height: 280px; /* Reduced from 300px */
+    padding: 1.5rem 1.8rem 1.5rem 1.2rem;
+  }
+  
+  .product-image {
+    max-height: 240px;
+  }
+}
+
+@media (max-width: 767px) {
+  .banner {
+    min-height: auto;
+  }
+
+  .imageContainer {
+    min-height: 150px;
+  }
+
+  .heading {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+
+  .product-row {
+    overflow-x: auto;
+    padding-bottom: 1.5rem;
+    gap: 15px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .product-card {
+    min-width: 250px;
+    scroll-snap-align: start;
+    padding: 1.2rem 1.5rem 1.2rem 1rem;
+    transform: skewX(-8deg); /* Reduced skew for mobile */
+  }
+  
+  .product-content {
+    transform: skewX(8deg); /* Adjusted counter-skew for mobile */
+  }
+  
+  /* First card stays larger on mobile */
+  .product-card.expanded {
+    min-width: 300px;
+  }
+  
+  /* Other cards are smaller on mobile */
+  .product-card:not(.expanded) {
+    min-width: 200px;
+    transform: scale(0.85) skewX(-8deg); /* Reduced from 0.9 */
+  }
+  
+  /* Expand non-expanded cards on hover */
+  .product-card:not(.expanded):hover {
+    transform: translateY(-5px) scale(1.1) skewX(-8deg); /* Increased from 1.05 */
+    min-width: 220px;
+  }
+  
+  .product-image {
+    transform: translateY(-50%) skewX(8deg); /* Adjusted counter-skew for mobile */
+    right: 0;
+    height: 220px;
+  }
+  
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateY(-50%) translateX(30px) skewX(8deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0) skewX(8deg);
+    }
+  }
+  
+  /* Adjust clip paths for mobile */
+  .product-card.expanded {
+    clip-path: polygon(0 0, 100% 0, 96% 85%, 92% 100%, 0 100%, 0 15%);
+  }
+  
+  .product-card:not(.expanded) {
+    clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+  }
+}

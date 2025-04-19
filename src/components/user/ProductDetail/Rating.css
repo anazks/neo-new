@@ -1,0 +1,170 @@
+/* Rating.css */
+.rating-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .rating-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  
+  .rating-score {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .rating-stars {
+    color: #FFD700;
+    font-size: 20px;
+    letter-spacing: -1px;
+  }
+  
+  .rating-count {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .reviews-carousel {
+    position: relative;
+    overflow: hidden;
+    padding: 0 60px;
+    margin: 0 auto;
+    max-width: 1200px; /* Set maximum width for carousel container */
+  }
+  
+  .carousel-track {
+    position: relative;
+    height: 280px;
+    margin: 0 auto;
+  }
+  
+  .review-card {
+    position: absolute;
+    width: 150px; /* Fixed width for cards */
+    height: 90%;
+    background-color: #666;
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .review-card:not(.active) {
+    opacity: 0.7;
+    transform-origin: center;
+    scale: 0.95;
+  }
+  
+  .review-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  
+  .review-author {
+    font-weight: 500;
+    font-size: 12px;
+  }
+  
+  .review-stars {
+    color: #FFD700;
+    font-size: 12px;
+  }
+  
+  .star {
+    margin-right: -1px;
+  }
+  
+  .review-date {
+    font-size: 10px;
+    opacity: 0.8;
+  }
+  
+  .review-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .review-content {
+    font-size: 11px;
+    line-height: 1.4;
+    opacity: 0.9;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #333;
+    z-index: 2;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .carousel-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .carousel-button.prev {
+    left: 20px;
+  }
+  
+  .carousel-button.next {
+    right: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .reviews-carousel {
+      padding: 0 40px;
+    }
+  
+    .review-card {
+      padding: 10px;
+    }
+  
+    .carousel-button {
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+    }
+    
+    .carousel-button.prev {
+      left: 10px;
+    }
+  
+    .carousel-button.next {
+      right: 10px;
+    }
+  }

@@ -1,0 +1,225 @@
+/* BestPairedWith.css */
+
+.paired-section {
+  background: linear-gradient(135deg, #ff5a8e 0%, #ff3377 100%);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  opacity: 0;
+  height: 55vh;
+  min-height: 450px;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.paired-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.paired-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.paired-title-bar {
+  height: 2px;
+  width: 40px;
+  background-color: #000;
+  margin: 0 0.8rem;
+}
+
+.paired-title {
+  font-size: 1.8rem;
+  color: #000;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0;
+}
+
+.paired-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+  height: calc(100% - 60px);
+}
+
+.paired-card {
+  background-color: #6b1d26;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px;
+  
+}
+
+.paired-image-container {
+  height: 55%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+
+}
+
+.paired-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.paired-card:hover .paired-image {
+  transform: scale(1.05);
+}
+
+.paired-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.paired-card:hover .paired-overlay {
+  opacity: 1;
+}
+
+.paired-quick-view {
+  background-color: #fff;
+  color: #333;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paired-quick-view:hover {
+  background-color: #f0f0f0;
+}
+
+.paired-content {
+  padding: 0.8rem;
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.paired-name {
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paired-price {
+  font-size: 1rem;
+  color: #ffd700;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.paired-cart-btn {
+  background-color: #eee;
+  color: #333;
+  border: none;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto;
+}
+
+.paired-cart-btn:hover {
+  background-color: #333;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.paired-badges {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.paired-badge {
+  display: inline-block;
+  background-color: #ff3377;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .paired-section {
+    height: auto;
+    min-height: 450px;
+    padding: 1.2rem 0.8rem;
+  }
+  
+  .paired-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  
+  .paired-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .paired-section {
+    min-height: 420px;
+    padding: 1rem 0.5rem;
+  }
+  
+  .paired-grid {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+  }
+  
+  .paired-card {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+  
+  .paired-title {
+    font-size: 1.3rem;
+  }
+  
+  .paired-title-bar {
+    width: 20px;
+    margin: 0 0.5rem;
+  }
+}

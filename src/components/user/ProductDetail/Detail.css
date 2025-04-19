@@ -1,0 +1,267 @@
+.DetailsBox {
+  width: 90%;
+  max-width: 1200px;
+  margin: 80px auto 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.pcPic {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.pcPic img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}
+
+.image-loaded {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.descreption {
+  flex: 1.5;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.descreption h2 {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.rate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.rate h1 {
+  margin: 0;
+  font-weight: bold;
+  color: #222;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.rate h1:first-child {
+  flex: 2;
+  margin-right: 20px;
+}
+
+.rate h1:last-child {
+  flex: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.rate h1 del {
+  font-size: 1.2rem;
+  color: #999;
+  margin-right: 10px;
+}
+
+.detailedDescrption {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  max-width: 600px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.selectionHeading {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 10px 0 5px;
+  letter-spacing: 0.5px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.circleBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #222;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.circle:hover {
+  transform: scale(1.05);
+  background-color: #444;
+}
+
+.circle.selected {
+  background-color: #111;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #111;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: green;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.buttondSection {
+  margin-top: 20px;
+
+}
+
+.addtoCart {
+  display: flex;
+  gap: 20px;
+}
+
+.addtoCart span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgb(255, 188, 188);
+  border-radius: 30px;
+  width: 169px;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.addtoCart span:hover {
+  color: #555;
+}
+
+.addtoCart button {
+  width: 180px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addtoCart button:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading state */
+.loading-container {
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .DetailsBox {
+    gap: 30px;
+  }
+  
+  .rate {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .rate h1:last-child {
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  .DetailsBox {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pcPic, .descreption {
+    max-width: 100%;
+  }
+  
+  .detailedDescrption {
+    max-width: 100%;
+  }
+  
+  .addtoCart {
+    width: 100%;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .circle {
+    width: 40px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
+  
+  .selected-indicator {
+    width: 16px;
+    height: 16px;
+  }
+}

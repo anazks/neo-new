@@ -1,0 +1,244 @@
+.priority-one-container {
+  width: 90vw;
+  margin: auto;
+  height: 100vh;
+  padding: 40px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 30px;
+  font-family: 'Raleway', Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.priority-one-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c);
+  z-index: 1;
+}
+
+.header {
+  /* margin-bottom: 3rem; */
+  position: relative;
+}
+
+.title {
+  font-family: "Raleway", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  text-align: left;
+  color: #222;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #3498db;
+  margin-top: 10px;
+}
+
+.subtitle {
+  font-family: "Raleway", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin: 15px 0 0;
+  text-align: left;
+  color: #555;
+}
+
+.header div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0 40px;
+  color: #555;
+}
+
+.scroll-indicator p {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.bounce {
+  font-size: 2rem;
+  animation: bounce 2s infinite;
+  color: #3498db;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.team-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  /* margin-top: 10px; */
+}
+
+.team-member {
+  width: 300px;
+  height: auto;
+  text-align: center;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.team-member:hover {
+  transform: translateY(-10px);
+}
+
+.image-wrapper {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.image-wrapper:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.person-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.team-member:hover .person-image {
+  transform: scale(1.05);
+}
+
+.specialty-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 0;
+  font-size: 0.9rem;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.image-wrapper:hover .specialty-tag {
+  transform: translateY(0);
+}
+
+.person-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0.5rem 0 0.3rem;
+  color: #222;
+}
+
+.person-position {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0 0 15px 0;
+  letter-spacing: 1px;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icon:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .team-container {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .priority-one-container {
+    padding: 30px 20px;
+  }
+  
+  .team-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .team-member {
+    width: 90%;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .person-name {
+    font-size: 1.2rem;
+  }
+  
+  .person-position {
+    font-size: 0.8rem;
+  }
+  
+  .image-wrapper {
+    height: 240px;
+  }
+}
