@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserShield, FaEye, FaEyeSlash, FaShip } from 'react-icons/fa';
+import { FaUserShield, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Login.css';
 
 function Login() {

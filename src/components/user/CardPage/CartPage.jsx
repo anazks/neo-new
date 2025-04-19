@@ -7,11 +7,9 @@ import { getMyCart, RemoveFromCart, cartIncrement, cartDecrement, CreateOrder, A
 import NavBar from '../NavBar/NavBar';
 import { Link } from "react-router-dom"; // Assuming you're using React Router
 import BaseURL from "../../../Static/Static";
-import Axios from '../../../Axios/Axios'
-import RazorPay from "../RazorPay/RazorPay";
+
 import RenderRazorpay from "../RazorPay/RenderRazorpay";
-import PaymentDone from "../PaymentDone/PaymentDone";
-import TestDone from "../PaymentDone/TestDone";
+
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState({ items: [], id: null });
@@ -46,7 +44,8 @@ const CartPage = () => {
   const handleCreateOrder = async () => {
       try {
         let getPrimaryAddress = await  getMyPrimaryAddress()
-        console.log(selectedAddressId,"get prim--")
+        
+        console.log(selectedAddressId,getPrimaryAddress,"get prim--")
           let order = await CreateOrder(selectedAddressId)
           console.log(order,"order--")
           let newData = order.data

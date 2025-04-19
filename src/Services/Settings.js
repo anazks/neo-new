@@ -87,29 +87,29 @@ export const AddTax = async (data)=>{
         return error
     }
 }
-export const AddoverViewCategory = async ()=>{
-    try {
-        let overViewCate = await Axios.post('')
-    } catch (error) {
+// export const AddoverViewCategory = async ()=>{
+//     try {
+//         let overViewCate = await Axios.post('')
+//     } catch (error) {
         
-    }
-} 
+//     }
+// } 
 
-const ViewOverViewCate = async ()=>{
-    try {
+// const ViewOverViewCate = async ()=>{
+//     try {
         
-    } catch (error) {
+//     } catch (error) {
         
-    }
-}
+//     }
+// }
 
-const AddOverViewItem = async ()=>{
-    try {
+// const AddOverViewItem = async ()=>{
+//     try {
         
-    } catch (error) {
+//     } catch (error) {
         
-    }
-}
+//     }
+// }
 
 export const viewAllOverView =  async()=>{
     try {

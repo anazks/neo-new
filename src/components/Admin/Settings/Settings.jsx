@@ -56,6 +56,7 @@ function Settings() {
     try {
       let Taxes = await getTax()
       setTax(Taxes.data)
+      console.log(tax)
     } catch (error) {
       console.log(error)
     }
@@ -77,7 +78,7 @@ function Settings() {
     const parent = categories.find(cat => cat.id === parentId);
     return parent ? parent.name : 'Unknown';
   };
-
+console.log(getParentCategoryName)
   // Show toast notification
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -95,6 +96,7 @@ function Settings() {
         name: brandName
       };
       let addedBrand = await addBrand(newBrand.name);
+      console.log(addedBrand)
       fetchBrands();
       setShowBrandPopup(false);
       setBrandName('');
@@ -115,6 +117,7 @@ function Settings() {
         description: categoryData.description,
       };
       let addedCate = await addCategory(newCategory);
+      console.log(addedCate)
       fetchCategory();
       setShowCategoryPopup(false);
       setCategoryData({ name: '', description: '', parent: '' });
@@ -141,6 +144,7 @@ function Settings() {
       try {
         setIsLoading(true);
         let deleteD = await deleteBrand(brandId);
+        console.log(deleteD)
         fetchBrands();
         showToast('Brand deleted successfully!');
         setIsLoading(false);
@@ -158,6 +162,7 @@ function Settings() {
       try {
         setIsLoading(true);
         let catedelete = await deleteCategory(categoryId);
+        console.log(catedelete)
         fetchCategory();
         showToast('Category deleted successfully!');
         setIsLoading(false);
