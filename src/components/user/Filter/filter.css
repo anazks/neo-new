@@ -6,47 +6,40 @@
   --neon-pink: #ff00a0;
   --neon-purple: #bc13fe;
   --dark-bg: #0a0a0a;
-  --medium-bg: #131313;
+  --medium-bg: #121212;
   --light-bg: #1a1a1a;
-  --light-bg:gray;
   --text-glow: 0 0 10px rgba(0, 243, 255, 0.7);
 }
 
 .filter-container {
   font-family: 'Orbitron', sans-serif;
-  background-color: gray;
+  background-color: var(--dark-bg);
   color: white;
-  padding: 1rem;
-  margin-top: 10px;
-  border-radius: 8px;
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), 
-              0 0 40px rgba(188, 19, 254, 0.1);
-  border: 1px solid var(--neon-blue);
-  margin: 1rem 0;
-  max-width: 70%;
-  margin: auto;
-  overflow: hidden;
+  padding: 1.5rem;
+  max-width: 1000px;
+  width: 100%;
+  margin: 2rem auto;
 }
 
 .filter-content {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
-  
+  gap: 2rem;
 }
 
 /* Category Column */
 .category-column {
   flex: 1;
-  min-width: 200px;
+  min-width: 250px;
 }
 
 .category-item {
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.5rem;
-  background-color: var(--gray);
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  background-color: var(--medium-bg);
   border-left: 3px solid transparent;
-  transition: all 0.3s ease;
+  border-radius: 6px;
+  transition: all 0.2s ease;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -64,6 +57,7 @@
 .category-item.active {
   border-left-color: var(--neon-blue);
   background-color: var(--light-bg);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
 }
 
 .category-item h3 {
@@ -122,16 +116,13 @@
   flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .option-group {
   display: none;
-  animation: fadeIn 0.5s ease forwards;
-  background-color: var(--medium-bg);
-  padding: 1rem;
-  border-radius: 4px;
-  gap: 0.5rem;
+  animation: fadeIn 0.3s ease forwards;
+  padding: 0.5rem 0;
+  gap: 1rem;
 }
 
 .option-group.active {
@@ -140,16 +131,16 @@
 }
 
 select {
-  padding: 0.7rem;
-  margin-bottom: 0.5rem;
-  background-color: var(--light-bg);
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 0.8rem;
+  background-color: var(--medium-bg);
   color: white;
   border: 1px solid #333;
-  border-radius: 4px;
+  border-radius: 6px;
   font-family: 'Orbitron', sans-serif;
   cursor: pointer;
   outline: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 select:focus, select:hover {
@@ -159,28 +150,28 @@ select:focus, select:hover {
 
 .button-container {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
   flex-wrap: wrap;
 }
 
 .apply-button, .reset-button {
-  padding: 0.7rem 1.5rem;
+  padding: 1rem 1.8rem;
   font-family: 'Orbitron', sans-serif;
   font-weight: 600;
   letter-spacing: 1px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-  
+  border-radius: 40px;
 }
 
 .apply-button {
-  background-color:black;
-  border-radius: 40px;
-  color:white;
+  background-color: var(--neon-blue);
+  color: var(--dark-bg);
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
 }
 
 .reset-button {
@@ -192,6 +183,14 @@ select:focus, select:hover {
 .apply-button:hover, .reset-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.apply-button:hover {
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.7);
+}
+
+.reset-button:hover {
+  box-shadow: 0 0 15px rgba(255, 0, 160, 0.7);
 }
 
 .apply-button:active, .reset-button:active {
@@ -225,18 +224,6 @@ select:focus, select:hover {
   }
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 5px var(--neon-blue);
-  }
-  50% {
-    box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-purple);
-  }
-  100% {
-    box-shadow: 0 0 5px var(--neon-blue);
-  }
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .filter-content {
@@ -253,10 +240,6 @@ select:focus, select:hover {
   
   .apply-button, .reset-button {
     width: 100%;
+    margin-bottom: 0.5rem;
   }
-}
-
-/* Add an animation for when filter is first loaded */
-.filter-container {
-  animation: pulse 2s ease-in-out;
 }

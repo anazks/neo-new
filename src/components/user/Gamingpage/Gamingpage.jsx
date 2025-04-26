@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './gamingpage.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGamepad, FaLaptop, FaDesktop, FaHeadset, FaShoppingCart, FaInfoCircle } from 'react-icons/fa';
+import { FaGamepad, FaLaptop, FaDesktop, FaHeadset, FaShoppingCart, FaInfoCircle, FaMoon, FaSun } from 'react-icons/fa';
 import { SiNvidia, SiAmd, SiIntel, SiAsus } from 'react-icons/si';
 
 // Import images
@@ -21,6 +21,7 @@ function Gamingpage() {
   const [isGaming, setIsGaming] = useState(true);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isAutoplay, setIsAutoplay] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
   const autoplayTimerRef = useRef(null);
 
   const gamingSpecs = [
@@ -43,7 +44,11 @@ function Gamingpage() {
     setIsGaming(prev => !prev);
     setActiveImageIndex(0);
   };
-  console.log(toggleSystemType)
+
+  const toggleTheme = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
   const nextImage = () => {
     setActiveImageIndex(prev => (prev + 1) % (isGaming ? gamingImages.length : proImages.length));
   };
@@ -89,8 +94,18 @@ function Gamingpage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="Gaming-page"
+      className={`Gaming-page ${isDarkMode ? 'dark-theme' : ''}`}
     >
+      <div className="theme-toggle">
+        <button 
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {isDarkMode ? <FaSun className="theme-icon" /> : <FaMoon className="theme-icon" />}
+        </button>
+      </div>
+
       <div className="system-toggle">
         <button 
           className={`toggle-btn ${isGaming ? 'active' : ''}`}
@@ -203,7 +218,7 @@ function Gamingpage() {
                 transition={{ delay: 0.1 * index, duration: 0.5 }}
                 whileHover={{ 
                   scale: 1.05,
-                  boxShadow: "0px 10px 20px rgba(0,0,0,0.1)"
+                  boxShadow: "0px 10px 20px rgba(0,0,0,0.2)"
                 }}
               >
                 <div className="spec-icon">

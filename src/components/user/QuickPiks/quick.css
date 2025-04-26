@@ -1,14 +1,12 @@
-/* Reduced height and adjusted parallax effects */
-
-/* Base styling with reduced height */
+/* Base styling with dark theme */
 .fullWindow {
   width: 90vw;
-  height: 95vh; /* Reduced from 100vh */
+  height: 95vh;
   position: relative;
   overflow: hidden;
   padding: 1.9rem;
   border-radius: 30px;
-  background-color: white;
+  background-color: #121212;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -20,10 +18,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("../../../Images//city.png"); /* Keep original path */
+  background: url("../../../Images//city.png");
   background-size: cover;
   background-position: center;
-  filter: blur(10px);
+  filter: blur(10px) brightness(0.4);
   opacity: 0.3;
   z-index: -1;
   animation: subtleFloat 20s ease-in-out infinite alternate;
@@ -45,41 +43,43 @@
   margin: 0 auto;
   position: relative;
   padding: 1.5rem;
+  background-color: #1e1e1e;
+  border-radius: 20px;
 }
 
-/* Banner section - increased height */
+/* Banner section */
 .banner {
   width: 100%;
-  min-height: 280px; /* Increased from 250px */
-  background: rgba(255, 255, 255, 0.7);
+  min-height: 280px;
+  background: rgba(30, 30, 30, 0.9);
   border-radius: 15px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   padding: 1.5rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
   transition: transform 0.5s ease, box-shadow 0.5s ease;
-  margin-bottom: 2rem; /* Reduced from 3rem */
+  margin-bottom: 2rem;
 }
 
 .banner:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 /* Enhanced parallax effect for banner */
 .parallax {
   position: relative;
   overflow: hidden;
-  z-index: 5; /* Ensure parallax is higher in stacking order */
+  z-index: 5;
 }
 
 .imageContainer {
   width: 100%;
-  min-height: 170px; /* Increased from 150px */
+  min-height: 170px;
   border-radius: 15px;
-  background-image: url("../../../Images//city.png"); /* Keep original path */
+  background-image: url("../../../Images//city.png");
   background-size: cover;
   background-position: center;
   position: relative;
@@ -91,36 +91,29 @@
   transform: scale(1.02);
 }
 
-/* Add subtle glow effect to banner image */
-.glow-overlay {
+.red-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.imageContainer:hover .glow-overlay {
-  opacity: 1;
+  background: linear-gradient(135deg, rgba(20, 0, 0, 0.6) 0%, rgba(70, 0, 0, 0.4) 100%);
+  z-index: 1;
 }
 
 .subcribe {
   width: 100%;
-  background: white;
-  opacity: 0.9;
-  color: black;
+  background: rgba(40, 40, 40, 0.95);
+  color: #e0e0e0;
   border-radius: 15px;
   padding: 1.5rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
 .subcribe:hover {
   opacity: 1;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .contentsdiv {
@@ -142,7 +135,7 @@
   font-size: 10px;
   font-weight: 600;
   margin: 0;
-  color: #444;
+  color: #b0b0b0;
   letter-spacing: 1px;
   transition: letter-spacing 0.3s ease;
 }
@@ -155,8 +148,9 @@
   font-size: 24px;
   font-weight: bold;
   margin: 5px 0;
-  color: #222;
+  color: #ffffff;
   transition: transform 0.3s ease;
+  text-shadow: 0 2px 4px rgba(255, 0, 0, 0.3);
 }
 
 .subcribe:hover .gaming {
@@ -166,7 +160,7 @@
 .partnership-text {
   font-size: 10px;
   margin: 0;
-  color: #444;
+  color: #a0a0a0;
 }
 
 .arrow {
@@ -177,17 +171,13 @@
   padding-right: 10px;
 }
 
-/* Add pulse animation to arrow */
 .arrowText {
   font-size: 24px;
-  color: #444;
+  color: #ff4444;
+  animation: pulseRed 2s infinite;
 }
 
-.pulse {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
+@keyframes pulseRed {
   0% {
     transform: scale(1);
     opacity: 1;
@@ -213,7 +203,7 @@
 .exclusive p {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #c0c0c0;
   text-align: center;
 }
 
@@ -222,7 +212,7 @@
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  background-color: black;
+  background-color: #ff3333;
   color: white;
   border: none;
   border-radius: 30px;
@@ -234,9 +224,9 @@
   gap: 10px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(255, 50, 50, 0.3);
 }
 
-/* Add ripple effect to button */
 .subscribe-button::after {
   content: '';
   position: absolute;
@@ -249,9 +239,9 @@
 }
 
 .subscribe-button:hover {
-  background-color: #333;
+  background-color: #ff5555;
   transform: translateY(-2px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(255, 50, 50, 0.4);
 }
 
 .subscribe-button:hover::after {
@@ -267,16 +257,23 @@
   transform: translateX(5px);
 }
 
-/* Improved Products Row with better parallelogram sizing and hover effects */
+.fire-icon {
+  color: #ff3333;
+  display: inline-block;
+  margin-left: 8px;
+  filter: drop-shadow(0 0 4px rgba(255, 50, 50, 0.7));
+  animation: pulseRed 2s infinite;
+}
+
+/* Products Section */
 .product-row-container {
   position: relative;
   width: 100%;
-  padding: 1.5rem 0; /* Reduced from 2.5rem */
+  padding: 1.5rem 0;
   perspective: 1200px;
-  z-index: 1; /* Lower z-index than banner */
+  z-index: 1;
 }
 
-/* Add fade-in animation for product row */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -292,45 +289,59 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 25px; /* Increased gap between cards */
+  gap: 25px;
   position: relative;
   overflow: visible;
-  min-height: 350px; /* Reduced from 400px */
+  min-height: 350px;
   align-items: stretch;
   justify-content: space-between;
   padding: 1rem 0.5rem;
 }
 
-/* Product row hover state - significantly shrink non-hovered cards */
 .product-row:hover .product-card:not(:hover) {
-  transform: translateY(0) scale(0.75) skewX(-10deg); /* Reduced scale from 0.85 to 0.75 */
+  transform: translateY(0) scale(0.75) skewX(-10deg);
   opacity: 0.7;
   filter: brightness(0.85);
-  flex: 0.5; /* Significantly reduce size of non-hovered cards */
+  flex: 0.5;
 }
 
-/* Product card improved styling with parallelogram shape */
+/* Product card styling */
 .product-card {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 0; /* Removed border radius for parallelogram effect */
+  background: rgba(40, 40, 40, 0.9);
+  border-radius: 0;
   position: relative;
   padding: 1.8rem 2rem 1.8rem 1.5rem;
   display: flex;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   transition: all 0.6s cubic-bezier(0.33, 1, 0.68, 1);
-  min-height: 320px; /* Reduced from 340px */
+  min-height: 320px;
   transform-origin: center;
   will-change: transform, flex;
   backdrop-filter: blur(5px);
-  transform: skewX(-10deg); /* Parallelogram skew effect */
+  transform: skewX(-10deg);
 }
 
-/* Fix content alignment inside skewed container */
+.red-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 50, 50, 0.15) 0%, transparent 70%);
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.product-card:hover .red-glow {
+  opacity: 1;
+}
+
 .product-content {
-  transform: skewX(10deg); /* Counter-skew to align content properly */
+  transform: skewX(10deg);
   z-index: 1;
-  color: #333;
+  color: #e0e0e0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -338,58 +349,31 @@
   transition: opacity 0.4s ease;
 }
 
-/* Add subtle glow effect to cards */
-.card-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, transparent 70%);
-  opacity: 0;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-.product-card.expanded:hover .card-glow {
-  opacity: 1;
-}
-
-/* Default state - first card is expanded and normal size */
+/* Expanded card state */
 .product-card.expanded {
   flex: 4;
-  clip-path: polygon(0 0, 100% 0, 96% 75%, 92% 100%, 0 100%, 0 25%); /* Enhanced parallelogram clip path */
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  transform: translateY(-8px) skewX(-10deg); /* Slightly reduced Y translation from -10px */
+  clip-path: polygon(0 0, 100% 0, 96% 75%, 92% 100%, 0 100%, 0 25%);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-8px) skewX(-10deg);
   z-index: 10;
 }
 
-/* Non-expanded cards are smaller by default */
+/* Compact card state */
 .product-card:not(.expanded) {
-  flex: 0.7; /* Reduced from 0.8 to make them smaller */
-  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); /* Strong parallelogram clip path */
+  flex: 0.7;
+  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
   cursor: pointer;
-  transform: translateY(0) scale(0.85) skewX(-10deg); /* Reduced scale from 0.9 */
+  transform: translateY(0) scale(0.85) skewX(-10deg);
   z-index: 5;
-  filter: brightness(0.9);
+  filter: brightness(0.8);
 }
 
-/* Hover effect for non-expanded cards - zoom in without direction change */
 .product-card:not(.expanded):hover {
-  transform: translateY(-6px) scale(1.15) skewX(-10deg); /* Increased scale from 1.08 to 1.15 */
-  flex: 2.2; /* Increased from 2 */
-  filter: brightness(1);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  z-index: 20; /* Higher z-index on hover to appear above others */
-}
-
-/* Product details container */
-.product-details {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding-right: 1rem;
+  transform: translateY(-6px) scale(1.15) skewX(-10deg);
+  flex: 2.2;
+  filter: brightness(1.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  z-index: 20;
 }
 
 /* Compact product content */
@@ -397,7 +381,6 @@
   justify-content: space-between;
 }
 
-/* Improved compact product image container - increased image size */
 .compact-product-image {
   height: 100%;
   width: 100%;
@@ -410,10 +393,9 @@
 }
 
 .product-card:not(.expanded):hover .compact-product-image {
-  transform: scale(1.2); /* Increased from 1.1 */
+  transform: scale(1.2);
 }
 
-/* Add floating animation to product images */
 .floating {
   animation: floating 3s ease-in-out infinite;
 }
@@ -455,24 +437,23 @@
 }
 
 .product-card:not(.expanded):hover .PcName span {
-  color: #000;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(255, 0, 0, 0.3);
 }
 
-/* Styling for expanded view content with improved animations */
+/* Expanded view content */
 .subheading-prebuild {
   font-size: 0.8rem;
   color: white;
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 12px; /* Reduced from 15px */
+  margin-bottom: 12px;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s forwards;
 }
 
-/* Add spinning animation for icon */
 .spin-on-hover {
   transition: transform 0.5s ease;
 }
@@ -502,14 +483,14 @@
 }
 
 .heading {
-  font-size: 26px; /* Reduced from 28px */
+  font-size: 26px;
   font-weight: bold;
-  margin: 0 0 6px; /* Reduced from 8px */
+  margin: 0 0 6px;
   color: white;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s forwards 0.1s;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 4px rgba(255, 0, 0, 0.3);
 }
 
 .product-card.expanded .heading {
@@ -520,7 +501,7 @@
 .subheading {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
-  margin: 0 0 18px; /* Reduced from 22px */
+  margin: 0 0 18px;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s forwards 0.2s;
@@ -533,8 +514,8 @@
 
 .rowCIricle {
   display: flex;
-  gap: 12px; /* Reduced from 15px */
-  margin: 18px 0; /* Reduced from 22px */
+  gap: 12px;
+  margin: 18px 0;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s forwards 0.3s;
@@ -546,8 +527,8 @@
 }
 
 .rowCIricle div {
-  width: 20px; /* Reduced from 24px */
-  height: 20px; /* Reduced from 24px */
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -559,31 +540,35 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.pink {
-  background: rgba(221, 124, 116, 1);
+.red {
+  background: #ff3333;
+  box-shadow: 0 2px 5px rgba(255, 50, 50, 0.5);
 }
 
-.yellow {
-  background: rgba(231, 225, 86, 1);
-}
-
-.blue {
-  background: rgba(80, 85, 211, 1);
+.crimson {
+  background: #dc143c;
+  box-shadow: 0 2px 5px rgba(220, 20, 60, 0.5);
 }
 
 .black {
-  background-color: black;
+  background: #222;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.gray {
+  background: #444;
+  box-shadow: 0 2px 5px rgba(68, 68, 68, 0.5);
 }
 
 .price {
-  font-size: 22px; /* Reduced from 24px */
+  font-size: 22px;
   font-weight: bold;
-  margin: 18px 0; /* Reduced from 22px */
+  margin: 18px 0;
   color: white;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s forwards 0.4s;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgba(255, 0, 0, 0.2);
 }
 
 .product-card.expanded .price {
@@ -595,21 +580,22 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 20px; /* Reduced from 12px 24px */
-  background-color: black;
+  padding: 10px 20px;
+  background-color: #ff3333;
   color: white;
   border: none;
   border-radius: 30px;
-  font-size: 14px; /* Reduced from 15px */
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.4s ease;
   width: auto;
-  margin-top: 16px; /* Reduced from 18px */
+  margin-top: 16px;
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.5s forwards 0.5s;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(255, 50, 50, 0.3);
 }
 
 .product-card.expanded .buyNow-button {
@@ -617,7 +603,6 @@
   transform: translateY(0);
 }
 
-/* Add ripple effect to button */
 .buyNow-button::after {
   content: '';
   position: absolute;
@@ -630,9 +615,9 @@
 }
 
 .buyNow-button:hover {
-  background-color: #333;
+  background-color: #ff5555;
   transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(255, 50, 50, 0.4);
 }
 
 .buyNow-button:hover::after {
@@ -640,7 +625,7 @@
 }
 
 .iconsbtn-buynow {
-  font-size: 22px; /* Reduced from 24px */
+  font-size: 22px;
   transition: transform 0.4s ease;
 }
 
@@ -648,25 +633,19 @@
   transform: translateX(5px);
 }
 
-.buyNow-button:hover span {
-  opacity: 0.8;
-  transform: translateX(-3px);
-}
-
-/* Fixed positioning of product images to account for skew - increased image size */
+/* Product images */
 .product-image {
   position: absolute;
   right: 5px;
   top: 50%;
-  transform: translateY(-50%) skewX(10deg); /* Counter-skew to fix image alignment */
-  height: 290px; /* Increased from 280px */
+  transform: translateY(-50%) skewX(10deg);
+  height: 290px;
   object-fit: contain;
   transition: all 0.6s cubic-bezier(0.33, 1, 0.68, 1);
   opacity: 0;
-  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 10px 15px rgba(255, 0, 0, 0.3));
 }
 
-/* Improve animation for product image */
 .product-image.animate-in {
   animation: fadeInRight 0.7s forwards;
 }
@@ -687,8 +666,8 @@
 }
 
 .product-card.expanded:hover .product-image {
-  transform: translateY(-50%) scale(1.08) skewX(10deg); /* Increased scale but removed rotation */
-  filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.25));
+  transform: translateY(-50%) scale(1.08) skewX(10deg);
+  filter: drop-shadow(0 15px 20px rgba(255, 0, 0, 0.4));
 }
 
 .imgage {
@@ -696,12 +675,12 @@
   height: 100%;
   object-fit: contain;
   transition: all 0.5s ease;
-  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 5px 10px rgba(255, 0, 0, 0.3));
 }
 
 .product-card:not(.expanded):hover .imgage {
-  transform: scale(1.12) translateY(-5px); /* Increased from 1.08 */
-  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
+  transform: scale(1.12) translateY(-5px);
+  filter: drop-shadow(0 8px 15px rgba(255, 0, 0, 0.4));
 }
 
 /* Responsive styles */
@@ -724,12 +703,12 @@
 
 @media (max-width: 992px) {
   .product-row {
-    min-height: 320px; /* Reduced from 340px */
+    min-height: 320px;
     gap: 20px;
   }
   
   .product-card {
-    min-height: 280px; /* Reduced from 300px */
+    min-height: 280px;
     padding: 1.5rem 1.8rem 1.5rem 1.2rem;
   }
   
@@ -767,32 +746,30 @@
     min-width: 250px;
     scroll-snap-align: start;
     padding: 1.2rem 1.5rem 1.2rem 1rem;
-    transform: skewX(-8deg); /* Reduced skew for mobile */
+    transform: skewX(-8deg);
+    background: rgba(50, 50, 50, 0.9) !important;
   }
   
   .product-content {
-    transform: skewX(8deg); /* Adjusted counter-skew for mobile */
+    transform: skewX(8deg);
   }
   
-  /* First card stays larger on mobile */
   .product-card.expanded {
     min-width: 300px;
   }
   
-  /* Other cards are smaller on mobile */
   .product-card:not(.expanded) {
     min-width: 200px;
-    transform: scale(0.85) skewX(-8deg); /* Reduced from 0.9 */
+    transform: scale(0.85) skewX(-8deg);
   }
   
-  /* Expand non-expanded cards on hover */
   .product-card:not(.expanded):hover {
-    transform: translateY(-5px) scale(1.1) skewX(-8deg); /* Increased from 1.05 */
+    transform: translateY(-5px) scale(1.1) skewX(-8deg);
     min-width: 220px;
   }
   
   .product-image {
-    transform: translateY(-50%) skewX(8deg); /* Adjusted counter-skew for mobile */
+    transform: translateY(-50%) skewX(8deg);
     right: 0;
     height: 220px;
   }
@@ -808,7 +785,6 @@
     }
   }
   
-  /* Adjust clip paths for mobile */
   .product-card.expanded {
     clip-path: polygon(0 0, 100% 0, 96% 85%, 92% 100%, 0 100%, 0 15%);
   }

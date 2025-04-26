@@ -118,11 +118,10 @@ const ParallaxRevealSection = () => {
             height: 100%;
             width: 50%;
             top: 0;
-            background: white;
+            background: #121212; /* Dark panel color */
             z-index: 3;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform;
-            
           }
 
           .panel-left {
@@ -144,6 +143,8 @@ const ParallaxRevealSection = () => {
             background-position: center;
             transition: width 0.8s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s ease-in-out;
             will-change: width, opacity;
+            /* Add dark overlay to image */
+            box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
           }
 
           /* Neo Tokyo container */
@@ -166,11 +167,11 @@ const ParallaxRevealSection = () => {
             transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform, opacity;
             font-family: 'Blade Runner', 'Orbitron', sans-serif;
-            color: black;
+            color: #e0e0e0; /* Light text for dark mode */
             padding: 5px 20px 10px;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.5);
             display: inline-block;
-            border-bottom: 3px solid red;
+            border-bottom: 3px solid #ff1744; /* Brighter red for dark mode */
           }
 
           /* Subtitle section */
@@ -196,7 +197,7 @@ const ParallaxRevealSection = () => {
 
           .tagline {
             font-size: 1.2rem;
-            color: ${parallaxActive ? "white" : "black"};
+            color: #bdbdbd; /* Light gray text for dark mode */
             margin-bottom: 0.8rem;
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
@@ -206,11 +207,11 @@ const ParallaxRevealSection = () => {
 
           .headline {
             font-size: 3rem;
-            color: ${parallaxActive ? "white" : "black"};
+            color: #f5f5f5; /* Almost white text for dark mode */
             font-weight: bold;
             margin: 0.8rem 0 2rem;
             font-family: 'Blade Runner', 'Orbitron', sans-serif;
-            border-bottom: 3px solid red;
+            border-bottom: 3px solid #ff1744; /* Brighter red for dark mode */
             display: inline-block;
             padding-bottom: 0.5rem;
             transition: color 0.5s ease;
@@ -222,7 +223,7 @@ const ParallaxRevealSection = () => {
           }
 
           .cta-button {
-            background: rgba(255, 0, 0, 0.8);
+            background: rgba(255, 23, 68, 0.8); /* Brighter red, slightly transparent */
             color: white;
             border: none;
             padding: 0.8rem 1.8rem;
@@ -233,6 +234,7 @@ const ParallaxRevealSection = () => {
             display: inline-flex;
             align-items: center;
             border-radius: 3px;
+            box-shadow: 0 2px 8px rgba(255, 23, 68, 0.5); /* Add glow effect */
           }
 
           .cta-text {
@@ -246,9 +248,9 @@ const ParallaxRevealSection = () => {
           }
 
           .cta-button:hover {
-            background: rgba(255, 0, 0, 1);
+            background: rgba(255, 23, 68, 1); /* Full opacity on hover */
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 12px rgba(255, 23, 68, 0.7);
           }
 
           .cta-button:hover .cta-icon {
@@ -270,6 +272,8 @@ const ParallaxRevealSection = () => {
             display: block !important;
             pointer-events: all !important;
             visibility: visible !important;
+            /* Add a subtle glow for dark mode */
+            filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.5));
           }
 
           /* Animation keyframes */
@@ -280,9 +284,9 @@ const ParallaxRevealSection = () => {
           }
 
           @keyframes textGlow {
-            0% { text-shadow: 0 0 5px rgba(0,0,0,0.5); }
-            50% { text-shadow: 0 0 15px rgba(0,0,0,0.9), 0 0 25px rgba(0,0,0,0.7); }
-            100% { text-shadow: 0 0 5px rgba(0,0,0,0.5); }
+            0% { text-shadow: 0 0 5px rgba(255, 23, 68, 0.3), 0 0 10px rgba(0, 0, 0, 0.5); }
+            50% { text-shadow: 0 0 15px rgba(255, 23, 68, 0.7), 0 0 25px rgba(255, 23, 68, 0.4); }
+            100% { text-shadow: 0 0 5px rgba(255, 23, 68, 0.3), 0 0 10px rgba(0, 0, 0, 0.5); }
           }
 
           @keyframes textReveal {

@@ -6,13 +6,13 @@ import BaseURL from '../../../../Static/Static';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../Loader/Loader';
 
-function ViewProducts() {
+function ProductInventory() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,7 +34,7 @@ function ViewProducts() {
 
   const handleView = (productId) => {
     console.log(`View product ${productId}`);
-    navigate(`/admin/products/${productId}`); // Navigate to detailed view
+    navigate(`/admin/products/${productId}`);
   };
 
   const handleEdit = (productId) => {
@@ -46,7 +46,13 @@ function ViewProducts() {
     console.log(`Delete product ${productId}`);
     // Add your delete logic here
   };
-
+const addNewProduct = ()=>{
+  try {
+    navigate('/admin/AddProduct');
+  } catch (error) {
+    console.log(error);
+  }
+}
   // Filter products based on search term and category
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -59,33 +65,33 @@ function ViewProducts() {
   const categories = [...new Set(products.map(product => product.product_code))];
 
   if (loading) return <Loader />;
-  if (error) return <div className="error-container">Error: {error}</div>;
+  if (error) return <div className="inventory-error">Error: {error}</div>;
 
   return (
-    <div className="products-container dark-mode">
-      <div className="products-header">
+    <div className="inventory-wrapper dark-theme">
+      <div className="inventory-title-bar">
         <h2>Product Inventory</h2>
-        <button className="add-product-btn">Add New Product</button>
+        <button className="inventory-create-btn" onClick={addNewProduct}>Add New Product</button>
       </div>
       
-      <div className="products-filters">
-        <div className="search-container">
-          <FiSearch className="search-icon" />
+      <div className="inventory-control-panel">
+        <div className="inventory-search-box">
+          <FiSearch className="inventory-icon-search" />
           <input 
             type="text" 
             placeholder="Search products..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            className="inventory-search-field"
           />
         </div>
         
-        <div className="filter-container">
-          <FiFilter className="filter-icon" />
+        <div className="inventory-filter-box">
+          <FiFilter className="inventory-icon-filter" />
           <select 
             value={filterCategory} 
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="filter-select"
+            className="inventory-category-dropdown"
           >
             <option value="">All Categories</option>
             {categories.map(category => (
@@ -95,40 +101,40 @@ function ViewProducts() {
         </div>
       </div>
       
-      <div className="products-stats">
-        <div className="stat-card">
-          <div className="stat-icon products">
+      <div className="inventory-metrics">
+        <div className="inventory-metric-card">
+          <div className="inventory-metric-icon total">
             <FiEye />
           </div>
-          <div className="stat-details">
+          <div className="inventory-metric-data">
             <h3>Total Products</h3>
-            <p className="stat-number">{products.length}</p>
+            <p className="inventory-metric-value">{products.length}</p>
           </div>
         </div>
         
-        <div className="stat-card">
-          <div className="stat-icon out-of-stock">
+        <div className="inventory-metric-card">
+          <div className="inventory-metric-icon empty">
             <FiFilter />
           </div>
-          <div className="stat-details">
+          <div className="inventory-metric-data">
             <h3>Out of Stock</h3>
-            <p className="stat-number">{products.filter(p => p.stock <= 0).length}</p>
+            <p className="inventory-metric-value">{products.filter(p => p.stock <= 0).length}</p>
           </div>
         </div>
         
-        <div className="stat-card">
-          <div className="stat-icon low-stock">
+        <div className="inventory-metric-card">
+          <div className="inventory-metric-icon warning">
             <FiFilter />
           </div>
-          <div className="stat-details">
+          <div className="inventory-metric-data">
             <h3>Low Stock</h3>
-            <p className="stat-number">{products.filter(p => p.stock > 0 && p.stock < 10).length}</p>
+            <p className="inventory-metric-value">{products.filter(p => p.stock > 0 && p.stock < 10).length}</p>
           </div>
         </div>
       </div>
       
-      <div className="products-table-container">
-        <table className="products-table">
+      <div className="inventory-data-container">
+        <table className="inventory-data-table">
           <thead>
             <tr>
               <th>Image</th>
@@ -148,30 +154,30 @@ function ViewProducts() {
                     <img 
                       src={product.images?.[0]?.image ? BaseURL + product.images[0].image : "/api/placeholder/50/50"} 
                       alt={product.name} 
-                      className="product-image" 
+                      className="inventory-product-img" 
                     />
                   </td>
                   <td>{product.name}</td>
-                  <td className="description-cell">{product.description}</td>
+                  <td className="inventory-description">{product.description}</td>
                   <td>Rs. {product.mrp}</td>
-                  <td><span className="category-badge">{product.product_code}</span></td>
+                  <td><span className="inventory-category-tag">{product.product_code}</span></td>
                   <td>
-                    <span className={`stock-indicator ${
-                      product.stock <= 0 ? 'no-stock' : 
-                      product.stock < 10 ? 'low-stock' : 'in-stock'
+                    <span className={`inventory-stock-level ${
+                      product.stock <= 0 ? 'empty' : 
+                      product.stock < 10 ? 'warning' : 'available'
                     }`}>
                       {product.stock}
                     </span>
                   </td>
                   <td>
-                    <div className="action-buttons">
-                      <button className="action-btn view" onClick={() => handleView(product.id || product._id)}>
+                    <div className="inventory-actions">
+                      <button className="inventory-btn view" onClick={() => handleView(product.id || product._id)}>
                         <FiEye />
                       </button>
-                      <button className="action-btn edit" onClick={() => handleEdit(product.id || product._id)}>
+                      <button className="inventory-btn edit" onClick={() => handleEdit(product.id || product._id)}>
                         <FiEdit2 />
                       </button>
-                      <button className="action-btn delete" onClick={() => handleDelete(product.id || product._id)}>
+                      <button className="inventory-btn delete" onClick={() => handleDelete(product.id || product._id)}>
                         <FiTrash2 />
                       </button>
                     </div>
@@ -180,7 +186,7 @@ function ViewProducts() {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="no-products">No products found matching your criteria</td>
+                <td colSpan="7" className="inventory-empty-state">No products found matching your criteria</td>
               </tr>
             )}
           </tbody>
@@ -190,4 +196,4 @@ function ViewProducts() {
   );
 }
 
-export default ViewProducts;
+export default ProductInventory;

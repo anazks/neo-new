@@ -2,15 +2,19 @@
 /* Main container */
 .login-container {
   display: flex;
-  height: 100vh;
-  width: 100%;
+  height: 90vh;
+  width: 80%;
+  margin: auto;
+  margin-top: 3%;
   font-family: 'Orbitron', sans-serif;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* Left section styling */
 .left-section {
   flex: 1;
-  background: linear-gradient(135deg, #000428, #004e92);
+  /* background: linear-gradient(135deg, #000428, #004e92); */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -28,7 +32,7 @@
   top: 0;
   left: 0;
   background: url('../../../Images/LoginWith/Loginbg.jpg');
-  opacity: 0.1;
+  /* opacity: 0.1; */
   z-index: 1;
 }
 
@@ -41,7 +45,7 @@
 }
 
 .logo img {
-  width: 180px;
+  width: 100px;
   height: auto;
   filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.7));
 }

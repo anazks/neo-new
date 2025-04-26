@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './inside.css';
 
-function Inside({ product }) {  // ✅ Receive product as a prop
+function Inside({ product }) {
+  const [isAnimated, setIsAnimated] = useState(false);
+
+  useEffect(() => {
+    // Add animation after component mounts
+    const timer = setTimeout(() => {
+      setIsAnimated(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   if (!product) {
-    return <h2>Loading specifications...</h2>; // ✅ Handle loading state
+    return (
+      <div className="dark-loading">
+        <div className="dark-spinner"></div>
+        <h2>Loading specifications...</h2>
+      </div>
+    );
   }
 
   // Extract warranty info, inside box content, and attributes dynamically
@@ -17,18 +33,18 @@ function Inside({ product }) {  // ✅ Receive product as a prop
   }));
 
   return (
-    <div className="pc-specs-container">
-      <div className="pc-specs-header">
+    <div className={`dark-container ${isAnimated ? 'dark-fade-in' : ''}`}>
+      <div className="dark-header">
         <h1>WHAT'S INSIDE</h1>
-        <p className="package-content">{insideBox}</p> {/* ✅ Dynamic inside-box content */}
+        <p className="dark-package-content">{insideBox}</p>
       </div>
 
-      <div className="warranty-section">
+      <div className="dark-warranty">
         <h2>WARRANTY INFO</h2>
-        <p>{warrantyInfo}</p> {/* ✅ Display warranty */}
-        <div className="warranty-bundles">
+        <p>{warrantyInfo}</p>
+        <div className="dark-warranty-bundles">
           <p>AMC Bundles Available at Checkout (Years)</p>
-          <div className="warranty-buttons">
+          <div className="dark-warranty-options">
             <button>+1</button>
             <button>+2</button>
             <button>+3</button>
@@ -36,14 +52,14 @@ function Inside({ product }) {  // ✅ Receive product as a prop
         </div>
       </div>
 
-      <div className="specs-section">
+      <div className="dark-specs">
         <h2>SPECIFICATIONS</h2>
-        <div className="specs-grid">
+        <div className="dark-specs-grid">
           {specs.length > 0 ? (
             specs.map((spec, index) => (
-              <div key={index} className="spec-item">
-                <div className="spec-label">{spec.label}</div>
-                <div className="spec-value">{spec.value}</div>
+              <div key={index} className="dark-spec-card">
+                <div className="dark-spec-title">{spec.label}</div>
+                <div className="dark-spec-data">{spec.value}</div>
               </div>
             ))
           ) : (

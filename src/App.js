@@ -17,6 +17,7 @@ import Store from "./Pages/user/Store";
 import AdminRoutes from "./Routes/AdminRoutes";
 import Myorders from "./Pages/user/Myorders";
 import GoogleLoginComponent from "./components/user/Google/GoogleLoginComponent";
+import AddProducts from "./components/Admin/Products/AddProducts/AddProducts";
 function App() {
   return (
     <>

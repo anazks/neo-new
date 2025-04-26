@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ProductCard.css';
 
 function ProductCard() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [imageError, setImageError] = useState({});
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
 
   const fallbackImage = "https://via.placeholder.com/300x200";
 
@@ -19,8 +20,27 @@ function ProductCard() {
     setImageError(prev => ({...prev, [index]: true}));
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  // Apply dark mode class to body
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
   return (
-    <div className="pc-recommendations-section">
+    <div className={`pc-recommendations-section ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      <div className="pc-theme-toggle">
+        <button className="pc-theme-toggle-btn" onClick={toggleDarkMode}>
+          {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+      </div>
+      
       <h2 className="pc-recommendations-title">You May Also Like</h2>
       <div className="pc-product-carousel">
         {products.map((product, index) => (

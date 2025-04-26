@@ -8,7 +8,7 @@ import { FaInstagram } from "react-icons/fa";
 import { BsShieldLock } from "react-icons/bs";
 import { FiMail } from "react-icons/fi";
 import { FiPhone } from "react-icons/fi";
-import { motion } from "framer-motion"; // You would need to install framer-motion
+import { motion } from "framer-motion";
 
 function Footer() {
   const [isVisible, setIsVisible] = useState(false);
@@ -16,7 +16,7 @@ function Footer() {
   useEffect(() => {
     const handleScroll = () => {
       // Check if footer is in viewport
-      const footer = document.querySelector('.Main-Footer');
+      const footer = document.querySelector('.main-footer');
       if (footer) {
         const rect = footer.getBoundingClientRect();
         if (rect.top < window.innerHeight) {
@@ -32,15 +32,16 @@ function Footer() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Define animation variants
+  // Define animation variants with smoother transitions
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { 
       opacity: 1, 
       y: 0,
       transition: { 
-        duration: 0.5,
-        staggerChildren: 0.1
+        duration: 0.7,
+        staggerChildren: 0.15,
+        ease: "easeOut"
       }
     }
   };
@@ -50,175 +51,244 @@ function Footer() {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.5 }
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
+  const itemHoverVariants = {
+    hover: { 
+      x: 10, 
+      transition: { 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 10 
+      } 
     }
   };
 
   return (
     <motion.div 
-      className="Main-Footer"
+      className="main-footer"
       initial="hidden"
       animate={isVisible ? "visible" : "hidden"}
       variants={containerVariants}
     >
-      <div className="BoxInsideMain-Footer">
-        <motion.div className="About-Footer" variants={childVariants}>
-          <div className="Forabout-Footer">
-            <h1 className="Aboutheading-Footer">Building Experiences <br />Since 20s </h1>
+      <div className="box-inside-main-footer">
+        <motion.div className="about-footer" variants={childVariants}>
+          <div className="forabout-footer">
+            <h1 className="aboutheading-footer">Building Experiences <br />Since 20s </h1>
+            <div className="tagline">Creating next-gen PC solutions</div>
           </div>
-          <div className="Getintouch-Footer">
-            <div className="Boxinsidegetintouch-Footer">
-              <div className="Getintouchslider-Footer">
-                <ImArrowUpRight2 className='Uprightarrow-Footer' />
+          <motion.div 
+            className="getintouch-footer"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="boxinsidegetintouch-footer">
+              <div className="getintouchslider-footer">
+                <ImArrowUpRight2 className='uprightarrow-footer' />
               </div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* SECOND DIV FOR CONTACT */}
-        <motion.div className="Contact-Footer" variants={childVariants}>
-          <div className="Boxinsidecontact-Footer">
+        <motion.div className="contact-footer" variants={childVariants}>
+          <div className="boxinsidecontact-footer">
             <motion.div 
-              className="Logo-Footer"
+              className="logo-footer"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <h1 className="Heading-Footer">NT <br />KO </h1>
+              <h1 className="heading-footer">NT <br />KO </h1>
+              <div className="logo-glow"></div>
             </motion.div>
-            <div className="Description-Footer">
-              <span className="Secheading-Footer">Priority One By Neo Tokyo </span>
+            <div className="description-footer">
+              <span className="secheading-footer">Priority One By Neo Tokyo </span>
             </div>
-            <div className="Support-Footer">
-              <div className="Support-Item">
-                <FiPhone className="Support-Icon" />
-                <span className="ThirdHeading-Footer">+91 7920938981</span>
-              </div>
-              <div className="Support-Item">
-                <FiMail className="Support-Icon" />
-                <span className="ThirdHeading-Footer">support@neotokyo.in</span>
-              </div>
+            <div className="support-footer">
+              <motion.div 
+                className="support-item"
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FiPhone className="support-icon" />
+                <span className="thirdheading-footer">+91 7920938981</span>
+              </motion.div>
+              <motion.div 
+                className="support-item"
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FiMail className="support-icon" />
+                <span className="thirdheading-footer">support@neotokyo.in</span>
+              </motion.div>
             </div>
           </div>
         </motion.div>
 
         {/* THIRD DIV FOR SITEOPTIONS */}
-        <motion.div className="Option-Footer" variants={childVariants}>
-          <div className="Boxinsideoption-Footer">
-            <div className="Firstbox-Footer">
-              <motion.div 
-                className="Fstbox-Footer"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <span className="Heading-Company">Company</span><br /><br />
-                <ul className="List-Company">About</ul><br />
-                <ul className="List-Company">FAQ's</ul><br />
-                <ul className="List-Company">Blog</ul><br />
-                <ul className="List-Company">Careers</ul>
+        <motion.div className="option-footer" variants={childVariants}>
+          <div className="boxinsideoption-footer">
+            <div className="firstbox-footer">
+              <motion.div className="fstbox-footer">
+                <span className="heading-company">Company</span>
+                <div className="links-container">
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">About</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">FAQ's</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Blog</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Careers</span>
+                  </motion.div>
+                </div>
               </motion.div>
-              <motion.div 
-                className="Sdbox-Footer"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <span className="Enterprise-Solutions">Enterprise Solutions</span><br /><br /><br />
-                <span className="Enterprise-Solutions">Gaming Rigs</span><br /><br /><br />
-                <span className="Enterprise-Solutions">Accounts</span><br /><br />
+              
+              <motion.div className="sdbox-footer">
+                <span className="enterprise-solutions">Enterprise Solutions</span>
+                <div className="links-container">
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Gaming Rigs</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Accounts</span>
+                  </motion.div>
+                </div>
               </motion.div>
-              <motion.div 
-                className="Thrdbox-Footer"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <span className="Store">Store</span><br /><br />
-                <ul className="List-Company">PC's</ul><br />
-                <ul className="List-Company">Peripherals</ul><br />
-                <ul className="List-Company">Gear</ul><br />
-                <ul className="List-Company">Accessories</ul>
+              
+              <motion.div className="thrdbox-footer">
+                <span className="store">Store</span>
+                <div className="links-container">
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">PC's</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Peripherals</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Gear</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Accessories</span>
+                  </motion.div>
+                </div>
               </motion.div>
-              <motion.div 
-                className="Forthbox-Footer"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <span className="Soluthions">Solutions</span><br /><br />
-                <ul className="List-Company">Home PC's</ul><br />
-                <ul className="List-Company">Gaming PC's</ul><br />
-                <ul className="List-Company">Workstations </ul><br />
-                <ul className="List-Company">Enterprise Solutions</ul><br />
+              
+              <motion.div className="forthbox-footer">
+                <span className="soluthions">Solutions</span>
+                <div className="links-container">
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Home PC's</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Gaming PC's</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Workstations</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Enterprise Solutions</span>
+                  </motion.div>
+                </div>
               </motion.div>
-              <motion.div 
-                className="Fifthbox-Footer"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <span className="Legal">Legal</span><br /><br />
-                <ul className="List-Company">Privacy Policy</ul><br />
-                <ul className="List-Company">Cookie Policy</ul><br />
-                <ul className="List-Company">Terms And Conditions</ul><br />
-                <ul className="List-Company">Return And Refunds</ul><br />
+              
+              <motion.div className="fifthbox-footer">
+                <span className="legal">Legal</span>
+                <div className="links-container">
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Privacy Policy</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Cookie Policy</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Terms And Conditions</span>
+                  </motion.div>
+                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                    <span className="list-company">Return And Refunds</span>
+                  </motion.div>
+                </div>
               </motion.div>
             </div>
+            
             <motion.div 
-              className="Secondbox-Footer"
+              className="secondbox-footer"
               whileHover={{ y: -5 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="FbiSecondbox-Footer">
-                <div className="Reachus-Footer">
-                  <span className="Reachus">Reach Us</span>
+              <div className="fbisecondbox-footer">
+                <div className="reachus-footer">
+                  <span className="reachus">Reach Us</span>
                 </div>
-                <div className="Location-Footer">
-                  <span className="Neotokyo">NEO TOKYO</span> 
+                <div className="location-footer">
+                  <span className="neotokyo">NEO TOKYO</span> 
                   <motion.div
-                    animate={{ x: [0, 2, -2, 0], y: [0, -2, 2, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    animate={{ 
+                      x: [0, 3, -3, 0], 
+                      y: [0, -3, 3, 0],
+                      rotate: [0, 10, -10, 0]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="location-icon-container"
                   >
-                    <CiLocationArrow1 className='Location-icon'/>
+                    <CiLocationArrow1 className='location-icon'/>
                   </motion.div>
-                  <br />
-                  <span className="Neotokyo">Head Quarters</span>
+                  <span className="neotokyo">Head Quarters</span>
                 </div>
               </div>
-              <div className="SbiSecondbox-Footer">
-                <span className="DetailedLocation">Floor no. 2, Koroth Arcade, </span><br />
-                <span className="DetailedLocation">Vennala High School Rd, </span><br />
-                <span className="DetailedLocation">opposite to V-Guard, Vennala,</span><br />
-                <span className="DetailedLocation">Kochi, Kerala 682028 </span>
+              <div className="sbisecondbox-footer">
+                <span className="detailedlocation">Floor no. 2, Koroth Arcade, </span>
+                <span className="detailedlocation">Vennala High School Rd, </span>
+                <span className="detailedlocation">opposite to V-Guard, Vennala,</span>
+                <span className="detailedlocation">Kochi, Kerala 682028 </span>
               </div>
             </motion.div>
-            <div className="Thirdbox-Footer">
-              <div className="Social">
-                <span className="Heading-Social">Social</span>
+            
+            <div className="thirdbox-footer">
+              <div className="social">
+                <span className="heading-social">Connect With Us</span>
+                <div className="social-underline"></div>
               </div>
-              <div className="Social-Icons">
+              <div className="social-icons">
                 <motion.div
                   whileHover={{ scale: 1.2, y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="social-icon-container"
                 >
-                  <FaWhatsapp className="Social-Iconszz"/>
+                  <FaWhatsapp className="social-iconszz"/>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.2, y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="social-icon-container"
                 >
-                  <SlSocialFacebook className="Social-Iconszz"/>
+                  <SlSocialFacebook className="social-iconszz"/>
                 </motion.div>
                 <motion.div
                   whileHover={{ scale: 1.2, y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="social-icon-container"
                 >
-                  <FaInstagram className="Social-Iconszz"/>
+                  <FaInstagram className="social-iconszz"/>
                 </motion.div>
               </div>
-              <div className="All-Rights">
+              <div className="all-rights">
                 <motion.div
                   animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  className="shield-container"
                 >
-                  <BsShieldLock className='Shield-Icon'/>
+                  <BsShieldLock className='shield-icon'/>
                 </motion.div>
-                <span>All Rights Reserved. 2024 Neo Tokyo</span>
+                <span>© All Rights Reserved. 2024 Neo Tokyo</span>
               </div>
             </div>
           </div>

@@ -22,6 +22,36 @@ const getSingleProduct = async (id) => {
     }
 };
 
-
+const AddOverViewCategory = async(data)=>{
+    try {
+        console.log(data,"in controller");
+       const response = await Axios.post('/inventory/productattribute_category/',data); 
+       console.log(response.data,"in controller response");
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching overview:', error);
+        return null; 
+    }
+}
+const viewOverView = async()=>{
+    try {
+        const response = await Axios.get('/inventory/ProductAttributeCategoryListView');
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching overview:', error);
+        return null; 
+    }
+}
+const addoverViewCate = async(data)=>{
+    try {
+        const response = await Axios.post('/inventory/productattribute/',data);
+        console.log(response.data,"in controller response");
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching overview:', error);
+        return null;  
+    }
+}
 // Correct way to export multiple functions
-export { getAllProduct, getSingleProduct };
+export { getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate };

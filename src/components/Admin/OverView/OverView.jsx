@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './over.css';
+import { AddOverViewCategory, viewOverView, addoverViewCate } from '../../../Services/Products';
 
 function OverView() {
   const [categories, setCategories] = useState([]);
@@ -10,64 +11,133 @@ function OverView() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [newItemName, setNewItemName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        const data = await viewOverView();
+        console.log("Fetched data:", data);
+        
+        // Ensure each category has an attributes array
+        const formattedData = data.map(category => ({
+          ...category,
+          attributes: category.attributes || []
+        }));
+        
+        setCategories(formattedData);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+        setError("Failed to load categories. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
 
   // Add a new category
-  const handleAddCategory = () => {
-    if (newCategoryName.trim()) {
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) return;
+
+    try {
+      const data = await AddOverViewCategory({ name: newCategoryName });
+      console.log("Added category:", data);
+      
       const newCategory = {
-        id: Date.now(),
+        id: data.id || Date.now(),
         name: newCategoryName,
-        items: []
+        attributes: []
       };
+      
       setCategories([...categories, newCategory]);
       setNewCategoryName('');
       setShowCategoryModal(false);
-      // Show the item modal for the newly added category
       setSelectedCategory(newCategory);
       setShowItemModal(true);
+    } catch (err) {
+      console.error("Error adding category:", err);
+      setError("Failed to add category. Please try again.");
     }
   };
 
   // Add a new item to a category
-  const handleAddItem = () => {
-    if (newItemName.trim() && selectedCategory) {
+  const handleAddItem = async () => {
+    if (!newItemName.trim() || !selectedCategory) return;
+
+    try {
+      // Call the API to add the attribute
+      const data = await addoverViewCate({
+        category_id: selectedCategory.id,
+        name: newItemName
+      });
+      console.log("Added attribute:", data);
+
+      // Update local state
       const updatedCategories = categories.map(category => {
         if (category.id === selectedCategory.id) {
           return {
             ...category,
-            items: [...category.items, {
-              id: Date.now(),
+            attributes: [...category.attributes, {
+              id: data.id || Date.now(),
               name: newItemName
             }]
           };
         }
         return category;
       });
+      
       setCategories(updatedCategories);
       setNewItemName('');
       setShowItemModal(false);
+    } catch (err) {
+      console.error("Error adding attribute:", err);
+      setError("Failed to add attribute. Please try again.");
     }
   };
 
   // Add an item through the Add Overview Items modal
-  const handleAddItemFromSelect = () => {
-    if (newItemName.trim() && selectedCategoryId) {
-      const updatedCategories = categories.map(category => {
-        if (category.id === parseInt(selectedCategoryId)) {
+  const handleAddItemFromSelect = async () => {
+    if (!newItemName.trim() || !selectedCategoryId) return;
+
+    try {
+      // Find the selected category
+      const category = categories.find(c => c.id === parseInt(selectedCategoryId));
+      if (!category) return;
+
+      // Call the API to add the attribute
+      const data = await addoverViewCate({
+        category_id: category.id,
+        name: newItemName
+      });
+      console.log("Added attribute:", data);
+
+      // Update local state
+      const updatedCategories = categories.map(c => {
+        if (c.id === category.id) {
           return {
-            ...category,
-            items: [...category.items, {
-              id: Date.now(),
+            ...c,
+            attributes: [...c.attributes, {
+              id: data.id || Date.now(),
               name: newItemName
             }]
           };
         }
-        return category;
+        return c;
       });
+      
       setCategories(updatedCategories);
       setNewItemName('');
       setSelectedCategoryId('');
       setShowAddItemsModal(false);
+    } catch (err) {
+      console.error("Error adding attribute:", err);
+      setError("Failed to add attribute. Please try again.");
     }
   };
 
@@ -100,6 +170,30 @@ function OverView() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="overview-container loading">
+        <div className="loader"></div>
+        <p>Loading categories...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="overview-container error">
+        <div className="error-icon">⚠️</div>
+        <p>{error}</p>
+        <button 
+          className="btn-primary" 
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="overview-container">
       <h2 className="overview-title">Overview</h2>
@@ -119,14 +213,16 @@ function OverView() {
               {categories.map(category => (
                 <tr key={category.id}>
                   <td>{category.name}</td>
+         
+
                   <td>
                     <div className="items-container">
-                      {category.items.map(item => (
+                      {category.attributes.map(item => (
                         <span key={item.id} className="item-badge">
                           {item.name}
                         </span>
                       ))}
-                      {category.items.length === 0 && (
+                      {category.attributes.length === 0 && (
                         <span className="no-items">No items added</span>
                       )}
                     </div>
@@ -183,7 +279,6 @@ function OverView() {
           <button 
             className="btn-secondary" 
             onClick={openAddItemsModal}
-            disabled={categories.length === 0}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="btn-icon">
               <path d="M8 3V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -262,6 +357,7 @@ function OverView() {
             <div className="form-group">
               <label>Category</label>
               <div className="input-readonly">{selectedCategory.name}</div>
+              <input type="hidden" value={selectedCategory.id} />
             </div>
             <div className="form-group">
               <label htmlFor="itemName">Attribute Name</label>

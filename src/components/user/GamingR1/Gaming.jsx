@@ -16,7 +16,7 @@ export default function Gaming() {
   }, []);
 
   return (
-    <div className='gaming-container'>
+    <div className='gaming-container dark-mode'>
       <motion.div 
         className="head"
         initial={{ opacity: 0, y: -50 }}
@@ -107,14 +107,14 @@ export default function Gaming() {
           <motion.div 
             className="Left"
             whileHover={{ 
-              boxShadow: "0px 10px 30px rgba(218, 0, 55, 0.4)",
+              boxShadow: "0px 10px 30px rgba(218, 0, 55, 0.6)",
             }}
             transition={{ duration: 0.3 }}
           >
      
             <motion.h2
               animate={{ 
-                color: ["rgba(218, 0, 55, 1)", "#000000", "rgba(218, 0, 55, 1)"],
+                color: ["rgba(218, 0, 55, 1)", "#ffffff", "rgba(218, 0, 55, 1)"],
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >

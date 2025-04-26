@@ -1,7 +1,6 @@
 import React from 'react';
 import { FiClock, FiEye, FiTruck, FiDollarSign, FiUser } from 'react-icons/fi';
 import './ViewOrders.css';
-
 function ViewOrders() {
   // Sample pending orders data
   const pendingOrders = [

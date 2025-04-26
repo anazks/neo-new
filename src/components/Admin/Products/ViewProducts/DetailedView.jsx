@@ -5,7 +5,7 @@ import { getSingleProduct } from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import Loader from '../../../../Loader/Loader';
 
-function DetailedView() {
+function ProductView() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,34 +36,34 @@ function DetailedView() {
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="product-error">{error}</div>;
   }
 
   if (!product) {
-    return <div className="product-not-found">Product not found</div>;
+    return <div className="product-missing">Product not found</div>;
   }
 
   return (
-    <div className="detailed-view-container">
-      <div className="product-header">
+    <div className="product-view-wrapper">
+      <div className="product-title-section">
         <h1>{product.name}</h1>
-        <div className="product-code">Product Code: {product.product_code}</div>
+        <div className="product-id">Product Code: {product.product_code}</div>
       </div>
 
-      <div className="product-content">
-        <div className="product-media">
+      <div className="product-layout">
+        <div className="product-gallery">
           {product.images?.length > 0 && (
             <>
-              <div className="main-image">
+              <div className="product-hero-image">
                 <img 
                   src={BaseURL + product.images[0].image} 
                   alt={product.name} 
                 />
               </div>
               
-              <div className="thumbnail-gallery">
+              <div className="product-image-grid">
                 {product.images.slice(1).map((img, index) => (
-                  <div key={index} className="thumbnail">
+                  <div key={index} className="product-thumbnail">
                     <img src={ BaseURL + img.image} alt={`${product.name} ${index + 2}`} />
                   </div>
                 ))}
@@ -74,41 +74,41 @@ function DetailedView() {
          
         </div>
 
-        <div className="product-details">
-          <div className="price-section">
-            <div className="current-price">₹{product.price}</div>
+        <div className="product-info">
+          <div className="product-pricing">
+            <div className="product-sale-price">₹{product.price}</div>
             {product.mrp && parseFloat(product.mrp) > parseFloat(product.price) && (
-              <div className="original-price">₹{product.mrp}</div>
+              <div className="product-regular-price">₹{product.mrp}</div>
             )}
             {product.discount_price && parseFloat(product.discount_price) > 0 && (
-              <div className="discount-badge">
+              <div className="product-savings">
                 Save ₹{(parseFloat(product.mrp) - parseFloat(product.price)).toFixed(2)}
               </div>
             )}
           </div>
 
-          <div className="stock-status">
+          <div className="product-availability">
             {product.stock > 0 ? (
-              <span className="in-stock">In Stock ({product.stock} available)</span>
+              <span className="product-available">In Stock ({product.stock} available)</span>
             ) : (
-              <span className="out-of-stock">Out of Stock</span>
+              <span className="product-unavailable">Out of Stock</span>
             )}
           </div>
 
-          <div className="product-description">
+          <div className="product-summary">
             <h3>Description</h3>
             <p>{product.description}</p>
           </div>
 
           {product.whats_inside && (
-            <div className="whats-inside">
+            <div className="product-contents">
               <h3>What's Inside</h3>
               <p>{product.whats_inside}</p>
             </div>
           )}
 
           {product.more_info && (
-            <div className="more-info">
+            <div className="product-additional-info">
               <a href={product.more_info} target="_blank" rel="noopener noreferrer">
                 More Information
               </a>
@@ -116,7 +116,7 @@ function DetailedView() {
           )}
 
           {product.broacher && (
-            <div className="brochure-download">
+            <div className="product-document">
               <a href={ BaseURL + product.broacher} download target="_blank" rel="noopener noreferrer">
                 Download Brochure
               </a>
@@ -124,9 +124,9 @@ function DetailedView() {
           )}
 
           {product.attributes?.length > 0 && (
-            <div className="specifications">
+            <div className="product-specs">
               <h3>Specifications</h3>
-              <table className="specs-table">
+              <table className="product-spec-table">
                 <tbody>
                   {product.attributes.map((attr) => (
                     <tr key={attr.id}>
@@ -151,4 +151,4 @@ function DetailedView() {
   );
 }
 
-export default DetailedView;
+export default ProductView;

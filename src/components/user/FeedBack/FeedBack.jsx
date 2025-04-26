@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./feedback.css";
-import { FaPeopleGroup, FaUserCheck, FaCheck, FaBuilding, FaComputer } from "react-icons/fa6";
+import { FaPeopleGroup, FaUserCheck, FaCheck, FaBuilding, FaComputer, FaMoon, FaSun } from "react-icons/fa6";
 import { BsStars, BsLightningChargeFill } from "react-icons/bs";
 import { MdSupportAgent, MdOutlineSpeed } from "react-icons/md";
 
@@ -12,8 +12,22 @@ function FeedBack() {
     grid2: "#0099ff",
     grid3: "#22cc88"
   });
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
+    // Check for saved theme preference in localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setDarkMode(true);
+    } else if (savedTheme === null) {
+      // If no saved preference, check user's system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setDarkMode(prefersDark);
+    }
+    
+    // Apply theme to document body for global styling
+    document.body.classList.toggle('dark-theme', darkMode);
+    
     // Load Grid2Background dynamically
     const loadBackground = async () => {
       try {
@@ -69,8 +83,23 @@ function FeedBack() {
       });
     }, 30);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      document.body.classList.remove('dark-theme');
+    };
   }, []);
+
+  // Effect to update body class when darkMode changes
+  useEffect(() => {
+    document.body.classList.toggle('dark-theme', darkMode);
+  }, [darkMode]);
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
+  };
 
   // Custom animation class adder
   useEffect(() => {
@@ -83,13 +112,18 @@ function FeedBack() {
   }, []);
 
   return (
-    <div className="feedback">
+    <div className={`feedback ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      {/* Dark mode toggle button */}
+      <button className="dark-mode-toggle" onClick={toggleDarkMode} aria-label="Toggle dark mode">
+        {darkMode ? <FaSun className="toggle-icon" /> : <FaMoon className="toggle-icon" />}
+      </button>
+      
       <div className="leftB animate-on-load">
         <h1 className="title-text animate-on-load">
           <span className="icon-container">
             <BsStars className="title-icon" style={{ color: colors.grid1 }} />
           </span>
-          𝙳𝚘𝚗'𝚝 𝙹𝚞𝚜𝚝 𝚃𝚊𝚔𝚎 𝚘𝚞𝚛 𝚆𝚘𝚛𝚍, 𝙻𝚒𝚜𝚝𝚎𝚗 𝚝𝚘 𝙾𝚞𝚛 𝙲𝚞𝚜𝚝𝚘𝚖𝚎𝚛𝚜
+          <span className="monospace-text">𝙳𝚘𝚗'𝚝 𝙹𝚞𝚜𝚝 𝚃𝚊𝚔𝚎 𝚘𝚞𝚛 𝚆𝚘𝚛𝚍, 𝙻𝚒𝚜𝚝𝚎𝚗 𝚝𝚘 𝙾𝚞𝚛 𝙲𝚞𝚜𝚝𝚘𝚖𝚎𝚛𝚜</span>
         </h1>
         
         <div className="ShortLine animate-on-load" style={{ backgroundColor: colors.grid1 }}></div>
@@ -97,7 +131,7 @@ function FeedBack() {
         <div className="bottomBox animate-on-load">
           <h2 className="subtitle-text">
             <FaComputer className="subtitle-icon" style={{ color: colors.grid2 }} />
-            𝙽𝚎𝚘 𝚃𝚘𝚔𝚢𝚘 𝙸𝚗 𝙽𝚞𝚖𝚋𝚎𝚛𝚜
+            <span className="monospace-text">𝙽𝚎𝚘 𝚃𝚘𝚔𝚢𝚘 𝙸𝚗 𝙽𝚞𝚖𝚋𝚎𝚛𝚜</span>
           </h2>
           
           <div className="stats-container">
@@ -164,6 +198,62 @@ function FeedBack() {
       </div>
       
       <style jsx>{`
+        /* Dark mode variables */
+        :root {
+          --bg-color: #ffffff;
+          --text-color: #333333;
+          --card-bg: rgba(255, 255, 255, 0.8);
+          --shadow-color: rgba(0, 0, 0, 0.1);
+          --highlight-color: rgba(255, 255, 255, 0.6);
+          --border-color: rgba(255, 255, 255, 0.1);
+          --secondary-text: #555555;
+          --button-bg: rgba(0, 0, 0, 0.1);
+          --button-hover: rgba(0, 0, 0, 0.2);
+          --button-text: #333333;
+          --loading-bg: rgba(0, 0, 0, 0.7);
+          --loading-text: #ffffff;
+          --card-hover-shadow: rgba(0, 0, 0, 0.15);
+          --card-shadow: rgba(0, 0, 0, 0.1);
+          --monospace-color: #333333;
+        }
+        
+        /* Global dark theme styles */
+        body.dark-theme {
+          background-color: #121212;
+          color: #f5f5f5;
+        }
+        
+        /* Component dark mode styles */
+        .dark-mode {
+          --bg-color: #121212;
+          --text-color: #f5f5f5;
+          --card-bg: rgba(30, 30, 30, 0.8);
+          --shadow-color: rgba(0, 0, 0, 0.3);
+          --highlight-color: rgba(40, 40, 40, 0.6);
+          --border-color: rgba(255, 255, 255, 0.05);
+          --secondary-text: #aaaaaa;
+          --button-bg: rgba(255, 255, 255, 0.1);
+          --button-hover: rgba(255, 255, 255, 0.2);
+          --button-text: #ffcc00;
+          --loading-bg: rgba(0, 0, 0, 0.7);
+          --loading-text: #f5f5f5;
+          --card-hover-shadow: rgba(0, 0, 0, 0.3);
+          --card-shadow: rgba(0, 0, 0, 0.3);
+          --monospace-color: #f5f5f5;
+          transition: all 0.3s ease;
+        }
+        
+        .light-mode {
+          transition: all 0.3s ease;
+        }
+        
+        /* Fix for monospace text in both light and dark modes */
+        .monospace-text {
+          color: var(--monospace-color);
+          font-family: monospace;
+          transition: color 0.3s ease;
+        }
+        
         /* Animation styles */
         @keyframes fadeInUp {
           from {
@@ -219,6 +309,35 @@ function FeedBack() {
           }
         }
         
+        /* Dark mode toggle button */
+        .dark-mode-toggle {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: var(--button-bg);
+          border: none;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.3s ease;
+          color: var(--button-text);
+          box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        
+        .dark-mode-toggle:hover {
+          transform: scale(1.1);
+          background: var(--button-hover);
+        }
+        
+        .toggle-icon {
+          font-size: 18px;
+        }
+        
         /* Component animations */
         .animate-on-load {
           opacity: 0;
@@ -257,19 +376,31 @@ function FeedBack() {
           animation: fadeInRight 1s 0.2s forwards;
         }
         
-        /* Enhanced styling */
+        /* Enhanced styling with dark mode support */
         .feedback {
           position: relative;
           overflow: hidden;
-          background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+          background: var(--bg-color);
           border: none;
-          box-shadow: 0 20px 80px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 20px 80px var(--shadow-color);
+          color: var(--text-color);
+          transition: all 0.3s ease;
+        }
+        
+        .dark-mode {
+          background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+        }
+        
+        .light-mode {
+          background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
         }
         
         .title-text {
           display: flex;
           align-items: center;
           gap: 15px;
+          color: var(--text-color);
+          transition: color 0.3s ease;
         }
         
         .icon-container {
@@ -288,6 +419,8 @@ function FeedBack() {
           display: flex;
           align-items: center;
           gap: 12px;
+          color: var(--text-color);
+          transition: color 0.3s ease;
         }
         
         .subtitle-icon {
@@ -315,8 +448,8 @@ function FeedBack() {
         
         .thousand {
           position: relative;
-          color: #333;
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+          color: var(--text-color);
+          text-shadow: 2px 2px 4px var(--shadow-color);
           transition: color 0.3s ease;
         }
         
@@ -334,8 +467,9 @@ function FeedBack() {
           align-items: center;
           gap: 8px;
           font-size: 18px;
-          color: #555;
+          color: var(--secondary-text);
           margin-top: 5px;
+          transition: color 0.3s ease;
         }
         
         .check-icon {
@@ -354,15 +488,16 @@ function FeedBack() {
           align-items: center;
           gap: 10px;
           padding: 15px;
-          background-color: rgba(255, 255, 255, 0.8);
+          background-color: var(--card-bg);
           border-radius: 12px;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 8px 20px var(--card-shadow);
           transition: all 0.3s ease;
+          color: var(--text-color);
         }
         
         .stat-card:hover {
           transform: translateY(-5px);
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 12px 30px var(--card-hover-shadow);
         }
         
         .stat-icon {
@@ -381,15 +516,16 @@ function FeedBack() {
           align-items: center;
           gap: 8px;
           padding: 10px 15px;
-          background-color: rgba(255, 255, 255, 0.6);
+          background-color: var(--highlight-color);
           border-radius: 30px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 4px 10px var(--shadow-color);
           transition: all 0.3s ease;
+          color: var(--text-color);
         }
         
         .highlight-item:hover {
           transform: translateY(-3px);
-          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 8px 15px var(--shadow-color);
         }
         
         .highlight-icon {
@@ -402,8 +538,9 @@ function FeedBack() {
           height: 100%;
           border-radius: 30px;
           overflow: hidden;
-          box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 15px 50px var(--shadow-color);
+          border: 1px solid var(--border-color);
+          transition: border 0.3s ease, box-shadow 0.3s ease;
         }
         
         .loading-overlay {
@@ -416,8 +553,8 @@ function FeedBack() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          background-color: rgba(0, 0, 0, 0.7);
-          color: white;
+          background-color: var(--loading-bg);
+          color: var(--loading-text);
           z-index: 10;
         }
         
@@ -434,9 +571,10 @@ function FeedBack() {
         .canvas-hint {
           text-align: center;
           margin-top: 15px;
-          color: #666;
+          color: var(--secondary-text);
           font-size: 14px;
           opacity: 0.8;
+          transition: color 0.3s ease;
         }
         
         /* Better responsive design */
@@ -481,6 +619,13 @@ function FeedBack() {
           
           .highlight-item {
             min-width: 100%;
+          }
+          
+          .dark-mode-toggle {
+            top: 10px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
           }
         }
       `}</style>

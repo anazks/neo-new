@@ -58,9 +58,9 @@ function Details({ product }) {
   }
 
   return (
-    <>
+    <div className="dark-theme">
       <NavBar />
-      <div className="DetailsBox">
+      <div  className="DetailsBox">
         <div className="pcPic">
           <img 
             src={product.images?.[0]?.image ? BaseURL + product.images[0].image : "https://via.placeholder.com/400x300"} 
@@ -70,13 +70,13 @@ function Details({ product }) {
             className={isImageLoaded ? "image-loaded" : ""}
           />
         </div>
-        
+        <br /><br />
         <div className="descreption">
           <div>
-            <h2>{product.category || "GAMING PC"}</h2>
+            <h2 >{product.name || "GAMING PC"}</h2>
             <div className="rate">
               <h1>{product.name || "THE SPECTRE SERIES"}</h1>
-              <h1 style={{ color: 'green' }}>
+              <h1 className="price">
                 {product.originalPrice && <del>₹ {product.originalPrice.toLocaleString()}</del>}  
                 ₹ {price.toLocaleString()}/-
               </h1>
@@ -129,7 +129,7 @@ function Details({ product }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

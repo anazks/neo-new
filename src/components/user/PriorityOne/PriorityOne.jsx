@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './PriorityOne.css';
 import person1 from '../../../Images/persons/Ajay.png';
 import person2 from '../../../Images/persons/RoneyThomas.png';
@@ -6,16 +6,23 @@ import person3 from '../../../Images/persons/Julien.png';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
 import { HiOutlineChevronDown } from 'react-icons/hi';
+import { FiMoon, FiSun } from 'react-icons/fi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function PriorityOne() {
+  const [darkMode, setDarkMode] = useState(true);
+  
   useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
     });
   }, []);
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
 
   const team = [
     {
@@ -54,7 +61,18 @@ function PriorityOne() {
   ];
 
   return (
-    <div className="priority-one-container">
+    <div className={`priority-one-container ${!darkMode ? 'light-mode' : ''}`}>
+      <div className="theme-toggle">
+        <motion.button
+          className="toggle-button"
+          onClick={toggleTheme}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          {darkMode ? <FiSun /> : <FiMoon />}
+        </motion.button>
+      </div>
+      
       <div className="header" data-aos="fade-up">
         <div>
           <h1 className="title">Priority One by Neo Tokyo</h1>
@@ -88,6 +106,7 @@ function PriorityOne() {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
                 className="social-icon"
+                aria-label="LinkedIn"
               >
                 <FaLinkedin />
               </motion.a>
@@ -96,6 +115,7 @@ function PriorityOne() {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
                 className="social-icon"
+                aria-label="Twitter"
               >
                 <FaTwitter />
               </motion.a>
@@ -104,6 +124,7 @@ function PriorityOne() {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
                 className="social-icon"
+                aria-label="Email"
               >
                 <FaEnvelope />
               </motion.a>

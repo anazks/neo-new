@@ -10,6 +10,7 @@ import Google from '../../../Images/LoginWith/Google.png';
 import logo from '../../../Images/LoginWith/neo_tokyo-logo.png';
 import OtpInput from '../OtpSubmit/otp';
 import { submitOTP } from '../../../Services/userApi';
+import Alert from '../Alert/Alert'
 // import GoogleAuth from '../Google/GoogleAuth';
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [googleAuth,setGoogleAuth] = useState(false)
+  const [sentingotp, setsentingtOtp] = useState(false);
   // const [FormData,setFormData] = useState("")
   
   const LoginWith = async(data)=>{
@@ -43,7 +45,13 @@ const Login = () => {
     const email = formData.email;
     // Send OTP logic here using the email
     console.log('Sending OTP to:', email);
+    if(email === ""){
+      setsentingtOtp(false)
+    }else{
+      setsentingtOtp(true)
+    }
     localStorage.setItem("email",email)
+
     let  OTPResponse = await submitOTP(email)
     console.log(OTPResponse)
     // Add your OTP request logic here (e.g., API call)
@@ -206,9 +214,11 @@ const Login = () => {
     const currentStep = getCurrentStep();
     
     return (
+      
       <>
     
         {/* Step indicator */}
+       
         <div className="step-indicator">
           <div className="steps">
             {[1, 2, 3, 4].map(step => (
@@ -327,7 +337,7 @@ const Login = () => {
                     required
                   />
                   <span>
-                    Yes; nEO tOKYO may use and share my email to enable personalized advertising with third parties (e.g. Google, Twitch) and to send me info about new releases, updates, events, or other related content.
+                    Yes; NEO TOKYO may use and share my email to enable personalized advertising with third parties (e.g. Google, Twitch) and to send me info about new releases, updates, events, or other related content.
                   </span>
                 </div>
               </div>
@@ -344,7 +354,7 @@ const Login = () => {
                 <>
                   {/* Social login options */}
                   <p className="text-gray-500 uppercase text-sm font-medium mt-6">
-                    yOU CAN ALSO CREATE AN aCCOUNT WITH
+                    YOU CAN ALSO CREATE AN aCCOUNT WITH
                   </p>
                   
                   <div className="icons">
@@ -633,6 +643,16 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      {
+        sentingotp && <div>
+             <Alert 
+              type={"success"}
+              message="OTP sent successfully!"
+              productId={null}
+              // onClose={() => setAlertData(null)}
+             />
+        </div> 
+      }
       {/* Left Section */}
       <div className="left-section">
         <div className="logo">

@@ -1,17 +1,95 @@
 /* Prefix all classes with 'pc-' (product card) to avoid conflicts */
+/* Dark mode variables and toggles */
 
+:root {
+  /* Light Theme Variables */
+  --light-bg: #f9fafb;
+  --light-card-bg: #ffffff;
+  --light-text-primary: #1f2937;
+  --light-text-secondary: #4b5563;
+  --light-accent: #3b82f6;
+  --light-card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --light-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --light-product-image-bg: #f3f4f6;
+  
+  /* Dark Theme Variables */
+  --dark-bg: #121212;
+  --dark-card-bg: #1e1e1e;
+  --dark-text-primary: #e0e0e0;
+  --dark-text-secondary: #a0a0a0;
+  --dark-accent: #4f8df9;
+  --dark-card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --dark-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --dark-product-image-bg: #2a2a2a;
+  
+  /* Shared Variables */
+  --tag-popular: #3b82f6;
+  --tag-sale: #ef4444;
+  --tag-new: #10b981;
+}
+
+/* Theme Toggle Button */
+.pc-theme-toggle {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.pc-theme-toggle-btn {
+  background-color: transparent;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.light-mode .pc-theme-toggle-btn {
+  border-color: var(--light-text-secondary);
+  color: var(--light-text-secondary);
+}
+
+.dark-mode .pc-theme-toggle-btn {
+  border-color: var(--dark-text-secondary);
+  color: var(--dark-text-secondary);
+}
+
+.pc-theme-toggle-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Base Styles with Theme Support */
 .pc-recommendations-section {
   padding: 3rem 1.5rem;
-  background-color: #f9fafb;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.light-mode.pc-recommendations-section {
+  background-color: var(--light-bg);
+  color: var(--light-text-primary);
+}
+
+.dark-mode.pc-recommendations-section {
+  background-color: var(--dark-bg);
+  color: var(--dark-text-primary);
 }
 
 .pc-recommendations-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
   text-align: center;
   margin-bottom: 2rem;
   position: relative;
+}
+
+.light-mode .pc-recommendations-title {
+  color: var(--light-text-primary);
+}
+
+.dark-mode .pc-recommendations-title {
+  color: var(--dark-text-primary);
 }
 
 .pc-recommendations-title::after {
@@ -22,8 +100,15 @@
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, #3b82f6, #60a5fa);
   border-radius: 2px;
+}
+
+.light-mode .pc-recommendations-title::after {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.dark-mode .pc-recommendations-title::after {
+  background: linear-gradient(90deg, #4f8df9, #77adff);
 }
 
 .pc-product-carousel {
@@ -34,25 +119,47 @@
 }
 
 .pc-product-card {
-  background-color: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-mode .pc-product-card {
+  background-color: var(--light-card-bg);
+  box-shadow: var(--light-card-shadow);
+}
+
+.dark-mode .pc-product-card {
+  background-color: var(--dark-card-bg);
+  box-shadow: var(--dark-card-shadow);
 }
 
 .pc-product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .pc-product-card:hover {
+  box-shadow: var(--light-card-hover-shadow);
+}
+
+.dark-mode .pc-product-card:hover {
+  box-shadow: var(--dark-card-hover-shadow);
 }
 
 .pc-product-image-container {
   position: relative;
   height: 220px;
   overflow: hidden;
-  background-color: #f3f4f6;
+}
+
+.light-mode .pc-product-image-container {
+  background-color: var(--light-product-image-bg);
+}
+
+.dark-mode .pc-product-image-container {
+  background-color: var(--dark-product-image-bg);
 }
 
 .pc-product-image {
@@ -80,15 +187,15 @@
 }
 
 .pc-tag-popular {
-  background: #3b82f6;
+  background: var(--tag-popular);
 }
 
 .pc-tag-sale {
-  background: #ef4444;
+  background: var(--tag-sale);
 }
 
 .pc-tag-new {
-  background: #10b981;
+  background: var(--tag-new);
 }
 
 .pc-quick-actions {
@@ -129,12 +236,23 @@
 }
 
 .pc-cart-button {
-  background-color: #3b82f6;
   color: white;
 }
 
-.pc-cart-button:hover {
+.light-mode .pc-cart-button {
+  background-color: var(--light-accent);
+}
+
+.light-mode .pc-cart-button:hover {
   background-color: #2563eb;
+}
+
+.dark-mode .pc-cart-button {
+  background-color: var(--dark-accent);
+}
+
+.dark-mode .pc-cart-button:hover {
+  background-color: #3672db;
 }
 
 .pc-product-info {
@@ -145,14 +263,34 @@
 .pc-product-name {
   font-size: 1rem;
   font-weight: 500;
-  color: #1f2937;
   margin-bottom: 0.5rem;
+}
+
+.light-mode .pc-product-name {
+  color: var(--light-text-primary);
+}
+
+.dark-mode .pc-product-name {
+  color: var(--dark-text-primary);
 }
 
 .pc-product-price {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #3b82f6;
+}
+
+.light-mode .pc-product-price {
+  color: var(--light-accent);
+}
+
+.dark-mode .pc-product-price {
+  color: var(--dark-accent);
+}
+
+/* Dark mode for body (added via JS) */
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text-primary);
 }
 
 /* Responsive adjustments */

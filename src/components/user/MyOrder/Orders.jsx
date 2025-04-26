@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './Order.css';
 import { getMyOrder } from '../../../Services/userApi';
 import Loader from '../../../Loader/Loader';
+import './Order.css';
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -9,6 +9,33 @@ export default function Orders() {
   const [error, setError] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Check for user's preferred color scheme on component mount
+  useEffect(() => {
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedMode = localStorage.getItem('darkMode');
+    
+    if (savedMode !== null) {
+      setDarkMode(savedMode === 'true');
+    } else {
+      setDarkMode(prefersDarkMode);
+    }
+  }, []);
+
+  // Update document with dark mode class and save preference
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(prevMode => !prevMode);
+  };
 
   const fetchMyOrders = async () => {
     try {
@@ -88,7 +115,7 @@ export default function Orders() {
 
   if (error) {
     return (
-      <div className="error-state">
+      <div className={`error-state ${darkMode ? 'dark-mode' : ''}`}>
         <div className="error-icon">⚠️</div>
         <h2>Unable to Load Orders</h2>
         <p>{error}</p>
@@ -101,7 +128,7 @@ export default function Orders() {
 
   if (orders.length === 0) {
     return (
-      <div className="empty-state">
+      <div className={`empty-state ${darkMode ? 'dark-mode' : ''}`}>
         <div className="empty-state-icon">📦</div>
         <h2>No Orders Found</h2>
         <p>You haven't placed any orders yet. Browse our products and start shopping!</p>
@@ -113,10 +140,19 @@ export default function Orders() {
   }
 
   return (
-    <div className="orders-container">
-        <br /><br /><br />
+    <div className={`orders-container ${darkMode ? 'dark-mode' : ''}`}>
+      <br /><br /><br />
       <div className="orders-header">
-        <h1>My Orders</h1>
+        <div className="header-title-group">
+          <h1>My Orders</h1>
+          <button 
+            onClick={toggleDarkMode} 
+            className="theme-toggle"
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
         <div className="orders-actions">
           <div className="orders-filter">
             <select 
@@ -169,19 +205,18 @@ export default function Orders() {
                       <span className="amount">RS.{order.total_price || order.total_tax}</span>
                     </div>
                     <div className="order-amount">
-                            <span className={`status-pill status-${order.order_status.toLowerCase()}`}>
-                                {order.order_status}
-                            </span>
-                </div>
+                      <span className={`status-pill status-${order.order_status.toLowerCase()}`}>
+                        {order.order_status}
+                      </span>
+                    </div>
                   </div>
                   
-                  <div className="order-summary" style={{backgroundImage: `url('https://i5.walmartimages.com/asr/bde145d4-6955-4a0e-a6df-ccb87c186b00_1.f878d0cc5af1145ec8598ca158a1337b.jpeg')`,backgroundSize: 'cover'}}>
-                    {/* <div className="order-items-count">
-                      <span className="item-count">{order.items?.length || 0} items</span>
-                    </div>
-                    <div className="order-amount">
-                      <span className="amount">RS.{order.total_price || order.total_tax}</span>
-                    </div> */}
+                  <div className="order-summary" style={{
+                    backgroundImage: darkMode 
+                      ? 'linear-gradient(rgba(30, 30, 30, 0.8), rgba(20, 20, 20, 0.9))' 
+                      : `url('https://i5.walmartimages.com/asr/bde145d4-6955-4a0e-a6df-ccb87c186b00_1.f878d0cc5af1145ec8598ca158a1337b.jpeg')`,
+                    backgroundSize: 'cover'
+                  }}>
                     <div 
                       className="order-status-badge"
                       style={{
@@ -228,7 +263,6 @@ export default function Orders() {
                           <div className="item-image">
                             {item.image ? (
                               <img 
-                                // src={item.image} 
                                 alt={item.name}
                                 onError={(e) => {
                                   e.target.onerror = null;
@@ -371,32 +405,6 @@ export default function Orders() {
                         </div>
                       </div>
                     </div>
-                    
-                    {/* <div className="order-actions">
-                      <button className="action-button secondary">
-                        <span className="button-icon">📋</span>
-                        Download Invoice
-                      </button>
-                      {order.order_status?.toLowerCase() !== 'delivered' && 
-                       order.order_status?.toLowerCase() !== 'canceled' && (
-                        <button className="action-button warning">
-                          <span className="button-icon">⚠️</span>
-                          Report Issue
-                        </button>
-                      )}
-                      {order.order_status?.toLowerCase() === 'delivered' && (
-                        <button className="action-button primary">
-                          <span className="button-icon">⭐</span>
-                          Rate Products
-                        </button>
-                      )}
-                      {order.order_status?.toLowerCase() !== 'canceled' && (
-                        <button className="action-button primary">
-                          <span className="button-icon">↺</span>
-                          Reorder
-                        </button>
-                      )}
-                    </div> */}
                   </div>
                 )}
               </div>

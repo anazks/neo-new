@@ -19,7 +19,6 @@ function Filter() {
   
   return (
     <div className="filter-container">
-        <br />
       <div className="filter-content">
         <div className="category-column">
           {categories.map((category, index) => (
@@ -35,20 +34,18 @@ function Filter() {
         </div>
 
         <div className="options-column">
-          {categories.map((_, index) => (
-            <div 
-              key={index} 
-              className={`option-group ${activeCategory === index ? 'active' : ''}`}
-            >
+          {activeCategory !== null && (
+            <div className="option-group active">
               <select><option value="">Select option</option><option>Option 1</option><option>Option 2</option></select>
               <select><option value="">Select option</option><option>Option 1</option><option>Option 2</option></select>
               <select><option value="">Select option</option><option>Option 1</option><option>Option 2</option></select>
+              
+              <div className="button-container">
+                <button className="apply-button">APPLY FILTER</button>
+                <button className="reset-button">RESET</button>
+              </div>
             </div>
-          ))}
-          <div className="button-container">
-            <button className="apply-button">APPLY FILTER</button>
-            <button className="reset-button">RESET</button>
-          </div>
+          )}
         </div>
       </div>
     </div>

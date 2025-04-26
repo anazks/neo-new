@@ -3,11 +3,14 @@ import React, { useEffect, useState } from "react";
 import { verifyOtp } from "../../../Services/userApi";
 import { useAuth } from "../../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
+import Varifying from '../Loader/Verifying'
+import './otp.css'
 
 const OtpInput = ({ email: propEmail }) => {
-  const {  setToken, setIsAdmin, isAdmin } = useAuth(); // Consistent casing
+  const { setToken, setIsAdmin, isAdmin } = useAuth();
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificstion, setVerifiction] = useState(undefined); // Use undefined as initial state
   const navigate = useNavigate();
   
   // Use email from props if available, otherwise from localStorage
@@ -35,28 +38,40 @@ const OtpInput = ({ email: propEmail }) => {
     }
     
     setLoading(true);
+    setVerifiction(undefined); // Reset to initial verification state
     
     try {
-      // Make API request to verify OTP - pass the correctly cased setIsAdmin
-      const isVerified = await verifyOtp(email, otp, setToken, setIsAdmin,isAdmin);
+      // Make API request to verify OTP
+      const isVerified = await verifyOtp(email, otp, setToken, setIsAdmin, isAdmin);
       
       if (isVerified.data === true) {
-
-        localStorage.removeItem("email");
-        console.log(isVerified.admin,"isadmin")
-        setIsAdmin(isVerified.admin)
-        navigate(isVerified.admin === true ? '/admin/dashboard' : '/');
+        // Success case
+        setVerifiction(true);
+        
+        // Wait to show the success animation before redirecting
+        setTimeout(() => {
+          localStorage.removeItem("email");
+          setIsAdmin(isVerified.admin);
+          navigate(isVerified.admin === true ? '/admin/dashboard' : '/');
+        }, 2000);
       } else {
-        alert("⚠️ Invalid OTP. Please try again.");
+        // Failed verification
+        setVerifiction(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       }
     } catch (error) {
       console.error(
         "❌ Error verifying OTP:",
         error.response?.data || error.message
       );
-      alert("⚠️ Invalid OTP. Please try again.");
-    } finally {
-      setLoading(false);
+      
+      // API error = failed verification
+      setVerifiction(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     }
   };
   
@@ -69,6 +84,12 @@ const OtpInput = ({ email: propEmail }) => {
   
   return (
     <div className="otp-container">
+      {loading && (
+        <div className="verifying-overlay">
+          <Varifying verificstion={verificstion} />
+        </div>
+      )}
+      
       <input
         type="text"
         inputMode="numeric"
@@ -86,13 +107,10 @@ const OtpInput = ({ email: propEmail }) => {
         disabled={loading || !otp}
         className={`submit-button ${loading ? 'loading' : ''}`}
       >
-        {loading ? 'Verifying...' : 'Submit OTP'}
+        Submit OTP
       </button>
     </div>
   );
 };
 
 export default OtpInput;
-
-
-

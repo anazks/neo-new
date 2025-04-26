@@ -1,29 +1,44 @@
 .ProductBanneBox {
     width: 85vw;
-    height: auto; /* Adjust height to fit content on smaller screens */
+    height: auto;
     margin: auto;
     display: flex;
     margin-top: 10%;
     justify-content: space-around;
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
-    gap: 20px; /* Add spacing between elements */
+    flex-wrap: wrap;
+    gap: 20px;
     position: relative;
     z-index: 1;
 }
 
+/* Dark mode specific styles */
+.ProductBanneBox.dark-theme {
+    color: white;
+    background-color: #121212;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.ProductBanneBox.dark-theme .textContenst,
+.ProductBanneBox.dark-theme .smallText,
+.ProductBanneBox.dark-theme .rate {
+    color: white; /* Ensure text is visible in dark mode */
+}
+
 .LeftBox{
     width: 50%;
-    height: 100vh;
+    height: auto; /* Changed from 100vh to auto for better responsiveness */
     display: flex;
     align-items: center;
     flex-direction: column;
     position: relative;
+    padding: 20px; /* Added padding for better spacing */
 }
 
 .rightBox {
-    width: 100%; /* Default full width for small screens */
-    max-width: 500px; /* Limit max width for larger screens */
-    height: 100vh;
+    width: 100%;
+    max-width: 500px;
+    height: auto; /* Changed from 100vh to auto for better responsiveness */
     position: relative;
 }
 
@@ -34,8 +49,9 @@
 }
 
 .rightBox img {
-    width: 100%; /* Ensure the image is responsive */
-    height: 100vh; /* Maintain aspect ratio */
+    width: 100%;
+    height: auto; /* Changed from 100vh to auto for proper aspect ratio */
+    max-height: 80vh; /* Limit maximum height */
     border-radius: 30px;
     transition: transform 0.5s ease;
     object-fit: cover;
@@ -48,20 +64,20 @@
 }
 
 .Headers {
-    height: 200px; /* Adjust height for content */
-    padding: 10px; /* Add padding for better spacing */
+    height: auto; /* Changed from fixed height to auto */
+    min-height: 150px; /* Set minimum height */
+    padding: 20px;
     width: 100%;
     background-color: black; 
     color: white;
     border-radius: 30px; 
     display: flex;
-    justify-content: center; /* Center align for smaller screens */
+    justify-content: center;
     align-items: center;
     text-align: center;
     position: relative;
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    /* Animation properties */
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.6s ease;
@@ -99,12 +115,12 @@
 }
 
 .Headers div {
-    width: 100%; /* Full width for small screens */
-    height: auto; /* Adjust height dynamically */
+    width: 100%;
+    height: auto;
     margin: auto;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center text horizontally */
+    justify-content: center;
 }
 
 .Headers h1 {
@@ -115,9 +131,8 @@
 .textContenst {
     margin-top: 20px;
     width: 100%;
-    height: auto; /* Adjust height dynamically */
-    color: BLACK;
-    /* Animation properties */
+    height: auto;
+    color: black; /* Default light mode color */
     opacity: 0;
     transform: translateX(-20px);
     transition: all 0.6s ease 0.2s;
@@ -177,12 +192,11 @@
 }
 
 .smallText {
-    width: 100%; /* Full width for smaller screens */
-    max-width: 600px; /* Limit max width */
-    height: auto; /* Adjust height dynamically */
-    color: BLACK;
-    margin: 20px auto; /* Center on smaller screens */
-    /* Animation properties */
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    color: black; /* Default light mode color */
+    margin: 20px auto;
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.6s ease 0.4s;
@@ -214,17 +228,16 @@
 }
 
 .spec-item span {
-    font-size: 18px; /* Adjust font size for readability */
+    font-size: 18px;
 }
 
 .rate {
-    color: BLACK;
-    height: auto; /* Adjust height dynamically */
-    text-align: center; /* Center align text */
+    color: black; /* Default light mode color */
+    height: auto;
+    text-align: center;
     position: relative;
     padding: 10px;
     margin: 20px 0;
-    /* Animation properties */
     opacity: 0;
     transform: scale(0.9);
     transition: all 0.6s ease 0.6s;
@@ -236,7 +249,7 @@
 }
 
 .rate span {
-    font-size: 24px; /* Increase font size */
+    font-size: 24px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
@@ -273,8 +286,8 @@
     }
 }
 
-    /* Buy Now Button Style - Dark Theme */
-.Buy-now{
+/* Fixed Buy Now Button Style */
+.Buy-now {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -282,90 +295,11 @@
     background: linear-gradient(90deg, #121212 0%, #2a2a2a 100%);
     color: #fff;
     border: 2px solid #333;
-    border-radius: 4px;
-    padding: 0.8rem 1.5rem;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 600;
-    height: 200px;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    text-transform: uppercase;
-  }
-  
-  .team-buttonsss:hover {
-    background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
-    border-color: #00f3ff;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 243, 255, 0.3);
-  }
-  
-  .team-buttonsss:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  }
-  
-  .team-buttonsss::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.15), transparent);
-    transition: 0.5s;
-  }
-  
-  .team-buttonsss:hover::after {
-    left: 100%;
-  }
-  
-  .iconsbtn-team {
-    font-size: 1.5rem;
-    color: #00f3ff;
-    transition: transform 0.3s ease;
-  }
-  
-  .team-buttonsss:hover .iconsbtn-team {
-    transform: translateX(4px);
-  }
-  
-  .Team {
-    color: #fff !important;
-    font-weight: 700;
-  }
-  
-  .team-buttonsss:hover .Team {
-    color: #00f3ff !important;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .team-buttonsss {
-      padding: 0.7rem 1.2rem;
-      font-size: 0.9rem;
-    }
-    
-    .iconsbtn-team {
-      font-size: 1.3rem;
-    }
-  }
-
-/* Buy Now Button Style - Dark Theme */
-.buy-Now {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    background: linear-gradient(90deg, #121212 0%, #2a2a2a 100%);
-    color: #fff;
-    border: 2px solid #333;
-    border-radius: 4px;
-    padding: 10px;  
+    border-radius: 8px; /* Changed from 4px for better appearance */
+    padding: 15px 30px; /* Adjusted padding for better size */
+    width: 200px; /* Set specific width */
+    height: auto; /* Changed from 200px to auto */
+    margin: 20px 0; /* Added margin for spacing */
     font-family: 'Orbitron', sans-serif;
     font-weight: 600;
     font-size: 1rem;
@@ -376,21 +310,21 @@
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     text-transform: uppercase;
-  }
-  
-  .team-buttonsss:hover {
+}
+
+.Buy-now:hover {
     background: linear-gradient(90deg, #1a1a1a 0%, #333333 100%);
     border-color: #00f3ff;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 243, 255, 0.3);
-  }
-  
-  .team-buttonsss:active {
+}
+
+.Buy-now:active {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  }
-  
-  .team-buttonsss::after {
+}
+
+.Buy-now::after {
     content: '';
     position: absolute;
     top: 0;
@@ -399,85 +333,103 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.15), transparent);
     transition: 0.5s;
-  }
-  
-  .team-buttonsss:hover::after {
-    left: 100%;
-  }
-  
-  .iconsbtn-team {
-    font-size: 1.5rem;
-    color: #00f3ff;
-    transition: transform 0.3s ease;
-  }
-  
-  .team-buttonsss:hover .iconsbtn-team {
-    transform: translateX(4px);
-  }
-  
-  .Team {
-    color: #fff !important;
-    font-weight: 700;
-  }
-  
-  .team-buttonsss:hover .Team {
-    color: #00f3ff !important;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .team-buttonsss {
-      padding: 0.7rem 1.2rem;
-      font-size: 0.9rem;
-    }
-    
-    .iconsbtn-team {
-      font-size: 1.3rem;
-    }
-  }
-
-.team-buttons.animated {
-    opacity: 1;
-    transform: translateY(0);
 }
 
-.team-buttons::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-}
-
-.team-buttons:hover {
-    background-color: #AD43DE;
-    color: white;
-    transform: scale(1.05) translateY(-3px);
-    box-shadow: 0 10px 20px rgba(173, 67, 222, 0.6);
-}
-
-.team-buttons:hover::before {
+.Buy-now:hover::after {
     left: 100%;
 }
 
 .iconsbtn-team {
-    font-size: 20px;
-    animation: bounce 2s infinite;
+    font-size: 1.5rem;
+    color: #00f3ff;
+    transition: transform 0.3s ease;
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateX(0);
-    }
-    40% {
-        transform: translateX(-5px);
-    }
-    60% {
-        transform: translateX(5px);
-    }
+.Buy-now:hover .iconsbtn-team {
+    transform: translateX(4px);
+}
+
+.Team {
+    color: #fff !important;
+    font-weight: 700;
+}
+
+.Buy-now:hover .Team {
+    color: #00f3ff !important;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #333;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.theme-toggle.dark-theme {
+    background-color: #f0f0f0;
+}
+
+.theme-icon {
+    font-size: 24px;
+    color: #f0f0f0;
+}
+
+.dark-theme .theme-icon {
+    color: #333;
+}
+
+/* Theme transition overlay */
+.theme-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    z-index: 99;
+    transition: background-color 0.3s ease;
+    transform: scale(0);
+    border-radius: 50%;
+}
+
+.theme-transition-overlay.active {
+    transform: scale(3);
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Dark mode specific adjustments */
+.dark-mode .textContenst,
+.dark-mode .smallText,
+.dark-mode .rate {
+    color: white;
+}
+
+.dark-mode .spec-item:hover {
+    background-color: rgba(173, 67, 222, 0.3);
 }
 
 /* Particles effect for button */
@@ -500,7 +452,7 @@
     opacity: 0;
 }
 
-.team-buttons:hover ~ .particles .particle {
+.Buy-now:hover ~ .particles .particle {
     animation: particle-animation 1s ease-out;
     opacity: 1;
 }
@@ -739,29 +691,29 @@
         display: none;
     }
     .ProductBanneBox {
-        flex-direction: column; /* Stack items vertically */
-        align-items: center; /* Center align items */
+        flex-direction: column;
+        align-items: center;
     }
 
     .LeftBox, .rightBox {
-        width: 100%; /* Reduce width for smaller screens */
+        width: 100%;
     }
 
     .Headers {
-        font-size: 15px; /* Reduce font size */
+        font-size: 15px;
         padding: 10px;
     }
 
-    .textContenst {
-        font-size: 20px; /* Adjust font size for readability */
+    .textContenst span {
+        font-size: 2.5rem;
     }
 
     .smallText span {
-        font-size: 16px; /* Reduce font size */
+        font-size: 16px;
     }
 
     .rate span {
-        font-size: 16px; /* Adjust font size */
+        font-size: 16px;
     }
     
     .discount-badge {
@@ -771,26 +723,32 @@
     .shape-container {
         display: none;
     }
+    
+    .Buy-now {
+        width: 180px;
+        padding: 12px 24px;
+    }
 }
 
 @media screen and (max-width: 480px) {
     .textContenst span{
-        font-size: 3rem; /* Further reduce font size for smaller devices */
+        font-size: 2rem;
     }
     .smallText{
         width: 80%;
     }
     .smallText span {
-        font-size: 18px; /* Adjust font size */
+        font-size: 16px;
     }
 
     .rate span {
-        font-size: 18px; /* Adjust font size */
+        font-size: 16px;
     }
 
-    .team-buttons {
-        font-size: 12px; /* Adjust button font size */
-        padding: 8px 16px; /* Reduce padding */
+    .Buy-now {
+        width: 160px;
+        padding: 10px 20px;
+        font-size: 14px;
     }
     
     .discount-badge {

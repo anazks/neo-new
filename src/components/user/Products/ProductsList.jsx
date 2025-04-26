@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import './producsList.css';
-import { FaCartPlus, FaSearch, FaSpinner } from "react-icons/fa";
+import { FaCartPlus, FaSearch, FaSpinner, FaMoon, FaSun, FaFilter, FaSort } from "react-icons/fa";
 import { getAllProduct } from '../../../Services/Products';
 import baseUrl from '../../../Static/Static';
 import { useAuth } from '../../../Context/UserContext';
@@ -9,6 +9,7 @@ import { addTocart as addToCartService } from '../../../Services/userApi';
 import Filter from '../Filter/Filter';
 import Sorting from '../Sorting/Sorting';
 import Alert from '../Alert/Alert';
+import Loader from '../Loader/Loader';
 
 function ProductsList() {
   const [filter, setFilter] = useState(false);
@@ -18,9 +19,23 @@ function ProductsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [addingToCart, setAddingToCart] = useState(null);
   const [alertData, setAlertData] = useState(null);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
   const alertTimeoutRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  useEffect(() => {
+    // Apply dark mode class to body
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    return () => {
+      document.body.classList.remove('dark-mode');
+    };
+  }, [darkMode]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -111,12 +126,16 @@ function ProductsList() {
     navigate(`/Details/${id}`);
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="products-page">
+    <div className={`products-page ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       {alertData && (
         <Alert 
           type={alertData.type}
@@ -126,39 +145,53 @@ function ProductsList() {
           onClose={() => setAlertData(null)}
         />
       )}
-      <div className="page-header">
-        <h1 style={{color:"black"}}>Our Products</h1>
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          <FaSearch className="search-icon" />
-        </div>
-      </div>
+     
 
-      <div className="buttonContainer">
-        <button 
-          className={`special ${filter ? 'active' : ''}`} 
-          onClick={() => {
-            setFilter(!filter);
-            if (sort) setSort(false);
-          }}
-        >
-          FILTERS
-        </button>
-        <button 
-          className={`special ${sort ? 'active' : ''}`} 
-          onClick={() => {
-            setSort(!sort);
-            if (filter) setFilter(false);
-          }}
-        >
-          SORT
-        </button> 
+
+      <div className="page-header">
+        <div className="header-content">
+          <h1>Our Products</h1>
+          <div className="controls-container">
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+              <FaSearch className="search-icon" />
+            </div>
+            
+            <div className="controls-buttons">
+              <button 
+                className={`control-button ${filter ? 'active' : ''}`} 
+                onClick={() => {
+                  setFilter(!filter);
+                  if (sort) setSort(false);
+                }}
+              >
+                <FaFilter /> FILTER
+              </button>
+              <button 
+                className={`control-button ${sort ? 'active' : ''}`} 
+                onClick={() => {
+                  setSort(!sort);
+                  if (filter) setFilter(false);
+                }}
+              >
+                <FaSort /> SORT
+              </button>
+              <button 
+                className="theme-toggle" 
+                onClick={toggleDarkMode} 
+                aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
+              >
+                {darkMode ? <FaSun /> : <FaMoon />}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {sort && (
@@ -174,10 +207,7 @@ function ProductsList() {
       )}
 
       {loading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading products...</p>
-        </div>
+        <Loader/>
       ) : filteredProducts.length === 0 ? (
         <div className="empty-container">
           <p>No products found. Try adjusting your filters or search term.</p>
@@ -194,13 +224,13 @@ function ProductsList() {
                 <img 
                   src={product.images?.[0]?.image 
                     ? baseUrl + product.images[0].image 
-                    : "https://via.placeholder.com/150"
+                    : "https://pnghq.com/wp-content/uploads/pnghq.com-gaming-computer-picture-p-4.png"
                   } 
                   alt={product.name}
                 />
               </div>
               <div className="card-content">
-                <h2>{product.name}</h2>
+                <h2 style={{color:'white'}}>{product.name}</h2>
                 <p className="price">₹ {product.price?.toLocaleString()}</p>
                 <div className="buttons">
                   <button 

@@ -1,114 +1,169 @@
-/* PCSpecs.css */
-.pc-specs-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    color: #333;
-    background: white;
-    border-radius: 20px;
-  }
-  
-  .pc-specs-header h1 {
-    font-size: 2rem;
-    margin: 0 0 1rem 0;
-    color: #1a1a1a;
-  }
-  
-  .package-content {
-    color: #666;
-    margin-bottom: 2rem;
-  }
-  
-  .warranty-section {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-radius: 12px;
-  }
-  
-  .warranty-section h2 {
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-  }
-  
-  .warranty-bundles {
-    margin-top: 1rem;
-  }
-  
-  .warranty-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-  }
-  
-  .warranty-buttons button {
-    background: #000;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .warranty-buttons button:hover {
-    transform: scale(1.1);
-    background: #333;
-  }
-  
-  .specs-section h2 {
-    margin: 0 0 1.5rem 0;
-    font-size: 1.5rem;
-  }
-  
-  .specs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .spec-item {
+/* dark-inside.css */
+
+.dark-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #e0e0e0;
+  background: #121212;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2c2c2c;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dark-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dark-header h1 {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  color: #4ecca3;
+  letter-spacing: 1px;
+}
+
+.dark-package-content {
+  color: #bdbdbd;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.dark-warranty {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #1e1e1e;
+  border-radius: 12px;
+  border: 1px solid #2c2c2c;
+}
+
+.dark-warranty h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #e0e0e0;
+}
+
+.dark-warranty-bundles {
+  margin-top: 1rem;
+}
+
+.dark-warranty-bundles p {
+  color: #bdbdbd;
+}
+
+.dark-warranty-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.dark-warranty-options button {
+  background: #2c2c2c;
+  color: #4ecca3;
+  border: 1px solid #4ecca3;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dark-warranty-options button:hover {
+  transform: scale(1.1);
+  background: #4ecca3;
+  color: #121212;
+}
+
+.dark-specs h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: #e0e0e0;
+}
+
+.dark-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.dark-spec-card {
+  padding: 1rem;
+  background: #1e1e1e;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #2c2c2c;
+}
+
+.dark-spec-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: #4ecca3;
+}
+
+.dark-spec-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #9e9e9e;
+  margin-bottom: 0.5rem;
+}
+
+.dark-spec-data {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4ecca3;
+}
+
+.dark-loading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #e0e0e0;
+}
+
+.dark-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(78, 204, 163, 0.2);
+  border-radius: 50%;
+  border-top-color: #4ecca3;
+  animation: dark-spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes dark-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .dark-container {
     padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .dark-specs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dark-warranty-options {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .dark-header h1 {
+    font-size: 1.6rem;
   }
   
-  .spec-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  .dark-warranty h2,
+  .dark-specs h2 {
+    font-size: 1.3rem;
   }
   
-  .spec-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #666;
-    margin-bottom: 0.5rem;
+  .dark-spec-card {
+    padding: 0.8rem;
   }
-  
-  .spec-value {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #1a1a1a;
-  }
-  
-  .spec-subvalue {
-    font-size: 0.875rem;
-    color: #666;
-    margin-top: 0.25rem;
-  }
-  
-  @media (max-width: 768px) {
-    .pc-specs-container {
-      padding: 1rem;
-    }
-  
-    .specs-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .warranty-buttons {
-      flex-wrap: wrap;
-    }
-  }
+}

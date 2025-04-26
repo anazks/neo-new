@@ -7,7 +7,7 @@ import { getMyCart, RemoveFromCart, cartIncrement, cartDecrement, CreateOrder, A
 import NavBar from '../NavBar/NavBar';
 import { Link } from "react-router-dom"; // Assuming you're using React Router
 import BaseURL from "../../../Static/Static";
-
+import Loader from '../Loader/Loader'
 import RenderRazorpay from "../RazorPay/RenderRazorpay";
 
 
@@ -297,12 +297,13 @@ const CartPage = () => {
       <div className="cart-content" style={{ marginTop: "120px" }}>
         {isLoading ? (
           <div className="loading-container">
-            <motion.div 
+            {/* <motion.div 
               className="loading-spinner"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
-            <p>Loading your cart...</p>
+            <p>Loading your cart...</p> */}
+            <Loader/>
           </div>
         ) : error ? (
           <motion.div 
@@ -348,7 +349,7 @@ const CartPage = () => {
                 >
                   <div className="empty-cart-icon">🛒</div>
                   <p>Your cart is empty</p>
-                  <Link to="/shop">
+                  <Link to="/products" className="link">
                     <motion.button 
                       className="continue-shopping"
                       whileHover={{ scale: 1.05, backgroundColor: "#ff4081" }}
@@ -403,7 +404,7 @@ const CartPage = () => {
                           </motion.button>
                         </div>
                       </div>
-                      <div className="item-price">
+                      <div className="item-price" style={{color:'white'}}>
                         ₹ {item.price.toLocaleString("en-IN")}/-
                       </div>
                       <div className="item-quantity">

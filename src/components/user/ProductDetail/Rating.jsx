@@ -3,6 +3,7 @@ import './Rating.css';
 
 function Rating() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
 
   const reviews = [
     {
@@ -13,46 +14,6 @@ function Rating() {
       content: "Fan controller and it's software are stable and reliable.",
       rating: 5
     },
-    {
-        id: 1,
-        author: "Ryan",
-        date: "12/04/23",
-        title: "NZXT Sets the Standard",
-        content: "Fan controller and it's software are stable and reliable.",
-        rating: 5
-      },
-      {
-        id: 1,
-        author: "Ryan",
-        date: "12/04/23",
-        title: "NZXT Sets the Standard",
-        content: "Fan controller and it's software are stable and reliable.",
-        rating: 5
-      },
-      {
-        id: 1,
-        author: "Ryan",
-        date: "12/04/23",
-        title: "NZXT Sets the Standard",
-        content: "Fan controller and it's software are stable and reliable.",
-        rating: 5
-      },
-      {
-        id: 1,
-        author: "Ryan",
-        date: "12/04/23",
-        title: "NZXT Sets the Standard",
-        content: "Fan controller and it's software are stable and reliable.",
-        rating: 5
-      },
-      {
-        id: 1,
-        author: "Ryan",
-        date: "12/04/23",
-        title: "NZXT Sets the Standard",
-        content: "Fan controller and it's software are stable and reliable.",
-        rating: 5
-      },
     {
       id: 2,
       author: "Ryan",
@@ -76,6 +37,46 @@ function Rating() {
       title: "NZXT Sets the Standard",
       content: "Fan controller and it's software are stable and reliable.",
       rating: 5
+    },
+    {
+      id: 5,
+      author: "Ryan",
+      date: "12/04/23",
+      title: "NZXT Sets the Standard",
+      content: "Fan controller and it's software are stable and reliable.",
+      rating: 5
+    },
+    {
+      id: 6,
+      author: "Ryan",
+      date: "12/04/23",
+      title: "NZXT Sets the Standard",
+      content: "Fan controller and it's software are stable and reliable.",
+      rating: 5
+    },
+    {
+      id: 7,
+      author: "Ryan",
+      date: "12/04/23",
+      title: "NZXT Sets the Standard",
+      content: "Fan controller and it's software are stable and reliable.",
+      rating: 5
+    },
+    {
+      id: 8,
+      author: "Ryan",
+      date: "12/04/23",
+      title: "NZXT Sets the Standard",
+      content: "Fan controller and it's software are stable and reliable.",
+      rating: 5
+    },
+    {
+      id: 9,
+      author: "Ryan",
+      date: "12/04/23",
+      title: "NZXT Sets the Standard",
+      content: "Fan controller and it's software are stable and reliable.",
+      rating: 5
     }
   ];
 
@@ -93,8 +94,18 @@ function Rating() {
     ));
   };
 
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="rating-container">
+    <div className={`rating-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      <div className="theme-toggle">
+        <button onClick={toggleTheme} className="theme-button">
+          {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+      </div>
+      
       <h1 className="rating-title">REVIEWS</h1>
       
       <div className="rating-summary">

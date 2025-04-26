@@ -1,9 +1,10 @@
-// React Component - Quick.jsx with updated hover behavior and sizes
+// React Component - Quick.jsx with dark mode and red shadows
 import React, { useState, useEffect, useRef } from 'react';
 import './quick.css';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoArrowForwardCircleSharp } from "react-icons/io5";
 import { RiShieldKeyholeLine } from "react-icons/ri";
+import { FaFire } from "react-icons/fa";
 
 function Quick() {
   // State to track which product is being hovered
@@ -17,7 +18,7 @@ function Quick() {
   // Ref for parallax effect on the banner
   const bannerRef = useRef(null);
   
-  // Product data
+  // Product data with updated colors for dark mode
   const products = [
     { 
       id: 'aspire', 
@@ -25,7 +26,7 @@ function Quick() {
       price: '$1,40,000/-', 
       description: 'Performance Minimal, Sleek',
       image: "http://www.pngmart.com/files/4/Gaming-Computer-PNG-Free-Download.png",
-      color: "linear-gradient(135deg, #2a2a72 0%, #009ffd 74%)"
+      color: "linear-gradient(135deg, #1a0022 0%, #8b0000 74%)" // Dark purple to dark red
     },
     { 
       id: 'ion', 
@@ -33,7 +34,7 @@ function Quick() {
       price: '$95,000/-', 
       description: 'Compact Power',
       image: "https://static.vecteezy.com/system/resources/previews/048/412/757/non_2x/modern-gaming-pc-isolated-on-transparent-free-png.png",
-      color: "linear-gradient(135deg, #000000 0%, #434343 74%)"
+      color: "linear-gradient(135deg, #000000 0%, #550000 74%)" // Black to dark red
     },
     { 
       id: 'e75', 
@@ -41,7 +42,7 @@ function Quick() {
       price: '$1,20,000/-', 
       description: 'Professional Grade',
       image: "https://parspng.com/wp-content/uploads/2023/02/computerpng.parspng.com-4.png",
-      color: "linear-gradient(135deg, #5f2c82 0%, #49a09d 74%)"
+      color: "linear-gradient(135deg, #2d0036 0%, #ff3333 94%)" // Dark purple to bright red
     },
     { 
       id: 'phantom', 
@@ -49,7 +50,7 @@ function Quick() {
       price: '$1,60,000/-', 
       description: 'Ultimate Gaming',
       image: "https://parspng.com/wp-content/uploads/2023/02/computerpng.parspng.com-4.png",
-      color: "linear-gradient(135deg, #380036 0%, #0CBABA 74%)"
+      color: "linear-gradient(135deg, #120036 0%, #c00000 94%)" // Dark blue to red
     },
   ];
 
@@ -130,27 +131,27 @@ function Quick() {
   };
 
   return (
-    <div className="fullWindow">
+    <div className="fullWindow dark-theme">
       <div className="mainBox">
         {/* Banner Section */}
         <div className="banner parallax" ref={bannerRef}>
           <div className="imageContainer">
-            <div className="glow-overlay"></div>
+            <div className="red-overlay"></div>
           </div>
           <div className="subcribe">
             <div className="contentsdiv">
               <div>
-                <p className="squad-text">SQUAD GAMING</p>
-                <h2 className="gaming">Gaming Computers</h2>
-                <p className="partnership-text">In partnership with top brands</p>
+                <p className="squad-text">INFERNO GAMING</p>
+                <h2 className="gaming">Gaming Rigs <FaFire className="fire-icon pulse-red" /></h2>
+                <p className="partnership-text">Built with cutting-edge components</p>
               </div>
             </div>
             <div className="arrow">
-              <IoIosArrowForward className="arrowText pulse" />
+              <IoIosArrowForward className="arrowText pulse-red" />
             </div>
             <div className="sub">
               <div className="exclusive">
-                <p>Get exclusive offers and early access to new releases</p>
+                <p>Unlock exclusive gaming deals & early access</p>
               </div>
               <button className="subscribe-button">
                 <span>Subscribe</span>
@@ -171,7 +172,7 @@ function Quick() {
                 onMouseEnter={() => handleMouseEnter(product.id)}
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="card-glow"></div>
+                <div className="red-glow"></div>
                 <div className="product-content">
                   {/* Content for expanded view */}
                   {hoveredProduct === product.id && (
@@ -179,15 +180,15 @@ function Quick() {
                       <div className="product-details">
                         <div className="subheading-prebuild">
                           <RiShieldKeyholeLine className="prebuild-icon spin-on-hover" />
-                          <span>PRE-BUILT GAMING PC</span>
+                          <span>CUSTOM GAMING PC</span>
                         </div>
                         <h2 className="heading">{product.name}</h2>
                         <p className="subheading">{product.description}</p>
                         <div className="rowCIricle">
-                          <div className="pink"></div>
-                          <div className="yellow"></div>
-                          <div className="blue"></div>
+                          <div className="red"></div>
+                          <div className="crimson"></div>
                           <div className="black"></div>
+                          <div className="gray"></div>
                         </div>
                         <p className="price">{product.price}</p>
                         <button className="buyNow-button">
@@ -210,7 +211,7 @@ function Quick() {
                         <img 
                           src={product.image} 
                           alt={product.name} 
-                          className="imgage floating" 
+                          className="imgage floating red-shadow" 
                         />
                       </div>
                       <div className="PcName">

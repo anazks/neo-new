@@ -11,7 +11,8 @@ import {
 } from 'react-icons/fi';
 import { AllOrders } from '../../../Services/Order';
 import './order.css';
-
+// import { Loader } from 'lucide-react';
+import Loader from '../../../Loader/Loader';
 function Order() {
   const [orders, setOrders] = useState([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
@@ -71,10 +72,7 @@ function Order() {
   if (loading) {
     return (
       <div className="admin-container">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Loading orders...</p>
-        </div>
+          <Loader/>
       </div>
     );
   }
