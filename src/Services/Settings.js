@@ -64,6 +64,7 @@ export const deleteCategory =  async(id)=>{
 export const getTax = async()=>{
     try {
       let taxes = await Axios.get('/inventory/taxes/')  
+      console.log(taxes,"taxes")
       return taxes
     } catch (error) {
         console.log(error)
@@ -116,5 +117,82 @@ export const viewAllOverView =  async()=>{
         
     } catch (error) {
         
+    }
+}
+
+export const addProduct = async (productDetails) => {
+    try {
+        console.log("Product Details Input:", productDetails);
+        
+        const data = new FormData();
+        
+        // Required fields with proper type conversions
+        data.append('product_code', productDetails.get('product_code') || '');
+        data.append('name', productDetails.get('name'));
+        data.append('brand', Number(productDetails.get('brand'))); // Make sure it's a number
+        data.append('description', productDetails.get('description'));
+        data.append('category', Number(productDetails.get('category'))); // Make sure it's a number
+        data.append('mrp', Number(productDetails.get('mrp'))); // Convert to number
+        data.append('price', Number(productDetails.get('price'))); // Convert to number
+        data.append('stock', Number(productDetails.get('stock'))); // Convert to integer
+        data.append('whats_inside', productDetails.get('whats_inside'));
+        
+        // Optional fields (only append if available)
+        const discount = productDetails.get('discount_price');
+        if (discount && discount !== '') {
+            data.append('discount_price', Number(discount));
+        }
+        
+        const isAvailable = productDetails.get('is_available');
+        if (isAvailable !== null && isAvailable !== undefined) {
+            data.append('is_available', isAvailable === 'true' || isAvailable === true ? true : false);
+        }
+        
+        const priceBT = productDetails.get('price_before_tax');
+        if (priceBT && priceBT !== '') {
+            data.append('price_before_tax', Number(priceBT));
+        }
+        
+        const taxAmount = productDetails.get('tax_amount');
+        if (taxAmount && taxAmount !== '') {
+            data.append('tax_amount', Number(taxAmount));
+        }
+        
+        const taxValue = productDetails.get('tax_value');
+        if (taxValue && taxValue !== '') {
+            data.append('tax_value', Number(taxValue)); // Converting to integer
+        }
+        
+        const youtubeUrl = productDetails.get('youtube_url');
+        if (youtubeUrl) {
+            data.append('youtube_url', youtubeUrl);
+        }
+        
+        const moreInfo = productDetails.get('more_info');
+        if (moreInfo) {
+            data.append('more_info', moreInfo);
+        }
+        
+        // Handle file upload - use broacher as shown in the component
+        const broacher = productDetails.get('broacher');
+        if (broacher) {
+            data.append('broacher', broacher);
+        }
+        
+        console.log('FormData entries:');
+        for (let pair of data.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        
+        let response = await Axios.post('/inventory/product_admin/', data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log('Response:', response.data);
+        return response;
+    } catch (error) {
+        console.error('Error adding product:', error.response?.data || error.message || error);
+        throw error;
     }
 }

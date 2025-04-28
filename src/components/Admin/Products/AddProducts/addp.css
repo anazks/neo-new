@@ -1,13 +1,14 @@
-/* Main Container Styles */
+/* Dark Theme Styles for Add Product Form */
 .add-product-container {
   max-width: 800px;
   margin: 20px auto;
   padding: 30px;
-  background-color: #ffffff;
+  background-color: #1e1e2e;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   transition: transform 0.3s ease;
   animation: fadeIn 0.5s ease-out;
+  color: #e0e0e0;
 }
 
 .add-product-container:hover {
@@ -21,7 +22,7 @@
 
 /* Heading Styles */
 h2 {
-  color: #2e7d32;
+  color: #9ecaff;
   margin-bottom: 30px;
   text-align: center;
   font-size: 28px;
@@ -35,7 +36,7 @@ h2:after {
   position: absolute;
   width: 60px;
   height: 4px;
-  background-color: #4CAF50;
+  background-color: #7b68ee;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
@@ -79,7 +80,7 @@ label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #424242;
+  color: #c9c9d1;
   transition: color 0.3s;
 }
 
@@ -91,24 +92,26 @@ select,
 textarea {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid #3a3a4d;
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.3s ease;
-  background-color: #f9f9f9;
+  background-color: #2a2a3c;
+  color: #e0e0e0;
 }
 
 input[type="file"] {
   padding: 10px 5px;
-  background-color: #f9f9f9;
+  background-color: #2a2a3c;
   border-radius: 8px;
-  border: 2px dashed #e0e0e0;
+  border: 2px dashed #3a3a4d;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: #e0e0e0;
 }
 
 input[type="file"]:hover {
-  border-color: #4CAF50;
+  border-color: #7b68ee;
 }
 
 /* Checkbox Styles */
@@ -128,7 +131,7 @@ input[type="file"]:hover {
   margin-right: 10px;
   width: 18px;
   height: 18px;
-  accent-color: #4CAF50;
+  accent-color: #7b68ee;
 }
 
 /* Textarea Styles */
@@ -136,6 +139,7 @@ textarea {
   resize: vertical;
   min-height: 100px;
   font-family: inherit;
+  color: #e0e0e0;
 }
 
 /* Focus States */
@@ -143,27 +147,27 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.25);
-  background-color: #ffffff;
+  border-color: #7b68ee;
+  box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.25);
+  background-color: #2d2d40;
 }
 
 input:hover,
 select:hover,
 textarea:hover {
-  border-color: #81c784;
+  border-color: #9370db;
 }
 
 /* Error States */
 input.error,
 select.error,
 textarea.error {
-  border-color: #f44336;
-  background-color: #fff8f8;
+  border-color: #ff5370;
+  background-color: #3a2a2a;
 }
 
 .error-message {
-  color: #f44336;
+  color: #ff5370;
   font-size: 12px;
   margin-top: 5px;
   animation: shake 0.5s ease-in-out;
@@ -182,7 +186,7 @@ textarea.error {
 }
 
 .btn-add-product {
-  background-color: #4CAF50;
+  background-color: #7b68ee;
   color: white;
   border: none;
   padding: 14px 32px;
@@ -191,20 +195,20 @@ textarea.error {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(123, 104, 238, 0.3);
   position: relative;
   overflow: hidden;
 }
 
 .btn-add-product:hover {
-  background-color: #2e7d32;
+  background-color: #6a5acd;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 6px 16px rgba(123, 104, 238, 0.4);
 }
 
 .btn-add-product:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 2px 8px rgba(123, 104, 238, 0.3);
 }
 
 .btn-add-product:after {
@@ -239,7 +243,7 @@ textarea.error {
 /* Select Dropdown Styling */
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c9c9d1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
@@ -248,14 +252,14 @@ select {
 
 /* Section Dividers */
 .form-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #3a3a4d;
   padding-bottom: 20px;
   margin-bottom: 25px;
 }
 
 .form-section-title {
   font-size: 18px;
-  color: #2e7d32;
+  color: #9ecaff;
   margin-bottom: 15px;
 }
 
@@ -263,14 +267,14 @@ select {
 .optional-field::after {
   content: " (optional)";
   font-size: 14px;
-  color: #757575;
+  color: #8a8a9a;
   font-weight: normal;
 }
 
 /* Required field indicator */
 .required-field::after {
   content: " *";
-  color: #f44336;
+  color: #ff5370;
 }
 
 /* Loading state for submit button */
@@ -299,11 +303,26 @@ select {
 
 /* Success feedback animation */
 @keyframes successPulse {
-  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-  70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(123, 104, 238, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(123, 104, 238, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(123, 104, 238, 0); }
 }
 
 .form-success {
   animation: successPulse 1.5s ease-out;
+}
+
+/* Placeholder styling */
+::placeholder {
+  color: #6c6c7c;
+}
+
+/* File name display adjustment for dark theme */
+input[type="file"] + span {
+  color: #a0a0b0;
+}
+
+/* Discount percentage color for dark theme */
+div[style*="color: #4CAF50"] {
+  color: #a5d6a7 !important;
 }

@@ -210,11 +210,28 @@ export default function Orders() {
                       </span>
                     </div>
                   </div>
-                  
+                  {
+                    order.items[0]?.image ? (
+                      <div className="order-image">
+                        <img
+                          alt={order.items[0].product_name}
+                          src={order.items[0].image}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = order.items[0].product_image;
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="order-image-placeholder">
+                        <span>No Image</span>
+                      </div>
+                    )
+                  }
                   <div className="order-summary" style={{
                     backgroundImage: darkMode 
                       ? 'linear-gradient(rgba(30, 30, 30, 0.8), rgba(20, 20, 20, 0.9))' 
-                      : `url('https://i5.walmartimages.com/asr/bde145d4-6955-4a0e-a6df-ccb87c186b00_1.f878d0cc5af1145ec8598ca158a1337b.jpeg')`,
+                      : `url(${order.items[0]?.product_image || ''})`,
                     backgroundSize: 'cover'
                   }}>
                     <div 
@@ -261,19 +278,20 @@ export default function Orders() {
                       {order.items.map((item) => (
                         <div key={`${order.id}-${item.id}`} className="order-item-row">
                           <div className="item-image">
-                            {item.image ? (
-                              <img 
-                                alt={item.name}
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = '/images/placeholder-product.png';
-                                }}
-                              />
-                            ) : (
-                              <div className="image-placeholder">
-                                <span>No Image</span>
-                              </div>
-                            )}
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.name || item.product_name}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = item.product_image;
+                              }}
+                            />
+                          ) : (
+                            <div className="image-placeholder">
+                              <span>No Image</span>
+                            </div>
+                          )}
                           </div>
                           
                           <div className="item-details">
