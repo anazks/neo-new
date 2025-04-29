@@ -1,4 +1,4 @@
-/* dark-inside.css */
+/* dark-inside.css - Enhanced with table styling */
 
 .dark-container {
   width: 100%;
@@ -22,7 +22,9 @@
 .dark-header h1 {
   font-size: 2rem;
   margin: 0 0 1rem 0;
-  color: #4ecca3;
+  background: linear-gradient(135deg, #8b54fd, #00e5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: 1px;
 }
 
@@ -38,6 +40,18 @@
   background: #1e1e1e;
   border-radius: 12px;
   border: 1px solid #2c2c2c;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-warranty::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #8b54fd, #00e5ff);
 }
 
 .dark-warranty h2 {
@@ -76,43 +90,92 @@
   color: #121212;
 }
 
-.dark-specs h2 {
-  margin: 0 0 1.5rem 0;
+/* Enhanced Specifications Table Styling */
+.dark-specs-section {
+  margin-bottom: 2.5rem;
+}
+
+.dark-specs-category-title {
   font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #4ecca3;
   color: #e0e0e0;
+  position: relative;
 }
 
-.dark-specs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.dark-spec-card {
-  padding: 1rem;
-  background: #1e1e1e;
+.dark-specs-table-container {
+  overflow-x: auto;
   border-radius: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #1e1e1e;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #2c2c2c;
 }
 
-.dark-spec-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-color: #4ecca3;
+.dark-specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #e0e0e0;
 }
 
-.dark-spec-title {
-  font-size: 0.875rem;
+.dark-specs-table thead {
+  background: #2c2c2c;
+  border-bottom: 2px solid #4ecca3;
+}
+
+.dark-specs-table th {
+  text-align: left;
+  padding: 1rem;
   font-weight: 600;
-  color: #9e9e9e;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #e0e0e0;
 }
 
-.dark-spec-data {
-  font-size: 1rem;
+.dark-specs-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.dark-specs-table tbody tr:hover {
+  background-color: rgba(78, 204, 163, 0.1);
+}
+
+.dark-specs-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid #2c2c2c;
+}
+
+.dark-specs-label {
+  padding: 1rem;
   font-weight: 500;
+  width: 35%;
+  color: #9e9e9e;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.dark-specs-value {
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dark-specs-detail-chip {
+  display: inline-block;
+  background: rgba(78, 204, 163, 0.15);
   color: #4ecca3;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  border: 1px solid rgba(78, 204, 163, 0.3);
+  transition: all 0.2s ease;
+}
+
+.dark-specs-detail-chip:hover {
+  background: rgba(78, 204, 163, 0.25);
+  transform: translateY(-1px);
 }
 
 .dark-loading {
@@ -143,13 +206,14 @@
   .dark-container {
     padding: 1rem;
   }
-
-  .dark-specs-grid {
-    grid-template-columns: 1fr;
+  
+  .dark-specs-label, 
+  .dark-specs-value {
+    padding: 0.75rem;
   }
-
-  .dark-warranty-options {
-    flex-wrap: wrap;
+  
+  .dark-specs-table th {
+    padding: 0.75rem;
   }
 }
 
@@ -159,11 +223,17 @@
   }
   
   .dark-warranty h2,
-  .dark-specs h2 {
+  .dark-specs-category-title {
     font-size: 1.3rem;
   }
   
-  .dark-spec-card {
-    padding: 0.8rem;
+  .dark-specs-label,
+  .dark-specs-value {
+    padding: 0.5rem;
+  }
+  
+  .dark-specs-detail-chip {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
   }
 }

@@ -1,8 +1,8 @@
 /* BestPairedWith-Dark.css */
 
 .paired-section {
-  background: linear-gradient(135deg, #1e1e2f 0%, #121221 100%);
-  padding: 1.5rem 1rem;
+  background: linear-gradient(135deg, rgba(40, 10, 80, 0.95), rgba(20, 30, 70, 0.95));
+  padding: 2rem 1rem;
   text-align: center;
   font-family: 'Poppins', sans-serif;
   opacity: 0;
@@ -13,6 +13,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
 .paired-section.visible {
@@ -24,73 +26,79 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .paired-title-bar {
-  height: 2px;
-  width: 40px;
-  background-color: #4ecca3;
-  margin: 0 0.8rem;
+  height: 3px;
+  width: 50px;
+  background: linear-gradient(90deg, #8b54fd, #00e5ff);
+  margin: 0 1rem;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(139, 84, 253, 0.6);
 }
 
 .paired-title {
-  font-size: 1.8rem;
-  color: #e0e0e0;
+  font-size: 2rem;
+  color: #ffffff;
   font-weight: 800;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
   margin: 0;
+  background: linear-gradient(90deg, #8b54fd, #00e5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .paired-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.2rem;
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 0.5rem;
-  height: calc(100% - 60px);
+  height: calc(100% - 70px);
 }
 
 .paired-card {
-  background-color: #1a1a25;
+  background: rgba(30, 20, 50, 0.7);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 10px;
-  border: 1px solid #2c2c3a;
+  padding: 12px;
+  border: 1px solid rgba(139, 84, 253, 0.3);
 }
 
 .paired-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
-  border-color: #4ecca3;
+  transform: translateY(-8px);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 84, 253, 0.3);
+  border-color: rgba(0, 229, 255, 0.6);
 }
 
 .paired-image-container {
   height: 55%;
   position: relative;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .paired-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
   filter: brightness(0.9);
 }
 
 .paired-card:hover .paired-image {
-  transform: scale(1.05);
-  filter: brightness(1);
+  transform: scale(1.08);
+  filter: brightness(1.1);
 }
 
 .paired-overlay {
@@ -99,12 +107,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(25, 15, 40, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 
 .paired-card:hover .paired-overlay {
@@ -112,24 +120,26 @@
 }
 
 .paired-quick-view {
-  background-color: #4ecca3;
-  color: #121212;
-  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, rgba(139, 84, 253, 0.9), rgba(0, 229, 255, 0.9));
+  color: #ffffff;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(139, 84, 253, 0.5);
+  letter-spacing: 0.5px;
 }
 
 .paired-quick-view:hover {
-  background-color: #3db893;
-  transform: scale(1.05);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
 }
 
 .paired-content {
-  padding: 0.8rem;
+  padding: 1rem 0.5rem;
   height: 45%;
   display: flex;
   flex-direction: column;
@@ -137,56 +147,72 @@
 }
 
 .paired-name {
-  font-size: 0.9rem;
-  color: #e0e0e0;
-  margin-bottom: 0.3rem;
+  font-size: 1rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.5px;
 }
 
 .paired-price {
-  font-size: 1rem;
-  color: #4ecca3;
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
   font-weight: 700;
+  background: linear-gradient(90deg, #8b54fd, #00e5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .paired-cart-btn {
-  background-color: #2a2a35;
-  color: #e0e0e0;
-  border: 1px solid #4ecca3;
-  padding: 0.5rem;
-  font-size: 0.75rem;
+  background: rgba(40, 30, 70, 0.6);
+  color: #ffffff;
+  border: 2px solid rgba(0, 229, 255, 0.6);
+  padding: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  border-radius: 20px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   margin-top: auto;
+  letter-spacing: 0.5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .paired-cart-btn:hover {
-  background-color: #4ecca3;
-  color: #121212;
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(139, 84, 253, 0.9), rgba(0, 229, 255, 0.9));
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(139, 84, 253, 0.5);
 }
 
 .paired-badges {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
 }
 
 .paired-badge {
   display: inline-block;
-  background-color: #383850;
-  color: #4ecca3;
-  font-size: 0.6rem;
+  background: rgba(25, 15, 40, 0.85);
+  color: #00e5ff;
+  font-size: 0.65rem;
   font-weight: 700;
-  padding: 0.2rem 0.6rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 15px;
-  border: 1px solid #4ecca3;
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.8px;
+}
+
+/* Active card state */
+.paired-card.paired-active {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 84, 253, 0.3);
+  border-color: rgba(0, 229, 255, 0.6);
 }
 
 /* Responsive Styles */
@@ -194,23 +220,28 @@
   .paired-section {
     height: auto;
     min-height: 450px;
-    padding: 1.2rem 0.8rem;
+    padding: 1.5rem 1rem;
   }
   
   .paired-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.2rem;
   }
   
   .paired-title {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
+  }
+  
+  .paired-title-bar {
+    width: 40px;
+    margin: 0 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   .paired-section {
     min-height: 420px;
-    padding: 1rem 0.5rem;
+    padding: 1.2rem 0.8rem;
   }
   
   .paired-grid {
@@ -219,16 +250,21 @@
   }
   
   .paired-card {
-    max-width: 240px;
+    max-width: 260px;
     margin: 0 auto;
   }
   
   .paired-title {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
   
   .paired-title-bar {
-    width: 20px;
-    margin: 0 0.5rem;
+    width: 30px;
+    margin: 0 0.6rem;
+  }
+  
+  .paired-badges {
+    top: 15px;
+    right: 15px;
   }
 }

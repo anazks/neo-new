@@ -22,15 +22,27 @@ function Inside({ product }) {
     );
   }
 
-  // Extract warranty info, inside box content, and attributes dynamically
+  // Extract warranty info and inside box content dynamically
   const warrantyInfo = "1 Year Onsite Warranty";  // You might want to extract from API if available
-  const insideBox = product.whats_inside || "No information available"; 
+  const insideBox = product.whats_inside || "No information available";
 
-  // Extract specifications from the response
-  const specs = product.attributes.map(attr => ({
-    label: attr.attribute.name.toUpperCase(),
-    value: attr.details.length > 0 ? attr.details[0].value : "Not specified"
-  }));
+  // Group attributes by category for better organization
+  const groupAttributesByCategory = () => {
+    if (!product.attributes || !product.attributes.length) return {};
+    
+    const grouped = {};
+    product.attributes.forEach(attr => {
+      const categoryName = attr.attribute.category.name;
+      if (!grouped[categoryName]) {
+        grouped[categoryName] = [];
+      }
+      grouped[categoryName].push(attr);
+    });
+    
+    return grouped;
+  };
+
+  const groupedAttributes = groupAttributesByCategory();
 
   return (
     <div className={`dark-container ${isAnimated ? 'dark-fade-in' : ''}`}>
@@ -39,34 +51,45 @@ function Inside({ product }) {
         <p className="dark-package-content">{insideBox}</p>
       </div>
 
-      <div className="dark-warranty">
-        <h2>WARRANTY INFO</h2>
-        <p>{warrantyInfo}</p>
-        <div className="dark-warranty-bundles">
-          <p>AMC Bundles Available at Checkout (Years)</p>
-          <div className="dark-warranty-options">
-            <button>+1</button>
-            <button>+2</button>
-            <button>+3</button>
-          </div>
-        </div>
-      </div>
+      
 
-      <div className="dark-specs">
-        <h2>SPECIFICATIONS</h2>
-        <div className="dark-specs-grid">
-          {specs.length > 0 ? (
-            specs.map((spec, index) => (
-              <div key={index} className="dark-spec-card">
-                <div className="dark-spec-title">{spec.label}</div>
-                <div className="dark-spec-data">{spec.value}</div>
-              </div>
-            ))
-          ) : (
-            <p>No specifications available.</p>
-          )}
+      {/* Display specifications in enhanced table format grouped by category */}
+      {Object.keys(groupedAttributes).length > 0 ? (
+        Object.entries(groupedAttributes).map(([categoryName, attributes]) => (
+          <div key={categoryName} className="dark-specs-section">
+            <h3 className="dark-specs-category-title">{categoryName.toUpperCase()}</h3>
+            <div className="dark-specs-table-container">
+              <table className="dark-specs-table">
+                <thead>
+                  <tr>
+                    <th>Specification</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {attributes.map((attr) => (
+                    <tr key={attr.id} className="dark-specs-row">
+                      <td className="dark-specs-label">{attr.attribute.name}</td>
+                      <td className="dark-specs-value">
+                        {attr.details.map((detail, idx) => (
+                          <span key={detail.id} className="dark-specs-detail-chip">
+                            {detail.value}
+                          </span>
+                        ))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="dark-specs-section">
+          <h2>SPECIFICATIONS</h2>
+          <p>No specifications available.</p>
         </div>
-      </div>
+      )}
     </div>
   );
 }

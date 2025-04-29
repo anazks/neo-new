@@ -39,20 +39,22 @@ function ProductInventory() {
 
   const handleEdit = (productId) => {
     console.log(`Edit product ${productId}`);
-    // Add your edit logic here
+    navigate(`/admin/Updateproducts/${productId}`); // Updated this line
   };
 
   const handleDelete = (productId) => {
     console.log(`Delete product ${productId}`);
     // Add your delete logic here
   };
-const addNewProduct = ()=>{
-  try {
-    navigate('/admin/AddProduct');
-  } catch (error) {
-    console.log(error);
-  }
-}
+
+  const addNewProduct = () => {
+    try {
+      navigate('/admin/AddProduct');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Filter products based on search term and category
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||

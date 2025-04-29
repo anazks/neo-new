@@ -6,11 +6,12 @@ function BestPairedWith() {
   const [activeProduct, setActiveProduct] = useState(null);
 
   useEffect(() => {
+    // Use Intersection Observer for scroll animation
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         setIsVisible(true);
       }
-    }, { threshold: 0.1 });
+    }, { threshold: 0.2 });
 
     const sectionElement = document.querySelector('.paired-section');
     if (sectionElement) observer.observe(sectionElement);
@@ -51,6 +52,18 @@ function BestPairedWith() {
     setActiveProduct(index);
   };
 
+  const handleQuickView = (index, e) => {
+    e.stopPropagation();
+    // Implement quick view functionality here
+    console.log(`Quick view for product ${index}`);
+  };
+
+  const handleAddToCart = (index, e) => {
+    e.stopPropagation();
+    // Implement add to cart functionality here
+    console.log(`Added product ${index} to cart`);
+  };
+
   return (
     <div className={`paired-section ${isVisible ? 'visible' : ''}`}>
       <div className="paired-header">
@@ -78,13 +91,21 @@ function BestPairedWith() {
                 }}
               />
               <div className="paired-overlay">
-                <button className="paired-quick-view">Quick View</button>
+                <button 
+                  className="paired-quick-view"
+                  onClick={(e) => handleQuickView(index, e)}
+                >
+                  Quick View
+                </button>
               </div>
             </div>
             <div className="paired-content">
               <h3 className="paired-name">{product.name}</h3>
               <p className="paired-price">{product.price}</p>
-              <button className="paired-cart-btn">
+              <button 
+                className="paired-cart-btn"
+                onClick={(e) => handleAddToCart(index, e)}
+              >
                 <span>ADD TO CART</span>
               </button>
             </div>
