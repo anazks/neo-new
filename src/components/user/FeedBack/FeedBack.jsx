@@ -1,261 +1,393 @@
-import React, { useEffect, useState } from "react";
-import "./feedback.css";
+import { useState, useEffect } from "react";
 
-function FeedBack() {
+export default function FeedbackComponent() {
   const [counter, setCounter] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Set theme to light/white mode by default
-    document.body.classList.add('light-theme');
-    
+    // Set visibility after a small delay to trigger animations
+    const visibilityTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+
     // Counter animation
-    const interval = setInterval(() => {
+    const counterInterval = setInterval(() => {
       setCounter(prev => {
         if (prev < 1000) {
           return prev + 20;
         } else {
-          clearInterval(interval);
+          clearInterval(counterInterval);
           return 1000;
         }
       });
     }, 30);
 
     return () => {
-      clearInterval(interval);
-      document.body.classList.remove('light-theme');
+      clearTimeout(visibilityTimer);
+      clearInterval(counterInterval);
     };
   }, []);
 
   return (
-    <div className="feedback light-mode">
-      <div className="leftB">
-        <h1 className="title-text">
-          Don't Just Take our Word, Listen to Our Customers
-        </h1>
+    <div className={`feedback-wrapper ${isVisible ? 'feedback-visible' : ''}`}>
+      <div className="feedback-left-section">
+        <h1 className="feedback-main-title">Don't Just Take our Word, Listen to Our Customers</h1>
         
-        <div className="ShortLine"></div>
+        <div className="feedback-red-line"></div>
         
-        <div className="bottomBox">
-          <h2 className="subtitle-text">
-            Neo Tokyo In Numbers
-          </h2>
+        <div className="feedback-stats-section">
+          <h2 className="feedback-subtitle">Neo Tokyo In Numbers</h2>
           
-          <div className="stats-container">
-            <div className="contentsTokio">
-              <div className="counter-container">
-                <h1 className="thousand">
-                  {counter}
-                  <span className="plus-icon"><b>+</b></span>
-                </h1>
-              </div>
-              <span className="build">
-                Completed Builds
-              </span>
+          <div className="feedback-counter-box">
+            <div className="feedback-counter">
+              {counter}<span className="feedback-plus">+</span>
             </div>
-            
-            <div className="numbers">
-              <div className="business-entity">
-                <span>50+ Business Entities</span>
-              </div>
-              
-              <div className="active-customers">
-                <span>500+ Active Customers</span>
-              </div>
-            </div>
+            <span className="feedback-counter-label">Completed Builds</span>
+          </div>
+          
+          <div className="feedback-additional-stats">
+            <div className="feedback-stat-item feedback-stat-item-1">50+ Business Entities</div>
+            <div className="feedback-stat-item feedback-stat-item-2">500+ Active Customers</div>
           </div>
         </div>
       </div>
       
-      <div className="rightB">
-        {/* <div className="gray-box"></div> */}
+      <div className="feedback-right-section">
+        <div className="feedback-content-box"></div>
       </div>
       
       <style jsx>{`
-      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap');
-        /* Light theme variables */
-        :root {
-          --bg-color: #ffffff;
-          --text-color: #333333;
-          --accent-color: #ff0055;
-          --card-bg: #ffffff;
-          --shadow-color: rgba(0, 0, 0, 0.05);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Poppins:wght@300;400;600;700&display=swap');
         
-        /* Global light theme styles */
-        body.light-theme {
-          background-color: #ffffff;
-          color: #333333;
-        }
-        
-        /* Component styles */
-        .feedback {
-          width: 95vw;
-          height: 100vh;
-          padding: 45px;
+        .feedback-wrapper {
+          width: 97vw;
+          height: 98vh;
+          padding: 40px;
           background-color: white;
-          border-radius: 24px;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
           display: flex;
-          flex-wrap: wrap;
           justify-content: space-between;
           align-items: center;
           position: relative;
           overflow: hidden;
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.7s ease, transform 0.7s ease;
         }
         
-        /* Removing animations */
+        .feedback-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
         
-        /* Layout and styling */
-        .leftB {
+        .feedback-left-section {
           width: 48%;
-          padding: 0;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          position: relative;
-          z-index: 1;
+          opacity: 0;
+          transform: translateX(-20px);
+          transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
         }
         
-        .title-text {
-          font-size: 2.5rem;
-          font-weight: bold;
-          margin-bottom: 1rem;
+        .feedback-visible .feedback-left-section {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .feedback-main-title {
           font-family: 'Montserrat', sans-serif;
-          color: var(--text-color);
+          font-size: 2.5rem;
+          font-weight: 300;
+          line-height: 1.2;
+          color: #222;
+          margin-bottom: 1rem;
+          position: relative;
+          animation: fadeInDown 1s ease forwards;
+          opacity: 0;
+          animation-delay: 0.5s;
         }
         
-        .ShortLine {
-          width: 80px;
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .feedback-red-line {
+          width: 120px;
           height: 4px;
-          background-color: var(--accent-color);
+          background-color: #ff0055;
           margin: 1rem 0 2rem 0;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 1s ease;
+          animation: expandLine 1.2s ease forwards;
+          animation-delay: 0.8s;
         }
         
-        .subtitle-text {
+        @keyframes expandLine {
+          from {
+            transform: scaleX(0);
+          }
+          to {
+            transform: scaleX(1);
+          }
+        }
+        
+        .feedback-subtitle {
+          font-family: 'Poppins', sans-serif;
           font-size: 1.5rem;
+          font-weight: 600;
           margin-bottom: 1.5rem;
-          color: var(--text-color);
+          color: #333;
+          opacity: 0;
+          animation: fadeIn 1s ease forwards;
+          animation-delay: 1s;
         }
         
-        .stats-container {
-          display: flex;
-          flex-direction: column;
-          gap: 25px;
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
         
-        .thousand {
+        .feedback-stats-section {
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeInUp 1s ease forwards;
+          animation-delay: 1.2s;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .feedback-counter-box {
+          margin-bottom: 1.5rem;
+        }
+        
+        .feedback-counter {
+          font-family: 'Montserrat', sans-serif;
           font-size: 3.5rem;
           font-weight: 700;
-          margin-bottom: 0.5rem;
-          color: var(--text-color);
+          color: #222;
           display: flex;
           align-items: center;
         }
         
-        .plus-icon {
+        .feedback-plus {
           font-size: 2.5rem;
           margin-left: 5px;
-          color: var(--text-color);
+          color: #ff0055;
+          animation: pulse 2s infinite;
         }
         
-        .build {
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        
+        .feedback-counter-label {
           display: block;
+          font-family: 'Poppins', sans-serif;
           font-size: 1.1rem;
           color: #555;
           margin-top: 0.5rem;
         }
         
-        .numbers {
+        .feedback-additional-stats {
           display: flex;
           gap: 20px;
           margin-top: 20px;
         }
         
-        .business-entity, .active-customers {
+        .feedback-stat-item {
           padding: 10px 15px;
-          color: #ffffff;
-          font-size: 1.1rem;
-          background-color: #000000;
-          margin-bottom: 10px;
-          border-radius: 4px;
-        }
-        
-        .business-entity span, .active-customers span {
+          background-color: #222;
+          color: white;
+          font-family: 'Poppins', sans-serif;
+          font-size: 1rem;
           font-weight: 500;
+          border-radius: 4px;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          opacity: 0;
         }
         
-        .rightB {
+        .feedback-stat-item:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feedback-stat-item-1 {
+          animation: slideIn 0.5s ease forwards;
+          animation-delay: 1.5s;
+        }
+        
+        .feedback-stat-item-2 {
+          animation: slideIn 0.5s ease forwards;
+          animation-delay: 1.7s;
+        }
+        
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .feedback-right-section {
           width: 48%;
-          height: 85vh;
-          border-radius: 16px;
-          overflow: hidden;
-          position: relative;
-          z-index: 2;
-          background-color: gray;
+          height: 80vh;
+          opacity: 0;
+          transform: translateX(20px);
+          animation: fadeInRight 1s ease forwards;
+          animation-delay: 1s;
         }
         
-        .gray-box {
+        @keyframes fadeInRight {
+          from {
+            opacity: 0;
+            transform: translateX(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .feedback-content-box {
           width: 100%;
           height: 100%;
-          background-color: #f0f0f0;
+          background-color: #f5f5f5;
           border-radius: 16px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+          transition: transform 0.5s ease, box-shadow 0.5s ease;
+          position: relative;
+          overflow: hidden;
         }
         
-        /* Responsive design */
+        .feedback-content-box:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feedback-content-box::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: linear-gradient(90deg, #ff0055, #ff6b6b);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.5s ease;
+        }
+        
+        .feedback-content-box:hover::after {
+          transform: scaleX(1);
+        }
+        
+        /* Media Queries for Responsive Design */
         @media screen and (max-width: 992px) {
-          .feedback {
+          .feedback-wrapper {
             flex-direction: column;
             padding: 30px;
           }
           
-          .leftB, .rightB {
+          .feedback-left-section {
             width: 100%;
           }
           
-          .ShortLine {
-            margin: 1rem 0 1.5rem 0;
+          .feedback-right-section {
+            display: none; /* Hide the right box in responsive view */
           }
           
-          .rightB {
-            margin-top: 40px;
-            height: 50vh;
+          .feedback-red-line {
+            width: 100px;
+            margin: 1rem 0 1.5rem 0;
           }
         }
         
         @media screen and (max-width: 768px) {
-          .title-text {
+          .feedback-main-title {
             font-size: 2rem;
           }
           
-          .subtitle-text {
+          .feedback-subtitle {
             font-size: 1.3rem;
           }
           
-          .thousand {
+          .feedback-counter {
             font-size: 3rem;
+          }
+          
+          .feedback-red-line {
+            height: 3px;
+            width: 80px;
           }
         }
         
         @media screen and (max-width: 576px) {
-          .numbers {
-            flex-direction: column;
-            gap: 10px;
+          .feedback-wrapper {
+            padding: 25px 20px;
           }
           
-          .title-text {
+          .feedback-additional-stats {
+            flex-direction: column;
+            gap: 15px;
+          }
+          
+          .feedback-main-title {
             font-size: 1.8rem;
           }
           
-          .thousand {
+          .feedback-counter {
             font-size: 2.5rem;
           }
           
-          .subtitle-text {
+          .feedback-subtitle {
             font-size: 1.2rem;
+          }
+          
+          .feedback-red-line {
+            width: 60px;
+            margin: 0.8rem 0 1.2rem 0;
+          }
+          
+          .feedback-stat-item {
+            width: 100%;
+            text-align: center;
           }
         }
       `}</style>
     </div>
   );
 }
-
-export default FeedBack;
