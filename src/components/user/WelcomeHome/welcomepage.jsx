@@ -49,7 +49,10 @@ const ParallaxRevealSection = () => {
         className="panel panel-right"
         style={{ transform: `translateX(${panelTransformPercentage}%)` }}
       >
-        <div className="text-right">TOKYO</div>
+        <div className="text-right">
+          <span className="first-part">TO</span>
+          <span className="second-part">KYO</span>
+        </div>
         <div className="content-wrapper">
           <div className="tagline">
             <span className="tagline-bold">Experience the Power of Personalization</span>       
@@ -112,7 +115,7 @@ const ParallaxRevealSection = () => {
 
           .text-left, .text-right {
             font-size: 3.5rem;
-            font-weight: 800;
+            font-weight: 400;
             font-family: 'Niveau Grotesk', sans-serif;
             color: #111;
             text-transform: uppercase;
@@ -121,6 +124,32 @@ const ParallaxRevealSection = () => {
             margin-bottom: 1.5rem;
             position: relative;
             padding-bottom: 15px;
+          }
+
+          /* Split TOKYO into two parts for styling */
+          .first-part {
+            position: relative;
+            display: inline-block;
+          }
+
+          .second-part {
+            display: inline-block;
+          }
+          
+          /* Only apply red underline to TO - reduced width and increased gap */
+          .first-part::after {
+            content: '';
+            position: absolute;
+            bottom: -25px; /* Increased from -15px to -25px for more gap */
+            left: 0;
+            height: 7px;
+            background: #ff1744;
+            width: 5%; /* Reduced from 10% to 5% for initial width */
+            transition: width 0.4s ease-in-out;
+          }
+
+          .in-view .first-part::after {
+            width: 80%; /* Reduced from 100% to 80% for final width */
           }
 
           /* Position both texts at exact same height */
@@ -143,22 +172,6 @@ const ParallaxRevealSection = () => {
             top: 60%;
             left: 5%;
             width: 90%;
-          }
-
-          /* Only apply red underline to TOKYO */
-          .text-right::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 7px;
-            background: #ff1744;
-            width: 10%;
-            transition: width 0.4s ease-in-out;
-          }
-
-          .in-view .text-right::after {
-            width: 100%;
           }
 
           .headline-right {
@@ -248,74 +261,63 @@ const ParallaxRevealSection = () => {
           /* Responsive Styles */
           @media (max-width: 1200px) {
             .text-left, .text-right {
-              font-size: 4rem;
+              font-size: 3.5rem;
+            }
+            .tagline {
+              max-width: 280px;
             }
           }
 
           @media (max-width: 992px) {
             .text-left, .text-right {
-              font-size: 3.5rem;
+              font-size: 3rem;
             }
             .headline-right {
               font-size: 0.9rem;
+              margin: 2rem 0 0.5rem;
             }
             .tagline {
               font-size: 0.85rem;
+              max-width: 250px;
+            }
+            .content-wrapper {
+              top: 62%;
             }
           }
 
           @media (max-width: 768px) {
+            /* Maintain left-right layout on mobile */
             .panel {
-              width: 100%;
-              height: 50vh;
-              position: relative;
-              transform: none !important;
-            }
-            
-            .panel-left {
-              padding-right: 0;
-            }
-            
-            .panel-right {
-              padding-left: 0;
-              text-align: center;
+              width: 50%; /* Keep panels at 50% width */
+              position: absolute; /* Keep absolute positioning */
             }
             
             .text-left, .text-right {
-              font-size: 3rem;
-              margin-bottom: 1rem;
-              position: relative;
-              top: auto;
-              left: auto;
-              right: auto;
-              transform: none;
+              font-size: 2.5rem;
+              letter-spacing: 0.7em;
             }
             
             .panel-left .text-left {
-              position: relative;
-              top: 50%;
-              right: auto;
-              left: auto;
-              transform: translateY(-50%);
-              text-align: center;
-              width: 100%;
+              right: 10%; /* Adjust position for smaller screen */
             }
             
             .panel-right .text-right {
-              position: relative;
-              top: 50%;
-              left: auto;
-              right: auto;
-              transform: translateY(-50%);
-              text-align: center;
-              width: 100%;
-              margin-bottom: 4rem;
+              left: 10%; /* Adjust position for smaller screen */
             }
             
-            .text-right::after {
-              width: 50%;
-              left: 25%;
-              right: 25%;
+            .first-part::after {
+              bottom: -15px;
+              height: 5px;
+            }
+            
+            .in-view .first-part::after {
+              width: 70%;
+            }
+            
+            .content-wrapper {
+              top: 62%;
+              left: 10%;
+              width: 80%;
             }
             
             .headline-right {
@@ -326,36 +328,100 @@ const ParallaxRevealSection = () => {
             
             .tagline {
               font-size: 0.8rem;
-              max-width: 80%;
-              text-align: center;
-              margin: 1rem auto;
-            }
-            
-            .center-image {
-              position: fixed;
-              z-index: 0;
+              max-width: 90%;
+              margin: 0.8rem 0;
             }
           }
 
           @media (max-width: 576px) {
             .text-left, .text-right {
-              font-size: 2.5rem;
+              font-size: 1.8rem;
+              letter-spacing: 0.5em;
             }
+            
+            .panel-left .text-left {
+              right: 8%;
+            }
+            
+            .panel-right .text-right {
+              left: 8%;
+            }
+            
             .headline-right {
               font-size: 0.7rem;
+              margin-top: 1.2rem;
+              letter-spacing: 0.12em;
             }
+            
             .tagline {
               font-size: 0.75rem;
-              max-width: 90%;
+              line-height: 1.5;
+            }
+            
+            .first-part::after {
+              bottom: -12px;
+              height: 4px;
+            }
+            
+            .content-wrapper {
+              top: 65%;
             }
           }
 
           @media (max-width: 480px) {
             .text-left, .text-right {
-              font-size: 2rem;
+              font-size: 1.5rem;
+              letter-spacing: 0.4em;
             }
+            
+            .panel-left .text-left {
+              right: 5%;
+            }
+            
+            .panel-right .text-right {
+              left: 5%;
+            }
+            
             .headline-right {
+              font-size: 0.65rem;
               letter-spacing: 0.1em;
+            }
+            
+            .tagline {
+              font-size: 0.7rem;
+              line-height: 1.4;
+              max-width: 95%;
+            }
+            
+            .first-part::after {
+              bottom: -10px;
+              height: 3px;
+            }
+            
+            .content-wrapper {
+              top: 65%;
+            }
+          }
+          
+          /* Handle very small devices */
+          @media (max-width: 360px) {
+            .text-left, .text-right {
+              font-size: 1.2rem;
+              letter-spacing: 0.3em;
+            }
+            
+            .headline-right {
+              font-size: 0.6rem;
+              letter-spacing: 0.08em;
+              margin-top: 1rem;
+            }
+            
+            .tagline {
+              font-size: 0.65rem;
+            }
+            
+            .content-wrapper {
+              top: 68%;
             }
           }
         `}

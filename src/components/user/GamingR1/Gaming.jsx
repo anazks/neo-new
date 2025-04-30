@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './gaming.css';
-import triangle from '../../../Images/triangle.png';
+import React, { useState, useEffect } from 'react';
 
+// CSS is included in a separate artifact
+import triangle from '../../../Images/triangle.png';
+import './gaming.css';
 export default function Gaming() {
   // State for typing effect
   const [displayText, setDisplayText] = useState("");
@@ -70,7 +71,7 @@ export default function Gaming() {
     setActiveTriangle(index);
     
     // Add animation class to Project Eden section
-    const edenSection = document.querySelector('.ProjectEden');
+    const edenSection = document.querySelector('.project-eden');
     edenSection.classList.add('content-change');
     
     // Remove animation class after animation completes
@@ -81,44 +82,48 @@ export default function Gaming() {
   
   return (
     <div className='gaming-container'>
-      <header className="head">
-        <div className="textContent">
-          <div className="quote-container">
-            <h1 className="main-title animate-fade-in">
-              <span className="quote-marks">"</span>DOESN'T HAVE TO BE A BOX IN A CORNER. IT CAN BE A...<span className="quote-marks">"</span>
-            </h1>
-          </div>
-          <div className="gaming-wrapper">
-            <h1 className="gaming">
+      {/* Header section - more compact design */}
+      <header className="header">
+        <div className="text-content">
+          <h1 className="main-title animate-fade-in">
+            <span className="quote-marks">"</span>DOESN'T HAVE TO BE A BOX IN A CORNER. IT CAN BE A...<span className="quote-marks">"</span>
+          </h1>
+          
+          <div className="typing-wrapper">
+            <h2 className="typing-text">
               {displayText}
               <span className="cursor">|</span>
-            </h1>
+            </h2>
           </div>
-          <div className="subheading-container">
-            <h5 className="subHeading animate-fade-in">
-              Built with latest in PC hardware, highest quality components and backed by lifetime support
-            </h5>
-          </div>
-          <div className="line animate-grow"></div>
+          
+          <p className="subheading animate-fade-in">
+            Built with latest in PC hardware, highest quality components and backed by lifetime support
+          </p>
+          
+          <div className="divider animate-grow"></div>
         </div>
       </header>
 
-      <div className="bottomSection">
-        <div className="containerBox">
-          <div className="leftBox">
-            <div className="leftDivText">
-              <h1 className="staggered-text animate-slide-in">NEW</h1>
-              <h1 className="staggered-text animate-slide-in-delay-1">
+      {/* Main content section */}
+      <div className="content-section">
+        <div className="flex-container">
+          {/* Left side with staggered text */}
+          <div className="text-box">
+            <div className="staggered-content">
+              <h2 className="staggered-text animate-slide-in">NEW</h2>
+              <h2 className="staggered-text animate-slide-in-delay-1">
                 <span className="highlight-text">EXP</span>ERIENCES
-              </h1>
-              <h1 className="staggered-text animate-slide-in-delay-2">BEGINS HERE</h1>
-              <h4 className="possibilities-text animate-fade-in-delay">Endless Possibilities</h4>
+              </h2>
+              <h2 className="staggered-text animate-slide-in-delay-2">BEGINS HERE</h2>
+              <p className="possibilities-text animate-fade-in-delay">Endless Possibilities</p>
             </div>
           </div>
-          <div className="right-Box">
+          
+          {/* Right side with interactive triangle */}
+          <div className="triangle-box">
             <div className="triangle-container">
               <div className="interactive-triangle-wrapper">
-                {/* Original triangle image with click regions */}
+                {/* Triangle image with click regions */}
                 <img 
                   src={triangle} 
                   alt="Triangle Design" 
@@ -134,7 +139,6 @@ export default function Gaming() {
                     coords="150,50, 150,240, 50,240" 
                     alt="Left triangle" 
                     onClick={() => handleTriangleClick(0)}
-                    className={activeTriangle === 0 ? "active-area" : ""}
                   />
                   {/* Right region */}
                   <area 
@@ -142,7 +146,6 @@ export default function Gaming() {
                     coords="150,50, 250,240, 150,240" 
                     alt="Right triangle" 
                     onClick={() => handleTriangleClick(1)}
-                    className={activeTriangle === 1 ? "active-area" : ""}
                   />
                   {/* Center region */}
                   <area 
@@ -150,7 +153,6 @@ export default function Gaming() {
                     coords="150,120, 200,240, 100,240" 
                     alt="Center triangle" 
                     onClick={() => handleTriangleClick(2)}
-                    className={activeTriangle === 2 ? "active-area" : ""}
                   />
                 </map>
                 
@@ -161,14 +163,15 @@ export default function Gaming() {
           </div>
         </div>
 
-        <div className="ProjectEden">
+        {/* Project Eden section */}
+        <div className="project-eden">
           <div className="eden-left">
             <div className="eden-logo">
               <div className="eden-circles">
                 <div className="circle blue-circle"></div>
                 <div className="circle purple-circle"></div>
               </div>
-              <h2 className="eden-title">{edenContent[activeTriangle].title}</h2>
+              <h3 className="eden-title">{edenContent[activeTriangle].title}</h3>
             </div>
           </div>
           <div className="eden-right">

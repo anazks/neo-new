@@ -1,15 +1,17 @@
+/* Main container styles */
 .gaming-container {
   background-color: white;
   color: #333;
   font-family: 'Arial', sans-serif;
-  max-width: 95%;
-  border-radius: 30px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 20px;
   overflow: hidden;
-  padding: 0;
-  margin: 0;
-  height: 100vh; /* Ensure container takes full viewport height */
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   opacity: 0;
   animation: fadeIn 0.8s ease-in-out forwards;
 }
@@ -19,61 +21,64 @@
   100% { opacity: 1; }
 }
 
-/* Header Section - Reduced padding and sizing */
-.head {
-  padding: 1rem 3rem;
-  position: relative;
+/* ===== HEADER SECTION ===== */
+.header {
+  padding: 0.75rem 1rem;
   text-align: center;
   flex: 0 0 auto;
+  margin-bottom: 0.5rem;
 }
 
-.textContent {
-  position: relative;
+.text-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .main-title {
   color: #666;
-  font-size: 1.8rem; /* Reduced font size */
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
   font-weight: bold;
-  margin-bottom: 0.5rem; /* Reduced margin */
+  margin: 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .quote-marks {
   color: #ff0044;
-  font-size: 2.2rem; /* Reduced font size */
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
   vertical-align: middle;
   font-family: 'Georgia', serif;
 }
 
-.gaming-wrapper {
+.typing-wrapper {
+  height: 3.5rem;
   display: flex;
   justify-content: center;
-  margin: 0.75rem 0; /* Reduced margin */
-  height: 4rem; /* Fixed height to prevent jumping */
+  align-items: center;
+  margin: 0.25rem 0;
 }
 
-.gaming {
+.typing-text {
   color: #000;
-  font-size: 3.5rem; /* Reduced font size */
+  font-size: clamp(1.8rem, 5vw, 3rem);
   font-weight: bold;
   margin: 0;
-  letter-spacing: 2px;
-  position: relative;
-  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
 }
 
-.gaming::after {
+.typing-text::after {
   content: "1";
   display: inline-block;
   color: white;
   background-color: #ff0044;
-  padding: 0 10px;
-  margin-left: 5px;
+  padding: 0 8px;
+  margin-left: 4px;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
 }
 
 .cursor {
@@ -89,15 +94,8 @@
   50% { opacity: 0; }
 }
 
-.subheading-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 0.5rem; /* Reduced margin */
-}
-
-.subHeading {
-  font-size: 0.9rem; /* Reduced font size */
+.subheading {
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
   color: #888;
   margin: 0;
   font-weight: normal;
@@ -105,44 +103,47 @@
   max-width: 600px;
 }
 
-.line {
+.divider {
   height: 2px;
   width: 80%;
-  max-width: 700px;
+  max-width: 600px;
   background-color: #ff0044;
-  margin: 0.75rem 0 1rem 0; /* Reduced margin */
+  margin: 0.25rem 0 0.75rem;
 }
 
-/* Bottom Section - Takes remaining space */
-.bottomSection {
-  padding: 0 3rem; /* Reduced padding */
+/* ===== CONTENT SECTION ===== */
+.content-section {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 0 0.5rem;
 }
 
-/* Container Box */
-.containerBox {
+.flex-container {
   display: flex;
-  margin-bottom: 1.5rem; /* Reduced margin */
-  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
   flex: 1;
 }
 
-.leftBox {
+/* Left side text box */
+.text-box {
   flex: 1;
-  border-right: 4px solid #ff0044;
-  padding-right: 1.5rem; /* Reduced padding */
+  border-right: 3px solid #ff0044;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.leftDivText {
-  padding: 0.5rem 0; /* Reduced padding */
+.staggered-content {
+  padding: 0.25rem 0;
 }
 
 .staggered-text {
-  font-size: 1.8rem; /* Reduced font size */
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
   margin: 0;
-  line-height: 1.1; /* Tighter line height */
+  line-height: 1.1;
   font-weight: bold;
 }
 
@@ -152,16 +153,18 @@
 
 .possibilities-text {
   color: #666;
-  font-size: 0.9rem; /* Reduced font size */
-  margin-top: 0.5rem; /* Reduced margin */
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
+  margin-top: 0.25rem;
   font-weight: normal;
 }
 
-.right-Box {
+/* Right side triangle */
+.triangle-box {
   flex: 1;
-  padding-left: 1.5rem; /* Reduced padding */
+  padding-left: 1rem;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .triangle-container {
@@ -173,10 +176,12 @@
 .interactive-triangle-wrapper {
   position: relative;
   display: inline-block;
+  width: 100%;
+  max-width: 300px;
 }
 
 .triangle-image {
-  max-width: 80%; /* Reduced size */
+  width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
@@ -189,7 +194,7 @@
   position: absolute;
   border: 2px dashed #ff0044;
   opacity: 0.7;
-  pointer-events: none; /* So it doesn't interfere with clicks */
+  pointer-events: none;
   transition: all 0.4s ease;
 }
 
@@ -226,14 +231,14 @@
   100% { opacity: 0.5; }
 }
 
-/* Project Eden Section */
-.ProjectEden {
+/* ===== PROJECT EDEN SECTION ===== */
+.project-eden {
   display: flex;
-  margin-top: 0; /* Removed margin */
   background-color: #f7f7f7;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 1rem; /* Added bottom margin */
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   flex: 0 0 auto;
   transition: all 0.3s ease;
 }
@@ -249,7 +254,7 @@
 
 .eden-left {
   flex: 1;
-  padding: 1.5rem; /* Reduced padding */
+  padding: 1rem;
   background-color: #f0f0f0;
   display: flex;
   flex-direction: column;
@@ -266,9 +271,9 @@
 
 .eden-circles {
   position: relative;
-  width: 100px; /* Reduced size */
-  height: 100px; /* Reduced size */
-  margin-bottom: 1rem; /* Reduced margin */
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0.75rem;
   animation: slowRotate 15s linear infinite;
 }
 
@@ -279,8 +284,8 @@
 
 .circle {
   position: absolute;
-  width: 60px; /* Reduced size */
-  height: 60px; /* Reduced size */
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   transition: all 0.5s ease;
 }
@@ -310,28 +315,27 @@
 }
 
 .eden-title {
-  font-size: 1.4rem; /* Reduced font size */
-  letter-spacing: 3px; /* Reduced spacing */
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: #333;
   margin: 0;
-  padding-top: 0.5rem; /* Reduced padding */
   font-weight: 500;
-  transition: all 0.3s ease;
+  text-align: center;
 }
 
 .eden-right {
   flex: 2;
-  padding: 1.5rem; /* Reduced padding */
+  padding: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .eden-description {
-  font-size: 0.9rem; /* Reduced font size */
-  line-height: 1.4; /* Reduced line height */
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  line-height: 1.4;
   margin: 0;
   color: #333;
-  max-width: 600px;
-  transition: all 0.3s ease;
 }
 
 .highlight {
@@ -383,54 +387,141 @@
   100% { width: 80%; }
 }
 
-/* Image map styles - these are invisible but need proper cursor */
+/* Image map styles */
 area {
   cursor: pointer;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+/* Tablet */
 @media (max-width: 768px) {
-  .head {
-    padding: 1rem;
+  .gaming-container {
+    padding: 0.75rem;
   }
   
-  .bottomSection {
-    padding: 0 1rem;
+  .header {
+    padding: 0.5rem;
   }
   
-  .containerBox, .ProjectEden {
-    flex-direction: column;
+  .text-box {
+    padding-right: 0.75rem;
   }
   
-  .leftBox {
-    border-right: none;
-    border-bottom: 4px solid #ff0044;
-    padding-right: 0;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
+  .triangle-box {
+    padding-left: 0.75rem;
   }
   
-  .right-Box {
-    padding-left: 0;
-    padding-top: 1rem;
+  .project-eden {
+    gap: 0.5rem;
   }
   
-  .eden-left {
-    border-radius: 8px 8px 0 0;
-    padding: 1rem;
-  }
-  
-  .eden-right {
-    padding: 1rem;
+  .eden-left, .eden-right {
+    padding: 0.75rem;
   }
   
   .eden-circles {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
   }
   
   .circle {
     width: 40px;
     height: 40px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .gaming-container {
+    padding: 0.5rem;
+    border-radius: 15px;
+  }
+  
+  .header {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .typing-wrapper {
+    height: 2.75rem;
+  }
+  
+  .flex-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .text-box {
+    border-right: none;
+    border-bottom: 3px solid #ff0044;
+    padding-right: 0;
+    padding-bottom: 0.75rem;
+  }
+  
+  .triangle-box {
+    padding-left: 0;
+    padding-top: 0.5rem;
+  }
+  
+  .project-eden {
+    flex-direction: column;
+  }
+  
+  .eden-left {
+    border-radius: 8px 8px 0 0;
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .eden-right {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .eden-circles {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .circle {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .main-title {
+    font-size: 1rem;
+  }
+  
+  .typing-text {
+    font-size: 1.5rem;
+  }
+  
+  .typing-wrapper {
+    height: 2.25rem;
+  }
+  
+  .staggered-text {
+    font-size: 1.1rem;
+  }
+  
+  .eden-circles {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .circle {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .eden-title {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+  
+  .eden-description {
+    font-size: 0.75rem;
+    line-height: 1.3;
   }
 }
