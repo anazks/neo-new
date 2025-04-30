@@ -1,150 +1,182 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './gaming.css';
 import triangle from '../../../Images/triangle.png';
-import Typewriter from 'typewriter-effect';
-import { motion } from 'framer-motion';
-import { FaGamepad, FaRocket, FaLaptopCode, FaTrophy } from 'react-icons/fa';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 export default function Gaming() {
+  // State for typing effect
+  const [displayText, setDisplayText] = useState("");
+  const [currentPhrase, setCurrentPhrase] = useState(0);
+  const phrases = ["GAMING R1", "PROFESSIONAL SYSTEM", "ENTERPRISE SYSTEM"];
+  
+  // State for triangle selection
+  const [activeTriangle, setActiveTriangle] = useState(0);
+  
+  // Project Eden content for each triangle
+  const edenContent = [
+    {
+      title: "PROJECT EDEN",
+      description: "<span class=\"highlight\">AT</span> Project Eden, we believe in creating a space that's uniquely yours. From personalized styling to climate control, IoT automation to immersive gaming, and a home theater experience, we've carefully chosen every element to guarantee your pleasure and comfort."
+    },
+    {
+      title: "GAMING SUITE",
+      description: "<span class=\"highlight\">IMMERSE</span> yourself in the ultimate gaming experience with our custom-built gaming suites. Featuring state-of-the-art hardware, personalized RGB lighting systems, and ergonomic design for maximum comfort during those intense gaming sessions."
+    },
+    {
+      title: "ENTERPRISE HUB",
+      description: "<span class=\"highlight\">ELEVATE</span> your business operations with our enterprise solutions. Designed for scalability and reliability, our systems feature military-grade security, seamless networking capabilities, and 24/7 technical support to keep your business running smoothly."
+    }
+  ];
+  
+  // Typing effect
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-    });
-  }, []);
-
+    const fullText = phrases[currentPhrase];
+    let currentIndex = 0;
+    let isDeleting = false;
+    let timer;
+    
+    const typeEffect = () => {
+      // Current text
+      const current = fullText.substring(0, currentIndex);
+      setDisplayText(current);
+      
+      // Speed factors
+      const typingSpeed = isDeleting ? 75 : 150;
+      
+      if (!isDeleting && currentIndex === fullText.length) {
+        // Start deleting after a pause
+        setTimeout(() => {
+          isDeleting = true;
+          timer = setTimeout(typeEffect, 1000);
+        }, 1500);
+      } else if (isDeleting && currentIndex === 0) {
+        // Move to next phrase
+        isDeleting = false;
+        setCurrentPhrase((prev) => (prev + 1) % phrases.length);
+        timer = setTimeout(typeEffect, 500);
+      } else {
+        // Update index based on deleting or typing
+        currentIndex = isDeleting ? currentIndex - 1 : currentIndex + 1;
+        timer = setTimeout(typeEffect, typingSpeed);
+      }
+    };
+    
+    timer = setTimeout(typeEffect, 100);
+    
+    return () => clearTimeout(timer);
+  }, [currentPhrase]);
+  
+  // Handle triangle click
+  const handleTriangleClick = (index) => {
+    setActiveTriangle(index);
+    
+    // Add animation class to Project Eden section
+    const edenSection = document.querySelector('.ProjectEden');
+    edenSection.classList.add('content-change');
+    
+    // Remove animation class after animation completes
+    setTimeout(() => {
+      edenSection.classList.remove('content-change');
+    }, 500);
+  };
+  
   return (
-    <div className='gaming-container dark-mode'>
-      <motion.div 
-        className="head"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
+    <div className='gaming-container'>
+      <header className="head">
         <div className="textContent">
-          <h1 className="main-title">
-            <span className="quote-marks">"</span>DOESN'T HAVE TO BE A BOX IN A CORNER.<span className="quote-marks">"</span>
-            <br/>
-            <span className="quote-marks">"</span>IT CAN BE A...<span className="quote-marks">"</span>
-          </h1>
-          <h1 className="gaming">
-            <Typewriter
-              options={{
-                strings: ["GAMING REVOLUTION", "LIFESTYLE", "MASTERPIECE", "STATEMENT"],
-                autoStart: true,
-                loop: true,
-                delay: 50,
-                deleteSpeed: 70,
-              }}
-            />
-          </h1>
-          <motion.div 
-            className="icon-row"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-          >
-            <FaGamepad className="feature-icon" />
-            <FaRocket className="feature-icon" />
-            <FaLaptopCode className="feature-icon" />
-            <FaTrophy className="feature-icon" />
-          </motion.div>
-          <h5 className="subHeading" data-aos="fade-up">
-            Built with the latest in PC hardware, highest quality components, and backed by lifetime support
-          </h5>
-          <motion.div 
-            className="line"
-            initial={{ width: 0 }}
-            animate={{ width: "80%" }}
-            transition={{ duration: 0.8, delay: 1 }}
-          ></motion.div>
+          <div className="quote-container">
+            <h1 className="main-title animate-fade-in">
+              <span className="quote-marks">"</span>DOESN'T HAVE TO BE A BOX IN A CORNER. IT CAN BE A...<span className="quote-marks">"</span>
+            </h1>
+          </div>
+          <div className="gaming-wrapper">
+            <h1 className="gaming">
+              {displayText}
+              <span className="cursor">|</span>
+            </h1>
+          </div>
+          <div className="subheading-container">
+            <h5 className="subHeading animate-fade-in">
+              Built with latest in PC hardware, highest quality components and backed by lifetime support
+            </h5>
+          </div>
+          <div className="line animate-grow"></div>
         </div>
-      </motion.div>
+      </header>
 
       <div className="bottomSection">
-        <div className="containerBox" data-aos="fade-up">
-          <motion.div 
-            className="leftBox"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
+        <div className="containerBox">
+          <div className="leftBox">
             <div className="leftDivText">
-              <h1 className="staggered-text">NEW</h1>
-              <h1 className="staggered-text">
+              <h1 className="staggered-text animate-slide-in">NEW</h1>
+              <h1 className="staggered-text animate-slide-in-delay-1">
                 <span className="highlight-text">EXP</span>ERIENCES
               </h1>
-              <h1 className="staggered-text">&nbsp;&nbsp; BEGIN HERE</h1>
-              <div className="pulsing-circle"></div>
-              <h4 className="possibilities-text">Endless Possibilities</h4>
-              <div className="feature-list">
-                <div className="feature-item">
-                  <FaRocket className="feature-item-icon" />
-                  <span>Performance</span>
-                </div>
-                <div className="feature-item">
-                  <FaGamepad className="feature-item-icon" />
-                  <span>Immersion</span>
-                </div>
-                <div className="feature-item">
-                  <FaTrophy className="feature-item-icon" />
-                  <span>Victory</span>
-                </div>
+              <h1 className="staggered-text animate-slide-in-delay-2">BEGINS HERE</h1>
+              <h4 className="possibilities-text animate-fade-in-delay">Endless Possibilities</h4>
+            </div>
+          </div>
+          <div className="right-Box">
+            <div className="triangle-container">
+              <div className="interactive-triangle-wrapper">
+                {/* Original triangle image with click regions */}
+                <img 
+                  src={triangle} 
+                  alt="Triangle Design" 
+                  className="triangle-image"
+                  useMap="#triangleMap"
+                />
+                
+                {/* Image map for clickable regions */}
+                <map name="triangleMap">
+                  {/* Left region */}
+                  <area 
+                    shape="poly" 
+                    coords="150,50, 150,240, 50,240" 
+                    alt="Left triangle" 
+                    onClick={() => handleTriangleClick(0)}
+                    className={activeTriangle === 0 ? "active-area" : ""}
+                  />
+                  {/* Right region */}
+                  <area 
+                    shape="poly" 
+                    coords="150,50, 250,240, 150,240" 
+                    alt="Right triangle" 
+                    onClick={() => handleTriangleClick(1)}
+                    className={activeTriangle === 1 ? "active-area" : ""}
+                  />
+                  {/* Center region */}
+                  <area 
+                    shape="poly" 
+                    coords="150,120, 200,240, 100,240" 
+                    alt="Center triangle" 
+                    onClick={() => handleTriangleClick(2)}
+                    className={activeTriangle === 2 ? "active-area" : ""}
+                  />
+                </map>
+                
+                {/* Visual indicator for active triangle */}
+                <div className={`triangle-indicator triangle-indicator-${activeTriangle}`}></div>
               </div>
             </div>
-          </motion.div>
-          <div className="right-Box" data-aos="fade-left">
-            <img 
-              src={triangle} 
-              alt="Triangle Design" 
-              className="floating-image"
-            />
           </div>
         </div>
 
-        <div className="ProjectEden" data-aos="fade-up">
-          <motion.div 
-            className="Left"
-            whileHover={{ 
-              boxShadow: "0px 10px 30px rgba(218, 0, 55, 0.6)",
-            }}
-            transition={{ duration: 0.3 }}
-          >
-     
-            <motion.h2
-              animate={{ 
-                color: ["rgba(218, 0, 55, 1)", "#ffffff", "rgba(218, 0, 55, 1)"],
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              PROJECT EDEN
-            </motion.h2>
-            <motion.div 
-              className="eden-badge"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.2 }}
-            >
-              EXCLUSIVE
-            </motion.div>
-          </motion.div>
-          <motion.div 
-            className="right"
-            whileHover={{ 
-              x: 10,
-              transition: { duration: 0.3 }
-            }}
-          >
-            <h1>
-              <span className="highlight">AT</span>{" "}
-              <span className="G-Text">
-                𝖯𝗋𝗈𝗃𝖾𝖼𝗍 𝖤𝖽𝖾𝗇 is a revolutionary gaming experience designed to immerse users in a world where technology meets comfort.
-              </span>
-            </h1>
-            <button className="discover-btn">
-              DISCOVER MORE <span className="btn-arrow">→</span>
-            </button>
-          </motion.div>
+        <div className="ProjectEden">
+          <div className="eden-left">
+            <div className="eden-logo">
+              <div className="eden-circles">
+                <div className="circle blue-circle"></div>
+                <div className="circle purple-circle"></div>
+              </div>
+              <h2 className="eden-title">{edenContent[activeTriangle].title}</h2>
+            </div>
+          </div>
+          <div className="eden-right">
+            <p 
+              className="eden-description"
+              dangerouslySetInnerHTML={{ __html: edenContent[activeTriangle].description }}
+            />
+          </div>
         </div>
       </div>
     </div>

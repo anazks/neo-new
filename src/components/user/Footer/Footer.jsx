@@ -15,7 +15,6 @@ function Footer() {
   
   useEffect(() => {
     const handleScroll = () => {
-      // Check if footer is in viewport
       const footer = document.querySelector('.main-footer');
       if (footer) {
         const rect = footer.getBoundingClientRect();
@@ -26,13 +25,11 @@ function Footer() {
     };
     
     window.addEventListener('scroll', handleScroll);
-    // Trigger once on load
     handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Define animation variants with smoother transitions
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { 
@@ -92,7 +89,6 @@ function Footer() {
           </motion.div>
         </motion.div>
 
-        {/* SECOND DIV FOR CONTACT */}
         <motion.div className="contact-footer" variants={childVariants}>
           <div className="boxinsidecontact-footer">
             <motion.div 
@@ -127,7 +123,6 @@ function Footer() {
           </div>
         </motion.div>
 
-        {/* THIRD DIV FOR SITEOPTIONS */}
         <motion.div className="option-footer" variants={childVariants}>
           <div className="boxinsideoption-footer">
             <div className="firstbox-footer">

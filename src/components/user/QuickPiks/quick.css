@@ -1,13 +1,14 @@
 /* Base styling with dark theme */
 .fullWindow {
   width: 90vw;
-  height: 95vh;
+  height: 90vh; /* Reduced from 95vh to ensure full visibility */
   position: relative;
   overflow: hidden;
-  padding: 1.9rem;
+  padding: 1rem; /* Reduced padding */
   border-radius: 30px;
-  background-color: #121212;
+  background-color: white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-sizing: border-box; /* Ensure padding is included in height */
 }
 
 /* Enhanced background blur effect with subtle animation */
@@ -39,28 +40,34 @@
 /* Main container */
 .mainBox {
   width: 100%;
+  height: 100%;
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  padding: 1.5rem;
-  background-color: #1e1e1e;
+  padding: 0.5rem; /* Reduced padding */
+  background-color: white;
   border-radius: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
-
 /* Banner section */
 .banner {
   width: 100%;
-  min-height: 280px;
-  background: rgba(30, 30, 30, 0.9);
+  height: 30%; /* Set relative height */
+  min-height: 200px; /* Reduced minimum height */
+  background: white;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: 1rem; /* Reduced gap */
+  padding: 1rem; /* Reduced padding */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
   transition: transform 0.5s ease, box-shadow 0.5s ease;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem; /* Reduced margin */
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .banner:hover {
@@ -71,7 +78,7 @@
 /* Enhanced parallax effect for banner */
 .parallax {
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 5;
 }
 
@@ -86,7 +93,71 @@
   overflow: hidden;
   transition: transform 0.3s ease;
 }
-
+.product-row-container {
+  position: relative;
+  width: 100%;
+  height: 65%; /* Adjusted height */
+  padding: 0.5rem 0; /* Reduced padding */
+  perspective: 1200px;
+  z-index: 1;
+  box-sizing: border-box;
+}
+.product-row {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 15px; /* Reduced gap */
+  position: relative;
+  overflow: visible;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0.5rem; /* Reduced padding */
+  box-sizing: border-box;
+}
+.product-card {
+  background: rgba(40, 40, 40, 0.9);
+  border-radius: 0;
+  position: relative;
+  padding: 1rem; /* Reduced padding */
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  transform-origin: center;
+  will-change: transform, flex;
+  backdrop-filter: blur(5px);
+  transform: skewX(-10deg);
+  box-sizing: border-box;
+  height: 100%;
+}
+.product-image {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%) skewX(10deg);
+  height: 70%; /* Relative height */
+  max-height: 220px; /* Reduced max height */
+  object-fit: contain;
+  transition: all 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  opacity: 0;
+  filter: drop-shadow(0 10px 15px rgba(255, 0, 0, 0.3));
+}
+@media (max-width: 767px) {
+  .banner {
+    min-height: 150px;
+    height: auto;
+  }
+  
+  .product-card {
+    flex: 1 1 100%;
+    min-height: 180px;
+  }
+  
+  .product-image {
+    max-height: 150px;
+  }
+}
 .imageContainer:hover {
   transform: scale(1.02);
 }
@@ -103,8 +174,9 @@
 
 .subcribe {
   width: 100%;
-  background: rgba(40, 40, 40, 0.95);
   color: #e0e0e0;
+  /* background:; */
+  color: black;
   border-radius: 15px;
   padding: 1.5rem;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -212,7 +284,7 @@
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
-  background-color: #ff3333;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 30px;
@@ -239,7 +311,7 @@
 }
 
 .subscribe-button:hover {
-  background-color: #ff5555;
+  background-color: black;
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(255, 50, 50, 0.4);
 }
@@ -791,5 +863,86 @@
   
   .product-card:not(.expanded) {
     clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+  }
+}
+/* Add these custom styles to your CSS file */
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Utility classes */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-pulse {
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Fade-in animation for product row */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.appear {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Additional responsive styles */
+@media (max-width: 768px) {
+  .flex-col-reverse {
+    flex-direction: column-reverse !important;
+  }
+  
+  /* Make product cards display better on mobile */
+  .flex.flex-col.md\:flex-row {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .flex.flex-col.md\:flex-row > div {
+    min-width: 280px;
+    scroll-snap-align: start;
   }
 }

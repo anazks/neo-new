@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaShoppingCart, FaBars } from "react-icons/fa";
 import logo from "../../../Images/LoginWith/neo_tokyo-logo.png";
@@ -17,6 +17,18 @@ function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [lastScroll, setLastScroll] = useState(0);
   const navigate = useNavigate();
+
+  // Load Poppins font from Google Fonts
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -50,7 +62,6 @@ function NavBar() {
 
   // Handle click outside for dropdown
   useEffect(() => {
-    console.log(setScrolled)
     const handleClickOutside = (event) => {
       if (isDropdownOpen && !event.target.closest('.user-dropdown')) {
         setIsDropdownOpen(false);
@@ -106,7 +117,7 @@ function NavBar() {
 
   return (
     <>
-      <nav className={`navbar ${ scrolled ? 'scrolled' : ''}`}>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Left Navigation Links */}
           <div className="nav-links left-links">
@@ -129,9 +140,9 @@ function NavBar() {
 
           {/* Right Side Buttons */}
           <div className="nav-buttons">
-            <button className="cart-btn" onClick={navigateToCart}>
-              <FaShoppingCart className="cart-icon" />
-            </button>
+            <Link to="/cart" className="cart-btn">
+              Cart
+            </Link>
 
             {token ? (
               <div className="user-dropdown">
@@ -156,7 +167,7 @@ function NavBar() {
               </div>
             ) : (
               <button className="login-btn" onClick={openLogin}>
-                Sign In
+                Login
               </button>
             )}
 

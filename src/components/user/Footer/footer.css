@@ -1,32 +1,15 @@
-/* Dark Mode Footer Styles */
+/* White Theme Footer Styles */
 .main-footer {
-  width: 90vw;
-  min-height: 60vh;
-  margin: 5% auto;
-  padding: 40px 30px;
-  background: linear-gradient(145deg, #121212, #1e1e1e);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 1px 5px rgba(0, 0, 0, 0.3);
-  transition: all 0.4s ease;
-  color: #e0e0e0;
+  width: 95%;
+  border-radius: 30px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  color: #333333;
   position: relative;
   overflow: hidden;
-}
-
-.main-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at top right, rgba(50, 50, 50, 0.1), transparent 70%);
-  z-index: 0;
-}
-
-.main-footer:hover {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 5px 10px rgba(0, 0, 0, 0.3);
-  transform: translateY(-5px);
 }
 
 .box-inside-main-footer {
@@ -34,11 +17,9 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
-  position: relative;
-  z-index: 1;
 }
 
-/* About Section with Animation */
+/* About Section */
 .about-footer {
   width: 100%;
   display: flex;
@@ -48,58 +29,29 @@
 }
 
 .forabout-footer {
-  width: 50%;
+  width: 60%;
 }
 
 .aboutheading-footer {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #f5f5f5, #9e9e9e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  position: relative;
-  overflow: hidden;
+  color: #222222;
   line-height: 1.2;
   margin: 0;
-  transition: all 0.3s ease;
-  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
 .tagline {
-  color: #9e9e9e;
+  color: #666666;
   font-size: 1rem;
   margin-top: 8px;
-  margin-left: 2px;
-  font-weight: 300;
-  opacity: 0.8;
-  transition: all 0.3s ease;
 }
 
-.forabout-footer:hover .tagline {
-  color: #d0d0d0;
-}
-
-.aboutheading-footer::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #f5f5f5, #9e9e9e);
-  transition: width 0.6s ease;
-}
-
-.aboutheading-footer:hover::after {
-  width: 100%;
-}
-
-/* Get In Touch Button with Animation */
+/* Get In Touch Button */
 .getintouch-footer {
   width: 30%;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
 }
 
 .boxinsidegetintouch-footer {
@@ -109,34 +61,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #3d3d3d, #1a1a1a);
+  background: #f5f5f5;
   padding: 0 10px 0 25px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .boxinsidegetintouch-footer:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, #4a4a4a, #212121);
+  background: #e0e0e0;
 }
 
 .boxinsidegetintouch-footer::before {
   content: "Get in touch";
   position: absolute;
-  color: #e0e0e0;
+  color: #333333;
   font-weight: 600;
   left: 25px;
   transition: all 0.3s ease;
-}
-
-.boxinsidegetintouch-footer:hover::before {
-  opacity: 1;
-  transform: translateX(-5px);
-  color: #ffffff;
 }
 
 .getintouchslider-footer {
@@ -146,112 +90,50 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #2c2c2c, #171717);
-  transition: all 0.3s ease-in-out;
-  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
-}
-
-.boxinsidegetintouch-footer:hover .getintouchslider-footer {
-  transform: scale(1.1) rotate(45deg);
-  background: linear-gradient(135deg, #353535, #1c1c1c);
+  background: #ffffff;
+  transition: all 0.3s ease;
 }
 
 .uprightarrow-footer {
   font-size: 18px;
-  transition: all 0.3s ease;
-  color: #e0e0e0;
+  color: #333333;
 }
 
-.boxinsidegetintouch-footer:hover .uprightarrow-footer {
-  transform: rotate(-45deg);
-  color: #ffffff;
-}
-
-/* Contact Section with Animation */
+/* Contact Section */
 .contact-footer {
-  height: auto;
   width: 100%;
-  border-radius: 20px;
+  border-radius: 12px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  background: linear-gradient(135deg, #2a2a2a, #121212);
+  background: #f9f9f9;
   padding: 30px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.contact-footer::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-
-.contact-footer:hover::before {
-  opacity: 1;
-}
-
-.contact-footer:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  transform: translateY(-8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .boxinsidecontact-footer {
-  width: 90%;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .logo-footer {
   width: 15%;
-  position: relative;
-  z-index: 1;
-}
-
-.logo-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  z-index: -1;
-}
-
-.logo-footer:hover .logo-glow {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1.5);
 }
 
 .heading-footer {
   font-size: 36px;
   font-weight: 900;
-  color: #f5f5f5;
+  color: #222222;
   line-height: 0.9;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .description-footer {
   width: 40%;
-  color: #d0d0d0;
+  color: #555555;
   font-size: 1.1rem;
-  opacity: 0.9;
-  transition: all 0.3s ease;
 }
 
 .secheading-footer {
@@ -260,26 +142,10 @@
   font-weight: 500;
 }
 
-.secheading-footer::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #f5f5f5, transparent);
-  transition: width 0.5s ease;
-}
-
-.description-footer:hover .secheading-footer::after {
-  width: 100%;
-}
-
 .support-footer {
   width: 30%;
   text-align: right;
-  color: #d0d0d0;
-  opacity: 0.9;
+  color: #555555;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -290,58 +156,28 @@
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
-  transition: all 0.3s ease;
 }
 
 .support-icon {
   font-size: 16px;
-  color: #9e9e9e;
-  transition: all 0.3s ease;
-}
-
-.support-item:hover .support-icon {
-  color: #f5f5f5;
-  transform: scale(1.2);
+  color: #777777;
 }
 
 .thirdheading-footer {
   font-weight: 400;
   line-height: 1.5;
-  display: inline-block;
-  position: relative;
-  transition: all 0.3s ease;
 }
 
-.thirdheading-footer::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: -3px;
-  width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #f5f5f5);
-  transition: width 0.5s ease;
-}
-
-.support-item:hover .thirdheading-footer {
-  color: #f5f5f5;
-}
-
-.support-item:hover .thirdheading-footer::after {
-  width: 100%;
-}
-
-/* Options Section with Hover Effects */
+/* Options Section */
 .option-footer {
   width: 100%;
-  border-radius: 20px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #1a1a1a;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: #f9f9f9;
   padding: 30px;
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .boxinsideoption-footer {
@@ -360,34 +196,12 @@
   margin-bottom: 20px;
 }
 
-/* Navigation Links Styling & Animation */
 .heading-company, .enterprise-solutions, .store, .soluthions, .legal {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #f5f5f5;
-  position: relative;
-  display: inline-block;
+  color: #222222;
   margin-bottom: 20px;
-}
-
-.heading-company::before, .enterprise-solutions::before, .store::before, .soluthions::before, .legal::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 30px;
-  height: 2px;
-  background: #9e9e9e;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
-.firstbox-footer > div:hover .heading-company::before, 
-.firstbox-footer > div:hover .enterprise-solutions::before, 
-.firstbox-footer > div:hover .store::before, 
-.firstbox-footer > div:hover .soluthions::before, 
-.firstbox-footer > div:hover .legal::before {
-  width: 100%;
-  background: #f5f5f5;
+  display: inline-block;
 }
 
 .links-container {
@@ -397,59 +211,28 @@
   margin-top: 16px;
 }
 
-.footer-link {
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.footer-link::before {
-  content: '→';
-  color: #5a5a5a;
-  opacity: 0;
-  transition: all 0.3s ease;
-  transform: translateX(-10px);
-}
-
-.footer-link:hover::before {
-  opacity: 1;
-  transform: translateX(0);
-  color: #9e9e9e;
-}
-
 .list-company {
-  padding: 0;
-  margin: 0;
-  color: #9e9e9e;
+  color: #666666;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.95rem;
 }
 
 .footer-link:hover .list-company {
-  color: #f5f5f5;
+  color: #ff0055;
 }
 
-/* Reach Us Section Animation */
+/* Reach Us Section */
 .secondbox-footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 30px;
   padding: 20px;
-  background-color: #222222;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  border: 1px solid #2a2a2a;
-}
-
-.secondbox-footer:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  transform: translateY(-5px);
-  border-color: #3a3a3a;
-  background-color: #252525;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eeeeee;
 }
 
 .fbisecondbox-footer {
@@ -459,26 +242,9 @@
 .reachus {
   font-size: 1.2rem;
   font-weight: 700;
-  position: relative;
   margin-bottom: 15px;
   display: inline-block;
-  color: #f5f5f5;
-}
-
-.reachus::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 40px;
-  height: 2px;
-  background: #9e9e9e;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
-.fbisecondbox-footer:hover .reachus::after {
-  width: 100%;
-  background: #f5f5f5;
+  color: #222222;
 }
 
 .location-footer {
@@ -492,28 +258,12 @@
 .neotokyo {
   font-weight: 600;
   margin-right: 5px;
-  color: #d0d0d0;
-  transition: all 0.3s ease;
-}
-
-.location-footer:hover .neotokyo {
-  color: #f5f5f5;
-}
-
-.location-icon-container {
-  display: inline-flex;
-  align-items: center;
-  margin: 0 5px;
+  color: #444444;
 }
 
 .location-icon {
   font-size: 18px;
-  color: #9e9e9e;
-  transition: all 0.3s ease;
-}
-
-.location-footer:hover .location-icon {
-  color: #f5f5f5;
+  color: #777777;
 }
 
 .sbisecondbox-footer {
@@ -524,55 +274,36 @@
 }
 
 .detailedlocation {
-  color: #9e9e9e;
+  color: #666666;
   line-height: 1.6;
   display: block;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
 }
 
-.sbisecondbox-footer:hover .detailedlocation {
-  color: #d0d0d0;
-}
-
-/* Social Icons with Animation */
+/* Social Icons */
 .thirdbox-footer {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
-  border-top: 1px solid #2a2a2a;
+  border-top: 1px solid #eeeeee;
 }
 
 .social {
   margin-bottom: 20px;
-  position: relative;
 }
 
 .heading-social {
   font-size: 1.2rem;
   font-weight: 700;
-  position: relative;
-  color: #f5f5f5;
-  padding: 0 5px;
+  color: #222222;
 }
 
 .social-underline {
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
   height: 2px;
-  background-color: #9e9e9e;
-  transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-/* Social Icons with Animation (Continued) */
-.social:hover .social-underline {
-  width: 100%;
-  background-color: #f5f5f5;
+  width: 40px;
+  background-color: #ff0055;
+  margin: 8px auto 0;
 }
 
 .social-icons {
@@ -588,96 +319,48 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #252525;
+  background: #f0f0f0;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #333333;
-}
-
-.social-icon-container:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.05);
 }
 
 .social-iconszz {
   font-size: 18px;
-  color: #9e9e9e;
-  transition: all 0.3s ease;
+  color: #555555;
 }
 
-/* WhatsApp icon - specific styling */
-.social-icons .social-icon-container:nth-child(1):hover {
-  background: rgba(37, 211, 102, 0.15);
-  border-color: rgba(37, 211, 102, 0.5);
+.social-icon-container:hover {
+  background: #ff0055;
 }
 
-.social-icons .social-icon-container:nth-child(1):hover .social-iconszz {
-  color: #25D366;
-}
-
-/* Facebook icon - specific styling */
-.social-icons .social-icon-container:nth-child(2):hover {
-  background: rgba(24, 119, 242, 0.15);
-  border-color: rgba(24, 119, 242, 0.5);
-}
-
-.social-icons .social-icon-container:nth-child(2):hover .social-iconszz {
-  color: #1877F2;
-}
-
-/* Instagram icon - specific styling */
-.social-icons .social-icon-container:nth-child(3):hover {
-  background: linear-gradient(45deg, rgba(228, 64, 95, 0.15), rgba(64, 93, 230, 0.15));
-  border-color: rgba(228, 64, 95, 0.5);
-}
-
-.social-icons .social-icon-container:nth-child(3):hover .social-iconszz {
-  color: #E4405F;
+.social-icon-container:hover .social-iconszz {
+  color: white;
 }
 
 .all-rights {
   font-size: 0.9rem;
-  color: #7a7a7a;
+  color: #888888;
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: all 0.3s ease;
-}
-
-.all-rights:hover {
-  color: #9e9e9e;
 }
 
 .shield-container {
-  background: #232323;
   width: 28px;
   height: 28px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  border: 1px solid #333333;
+  background: #f0f0f0;
 }
 
 .shield-icon {
   font-size: 12px;
-  color: #9e9e9e;
-  transition: all 0.3s ease;
+  color: #888888;
 }
 
-.all-rights:hover .shield-container {
-  background: #2a2a2a;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), 0 0 5px rgba(255, 255, 255, 0.05);
-}
-
-.all-rights:hover .shield-icon {
-  color: #d0d0d0;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 1200px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
   .forabout-footer {
     width: 55%;
   }
@@ -691,23 +374,19 @@
   }
 }
 
-@media (max-width: 992px) {
-  .main-footer {
-    width: 95vw;
-    padding: 30px 25px;
+@media (max-width: 768px) {
+  .about-footer {
+    flex-direction: column;
+    gap: 25px;
   }
   
-  .forabout-footer {
-    width: 60%;
-  }
-  
-  .aboutheading-footer {
-    font-size: 2rem;
+  .forabout-footer, .getintouch-footer {
+    width: 100%;
+    text-align: center;
   }
   
   .boxinsidecontact-footer {
     flex-direction: column;
-    align-items: center;
     gap: 20px;
     text-align: center;
   }
@@ -717,16 +396,10 @@
   .boxinsidecontact-footer .support-footer {
     width: 100%;
     text-align: center;
-    justify-content: center;
   }
   
   .support-item {
     justify-content: center;
-  }
-  
-  .thirdheading-footer::after {
-    right: 50%;
-    transform: translateX(50%);
   }
   
   .fbisecondbox-footer, .sbisecondbox-footer {
@@ -735,58 +408,14 @@
     margin-bottom: 20px;
   }
   
-  .location-footer {
-    justify-content: center;
-  }
-  
-  .reachus::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-
-@media (max-width: 768px) {
-  .about-footer {
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-  }
-  
-  .forabout-footer, .getintouch-footer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .tagline {
-    text-align: center;
-  }
-  
-  .aboutheading-footer::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .firstbox-footer {
-    gap: 25px;
-  }
-  
   .firstbox-footer > div {
     width: 48%;
-  }
-  
-  .contact-footer {
-    flex-direction: column;
   }
 }
 
 @media (max-width: 576px) {
   .main-footer {
-    width: 95vw;
-    padding: 25px 15px;
+    padding: 30px 15px;
   }
   
   .firstbox-footer > div {
@@ -795,7 +424,6 @@
   
   .aboutheading-footer {
     font-size: 1.8rem;
-    text-align: center;
   }
   
   .social-icons {
@@ -810,50 +438,4 @@
   .social-iconszz {
     font-size: 16px;
   }
-}
-
-/* Dark mode effect for navigation links */
-.footer-link {
-  position: relative;
-}
-
-.footer-link::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, #9e9e9e, transparent);
-  transition: width 0.3s ease;
-  opacity: 0.5;
-}
-
-.footer-link:hover::after {
-  width: 100%;
-}
-
-/* Additional Animations */
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-  }
-}
-
-.contact-footer {
-  animation: glow 4s infinite ease-in-out;
-}
-
-/* Add a subtle grid background pattern */
-.main-footer {
-  background-image: linear-gradient(145deg, #121212, #1e1e1e),
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 20px 20px, 20px 20px;
 }

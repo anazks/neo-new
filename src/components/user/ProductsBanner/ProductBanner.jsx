@@ -108,13 +108,13 @@ function ProductBanner() {
       <div ref={overlayRef} className="theme-transition-overlay"></div>
       
       {/* Theme toggle button */}
-      <button 
+      {/* <button 
         className={`theme-toggle ${darkMode ? 'dark-theme' : 'light-theme'}`}
         onClick={toggleDarkMode}
         aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
       >
         {darkMode ? <FaSun className="theme-icon" /> : <FaMoon className="theme-icon" />}
-      </button>
+      </button> */}
 
       {/* Animated shapes - positioned absolutely */}
       <div className="shape-container">

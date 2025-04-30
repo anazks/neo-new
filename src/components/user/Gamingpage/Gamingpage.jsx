@@ -21,7 +21,7 @@ function Gamingpage() {
   const [isGaming, setIsGaming] = useState(true);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isAutoplay, setIsAutoplay] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
+  const [isDarkMode, setIsDarkMode] = useState(false); // Default to dark mode
   const autoplayTimerRef = useRef(null);
 
   const gamingSpecs = [

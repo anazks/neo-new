@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Tokyo from '../../../Images/city.png';
-import Drone from "../Drone/Drone";
 
 const ParallaxRevealSection = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -11,7 +10,6 @@ const ParallaxRevealSection = () => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
       
-      // Check if section is in viewport
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         const isInView = rect.top <= window.innerHeight/2 && rect.bottom >= 0;
@@ -19,9 +17,7 @@ const ParallaxRevealSection = () => {
       }
     };
 
-    // Initial check
     handleScroll();
-
     window.addEventListener("scroll", handleScroll);
     
     return () => {
@@ -29,12 +25,9 @@ const ParallaxRevealSection = () => {
     };
   }, []);
 
-  // Calculate parallax effects based on scroll
   const parallaxActive = scrollY > 200;
   const parallaxDeep = scrollY > 300;
   const panelTransformPercentage = Math.min(100, scrollY / 5);
-  
-  // Ensure the image is always full width when revealed
   const imageWidth = parallaxActive ? 100 : 20;
   const imageOpacity = Math.min(1, scrollY / 300);
 
@@ -43,19 +36,31 @@ const ParallaxRevealSection = () => {
       ref={sectionRef}
       className={`parallax-container ${inView ? 'in-view' : ''} ${parallaxActive ? 'parallax-active' : ''} ${parallaxDeep ? 'parallax-deep' : ''}`}
     >
-      {/* Left Panel */}
+      {/* Left Panel - Contains NEO text */}
       <div 
         className="panel panel-left"
         style={{ transform: `translateX(-${panelTransformPercentage}%)` }}
-      />
+      >
+        <div className="text-left">NEO</div>
+      </div>
 
-      {/* Right Panel */}
+      {/* Right Panel - Contains TOKYO text */}
       <div 
         className="panel panel-right"
         style={{ transform: `translateX(${panelTransformPercentage}%)` }}
-      />
+      ><br /><br /><br /><br /><br /><br /><br /><br />
+        <div className="text-right">TOKYO</div>
+        <div className="tagline">
+        <b>Experience the Power of Personalization</b>       
+        </div>
+        
+        <br /><br /><br />
+        <div className="headline-right">
+          ENDLESS POSSIBILITIES
+        </div>
+      </div>
 
-      {/* Center Image - Revealed */}
+      {/* Center Image */}
       <div
         className="center-image"
         style={{
@@ -64,45 +69,11 @@ const ParallaxRevealSection = () => {
           backgroundImage: `url(${Tokyo})`,
         }}
       />
-      
-      {/* Drone positioned above subtitle section */}
-      <div className="drone-container">
-        <Drone />
-      </div>
 
-      {/* Subtitle section - Positioned at the top */}
-      <div className="subtitle-section">
-        <div className="tagline">
-          Experience the power of personalization
-        </div>
-        <h2 className="headline">
-          ENDLESS POSSIBILITIES
-        </h2>
-        <div className="cta-container">
-          <button className="cta-button">
-            <span className="cta-text">EXPERIENCE NOW</span>
-            <span className="cta-icon">→</span>
-          </button>
-        </div>
-      </div>
-      
-      {/* Text - NEO TOKYO - Now positioned below subtitle section */}
-      <div className="neo-tokyo-container">
-        <div className="text text-left">NEO</div>
-        <div className="text text-right">TOKYO</div>
-      </div>
-
-      {/* Styling */}
       <style>
         {`
-          /* Base styling */
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-
-          /* Parallax container */
+          @import url('https://fonts.googleapis.com/css2?family=Niveau+Grotesk:wght@400;500;700&family=Raleway:wght@300;400;600;700&display=swap');
+          
           .parallax-container {
             position: relative;
             min-height: 100vh;
@@ -112,27 +83,86 @@ const ParallaxRevealSection = () => {
             width: 100%;
           }
 
-          /* Panel styling */
           .panel {
             position: absolute;
             height: 100%;
             width: 50%;
             top: 0;
-            background: #121212; /* Dark panel color */
             z-index: 3;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
           }
 
           .panel-left {
             left: 0;
+            background: white;
+            align-items: flex-end;
+            padding-right: 5%;
           }
 
           .panel-right {
             right: 0;
+            background: white;
+            align-items: flex-start;
+            padding-left: 5%;
           }
 
-          /* Center image */
+          .text-left, .text-right {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Niveau Grotesk', sans-serif;
+            color: #111;
+            text-transform: uppercase;
+            letter-spacing: 1.03em;
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 15px;
+          }
+
+          .text-left::after, .text-right::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: #ff1744;
+          }
+
+          .text-left::after {
+            right: 0;
+            width: 80%;
+          }
+
+          .text-right::after {
+            left: 0;
+            width: 80%;
+          }
+
+          .headline-right {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 700;
+            font-family: 'Raleway', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin: 0.5rem 0;
+            padding-left: 2px;
+          }
+
+          .tagline {
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: 400;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 0.1em;
+            line-height: 1.6;
+            margin-top: 1rem;
+            max-width: 300px;
+          }
+
           .center-image {
             position: absolute;
             height: 100%;
@@ -143,261 +173,75 @@ const ParallaxRevealSection = () => {
             background-position: center;
             transition: width 0.8s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s ease-in-out;
             will-change: width, opacity;
-            /* Add dark overlay to image */
-            box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
-          }
-
-          /* Neo Tokyo container */
-          .neo-tokyo-container {
-            position: absolute;
-            top: 75%;
-            width: 100%;
-            z-index: 4;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-          }
-
-          /* Text styling */
-          .text {
-            font-size: 6rem;
-            font-weight: 800;
-            letter-spacing: 0.5em;
-            white-space: nowrap;
-            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-            will-change: transform, opacity;
-            font-family: 'Blade Runner', 'Orbitron', sans-serif;
-            color: #e0e0e0; /* Light text for dark mode */
-            padding: 5px 20px 10px;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.5);
-            display: inline-block;
-            border-bottom: 3px solid #ff1744; /* Brighter red for dark mode */
-          }
-
-          /* Subtitle section */
-          .subtitle-section {
-            position: absolute;
-            top: 40%;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 6;
-            transition: all 0.8s ease-in-out;
-            padding: 0 20px;
-          }
-
-          /* Adjust subtitle section based on parallax state */
-          .parallax-active .subtitle-section {
-            top: 20%;
-          }
-
-          .parallax-active .neo-tokyo-container {
-            top: 60%;
-          }
-
-          .tagline {
-            font-size: 1.2rem;
-            color: #bdbdbd; /* Light gray text for dark mode */
-            margin-bottom: 0.8rem;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            transition: color 0.5s ease;
-          }
-
-          .headline {
-            font-size: 3rem;
-            color: #f5f5f5; /* Almost white text for dark mode */
-            font-weight: bold;
-            margin: 0.8rem 0 2rem;
-            font-family: 'Blade Runner', 'Orbitron', sans-serif;
-            border-bottom: 3px solid #ff1744; /* Brighter red for dark mode */
-            display: inline-block;
-            padding-bottom: 0.5rem;
-            transition: color 0.5s ease;
-          }
-
-          /* CTA button */
-          .cta-container {
-            margin-top: 2rem;
-          }
-
-          .cta-button {
-            background: rgba(255, 23, 68, 0.8); /* Brighter red, slightly transparent */
-            color: white;
-            border: none;
-            padding: 0.8rem 1.8rem;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            border-radius: 3px;
-            box-shadow: 0 2px 8px rgba(255, 23, 68, 0.5); /* Add glow effect */
-          }
-
-          .cta-text {
-            letter-spacing: 0.1em;
-          }
-
-          .cta-icon {
-            margin-left: 0.5rem;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-          }
-
-          .cta-button:hover {
-            background: rgba(255, 23, 68, 1); /* Full opacity on hover */
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(255, 23, 68, 0.7);
-          }
-
-          .cta-button:hover .cta-icon {
-            transform: translateX(5px);
-          }
-
-          /* Drone container */
-          .drone-container {
-            position: absolute;
-            z-index: 10;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            opacity: 1;
-            transition: opacity 1s ease-in-out, transform 1.5s ease-in-out;
-            animation: droneHover 4s infinite ease-in-out;
-            display: block !important;
-            pointer-events: all !important;
-            visibility: visible !important;
-            /* Add a subtle glow for dark mode */
-            filter: drop-shadow(0 0 8px rgba(255, 23, 68, 0.5));
-          }
-
-          /* Animation keyframes */
-          @keyframes droneHover {
-            0% { transform: translate(-50%, -50%); }
-            50% { transform: translate(-50%, calc(-50% - 15px)); }
-            100% { transform: translate(-50%, -50%); }
+            box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.3);
+            filter: contrast(1.1) brightness(0.9);
           }
 
           @keyframes textGlow {
-            0% { text-shadow: 0 0 5px rgba(255, 23, 68, 0.3), 0 0 10px rgba(0, 0, 0, 0.5); }
-            50% { text-shadow: 0 0 15px rgba(255, 23, 68, 0.7), 0 0 25px rgba(255, 23, 68, 0.4); }
-            100% { text-shadow: 0 0 5px rgba(255, 23, 68, 0.3), 0 0 10px rgba(0, 0, 0, 0.5); }
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
           }
 
-          @keyframes textReveal {
-            0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
-            100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+          .in-view .text-left, 
+          .in-view .text-right {
+            animation: textGlow 2.5s infinite ease-in-out;
           }
 
-          /* Apply animations when in view */
-          .in-view .text {
-            animation: textGlow 3s infinite ease-in-out, textReveal 1.2s forwards;
-            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-          }
-
-          /* Responsive styles */
           @media (max-width: 1200px) {
-            .text {
-              font-size: 5rem;
-              letter-spacing: 0.4em;
-            }
-            .headline {
-              font-size: 2.6rem;
+            .text-left, .text-right {
+              font-size: 4.5rem;
             }
           }
 
           @media (max-width: 992px) {
-            .text {
-              font-size: 4rem;
-              letter-spacing: 0.3em;
+            .text-left, .text-right {
+              font-size: 3.8rem;
             }
-            .headline {
-              font-size: 2.2rem;
+            .headline-right {
+              font-size: 0.9rem;
             }
-            .drone-container {
-              width: 120px;
-              height: 120px;
+            .tagline {
+              font-size: 0.85rem;
             }
           }
 
           @media (max-width: 768px) {
-            .text {
+            .text-left, .text-right {
               font-size: 3rem;
-              letter-spacing: 0.2em;
+              margin-bottom: 1rem;
             }
-            .headline {
-              font-size: 1.8rem;
+            .headline-right {
+              font-size: 0.8rem;
+              letter-spacing: 0.15em;
             }
             .tagline {
-              font-size: 1rem;
-            }
-            .drone-container {
-              width: 100px;
-              height: 100px;
-            }
-            .neo-tokyo-container {
-              gap: 10px;
+              font-size: 0.8rem;
+              max-width: 250px;
             }
           }
 
           @media (max-width: 576px) {
-            .text {
-              font-size: 2rem;
-              letter-spacing: 0.15em;
-              padding: 5px 10px 8px;
+            .text-left, .text-right {
+              font-size: 2.5rem;
             }
-            .headline {
-              font-size: 1.5rem;
-              margin: 0.5rem 0 1.5rem;
+            .headline-right {
+              font-size: 0.7rem;
             }
             .tagline {
-              font-size: 0.9rem;
-            }
-            .drone-container {
-              width: 80px;
-              height: 80px;
-            }
-            .cta-button {
-              padding: 0.6rem 1.2rem;
-              font-size: 0.9rem;
-            }
-            .neo-tokyo-container {
-              gap: 5px;
+              font-size: 0.75rem;
+              max-width: 200px;
             }
           }
 
           @media (max-width: 480px) {
-            .text {
-              font-size: 1.5rem;
+            .text-left, .text-right {
+              font-size: 2rem;
             }
-            .headline {
-              font-size: 1.3rem;
-            }
-            .tagline {
-              font-size: 0.8rem;
-            }
-            .cta-button {
-              padding: 0.5rem 1rem;
-              font-size: 0.8rem;
-            }
-            .drone-container {
-              width: 60px;
-              height: 60px;
-            }
-            .cta-container {
-              margin-top: 1.5rem;
+            .headline-right {
+              letter-spacing: 0.1em;
             }
           }
-            .parallax-deep .neo-tokyo-container {
-              opacity: 0;
-              visibility: hidden;
-            }
-         
         `}
       </style>
     </div>

@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './PriorityOne.css';
 import person1 from '../../../Images/persons/Ajay.png';
 import person2 from '../../../Images/persons/RoneyThomas.png';
 import person3 from '../../../Images/persons/Julien.png';
-import { motion } from 'framer-motion';
 import { FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
-import { HiOutlineChevronDown } from 'react-icons/hi';
-import { FiMoon, FiSun } from 'react-icons/fi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-function PriorityOne() {
-  const [darkMode, setDarkMode] = useState(true);
-  
+function PriorityOne() {  
   useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
     });
   }, []);
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
 
   const team = [
     {
@@ -61,18 +52,7 @@ function PriorityOne() {
   ];
 
   return (
-    <div className={`priority-one-container ${!darkMode ? 'light-mode' : ''}`}>
-      <div className="theme-toggle">
-        <motion.button
-          className="toggle-button"
-          onClick={toggleTheme}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          {darkMode ? <FiSun /> : <FiMoon />}
-        </motion.button>
-      </div>
-      
+    <div className="priority-one-container">
       <div className="header" data-aos="fade-up">
         <div>
           <h1 className="title">Priority One by Neo Tokyo</h1>
@@ -101,33 +81,27 @@ function PriorityOne() {
             <h3 className="person-name">{member.name}</h3>
             <p className="person-position">{member.position}</p>
             <div className="social-icons">
-              <motion.a 
+              <a 
                 href={member.social.linkedin}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
                 className="social-icon"
                 aria-label="LinkedIn"
               >
                 <FaLinkedin />
-              </motion.a>
-              <motion.a 
+              </a>
+              <a 
                 href={member.social.twitter}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
                 className="social-icon"
                 aria-label="Twitter"
               >
                 <FaTwitter />
-              </motion.a>
-              <motion.a 
+              </a>
+              <a 
                 href={member.social.email}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
                 className="social-icon"
                 aria-label="Email"
               >
                 <FaEnvelope />
-              </motion.a>
+              </a>
             </div>
           </div>
         ))}

@@ -19,21 +19,24 @@ function ProductsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [addingToCart, setAddingToCart] = useState(null);
   const [alertData, setAlertData] = useState(null);
-  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
+  const [darkMode, setDarkMode] = useState(false); // Default to light mode
   const alertTimeoutRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
-    // Apply dark mode class to body
+    // Apply theme class to body
     if (darkMode) {
       document.body.classList.add('dark-mode');
+      document.body.classList.remove('light-mode');
     } else {
+      document.body.classList.add('light-mode');
       document.body.classList.remove('dark-mode');
     }
     
     return () => {
       document.body.classList.remove('dark-mode');
+      document.body.classList.remove('light-mode');
     };
   }, [darkMode]);
 
@@ -145,8 +148,6 @@ function ProductsList() {
           onClose={() => setAlertData(null)}
         />
       )}
-     
-
 
       <div className="page-header">
         <div className="header-content">
@@ -230,7 +231,7 @@ function ProductsList() {
                 />
               </div>
               <div className="card-content">
-                <h2 style={{color:'white'}}>{product.name}</h2>
+                <h2>{product.name}</h2>
                 <p className="price">₹ {product.price?.toLocaleString()}</p>
                 <div className="buttons">
                   <button 
