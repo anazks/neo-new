@@ -359,10 +359,10 @@
   color: #888888;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
+/* Improved Responsive Design */
+@media (max-width: 1200px) {
   .forabout-footer {
-    width: 55%;
+    width: 60%;
   }
 
   .getintouch-footer {
@@ -372,70 +372,172 @@
   .aboutheading-footer {
     font-size: 2.2rem;
   }
+  
+  .firstbox-footer > div {
+    width: calc(100% / 5 - 10px);
+  }
+}
+
+@media (max-width: 992px) {
+  .forabout-footer {
+    width: 50%;
+  }
+  
+  .getintouch-footer {
+    width: 40%;
+  }
+  
+  .firstbox-footer > div {
+    width: calc(100% / 3 - 15px);
+  }
+  
+  .heading-footer {
+    font-size: 28px;
+  }
+  
+  .boxinsidecontact-footer {
+    gap: 15px;
+  }
+  
+  .logo-footer {
+    width: 20%;
+  }
+  
+  .description-footer {
+    width: 35%;
+  }
 }
 
 @media (max-width: 768px) {
+  .main-footer {
+    width: 100%;
+    border-radius: 0;
+    padding: 30px 15px;
+  }
+  
   .about-footer {
     flex-direction: column;
     gap: 25px;
+    align-items: flex-start;
   }
   
   .forabout-footer, .getintouch-footer {
     width: 100%;
-    text-align: center;
+  }
+  
+  .getintouch-footer {
+    justify-content: flex-start;
+  }
+  
+  .aboutheading-footer {
+    font-size: 2rem;
   }
   
   .boxinsidecontact-footer {
     flex-direction: column;
-    gap: 20px;
-    text-align: center;
+    gap: 25px;
   }
   
-  .boxinsidecontact-footer .logo-footer,
-  .boxinsidecontact-footer .description-footer,
-  .boxinsidecontact-footer .support-footer {
+  .logo-footer, .description-footer, .support-footer {
     width: 100%;
-    text-align: center;
+    text-align: left;
   }
   
   .support-item {
-    justify-content: center;
+    justify-content: flex-start;
+  }
+  
+  .firstbox-footer > div {
+    width: calc(50% - 10px);
   }
   
   .fbisecondbox-footer, .sbisecondbox-footer {
     width: 100%;
-    text-align: center;
-    margin-bottom: 20px;
   }
   
-  .firstbox-footer > div {
-    width: 48%;
+  .sbisecondbox-footer {
+    margin-top: 20px;
   }
 }
 
 @media (max-width: 576px) {
   .main-footer {
-    padding: 30px 15px;
+    padding: 25px 12px;
+  }
+  
+  .box-inside-main-footer {
+    gap: 20px;
+  }
+  
+  .contact-footer, .option-footer {
+    padding: 20px 15px;
+  }
+  
+  .aboutheading-footer {
+    font-size: 1.7rem;
+  }
+  
+  .tagline {
+    font-size: 0.9rem;
+  }
+  
+  .boxinsidegetintouch-footer {
+    height: 50px;
+    width: 160px;
+    font-size: 0.9rem;
+  }
+  
+  .getintouchslider-footer {
+    height: 38px;
+    width: 38px;
   }
   
   .firstbox-footer > div {
     width: 100%;
+    margin-bottom: 25px;
   }
   
-  .aboutheading-footer {
-    font-size: 1.8rem;
+  .links-container {
+    gap: 10px;
   }
   
   .social-icons {
     gap: 15px;
   }
   
-  .social-icon-container {
-    width: 35px;
-    height: 35px;
+  .heading-footer {
+    font-size: 24px;
   }
   
-  .social-iconszz {
-    font-size: 16px;
+  .secheading-footer {
+    font-size: 1rem;
+  }
+  
+  .thirdheading-footer {
+    font-size: 0.9rem;
+  }
+  
+  .all-rights {
+    text-align: center;
+    flex-direction: column;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .aboutheading-footer {
+    font-size: 1.5rem;
+  }
+  
+  .heading-footer {
+    font-size: 22px;
+  }
+  
+  .heading-company, .enterprise-solutions, .store, .soluthions, .legal, .reachus, .heading-social {
+    font-size: 1rem;
+  }
+  
+  .list-company, .detailedlocation {
+    font-size: 0.85rem;
   }
 }

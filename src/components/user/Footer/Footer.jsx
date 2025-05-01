@@ -12,22 +12,39 @@ import { motion } from "framer-motion";
 
 function Footer() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
+    // Check if viewport is mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Handle visibility on scroll
     const handleScroll = () => {
       const footer = document.querySelector('.main-footer');
       if (footer) {
         const rect = footer.getBoundingClientRect();
-        if (rect.top < window.innerHeight) {
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.top <= viewportHeight * 0.9) {
           setIsVisible(true);
         }
       }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    // Initialize states
+    checkMobile();
     handleScroll();
     
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Add event listeners
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', checkMobile);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   const containerVariants = {
@@ -37,7 +54,7 @@ function Footer() {
       y: 0,
       transition: { 
         duration: 0.7,
-        staggerChildren: 0.15,
+        staggerChildren: isMobile ? 0.1 : 0.15,
         ease: "easeOut"
       }
     }
@@ -103,22 +120,24 @@ function Footer() {
               <span className="secheading-footer">Priority One By Neo Tokyo </span>
             </div>
             <div className="support-footer">
-              <motion.div 
+              <motion.a 
+                href="tel:+917920938981"
                 className="support-item"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <FiPhone className="support-icon" />
                 <span className="thirdheading-footer">+91 7920938981</span>
-              </motion.div>
-              <motion.div 
+              </motion.a>
+              <motion.a 
+                href="mailto:support@neotokyo.in"
                 className="support-item"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <FiMail className="support-icon" />
                 <span className="thirdheading-footer">support@neotokyo.in</span>
-              </motion.div>
+              </motion.a>
             </div>
           </div>
         </motion.div>
@@ -129,84 +148,84 @@ function Footer() {
               <motion.div className="fstbox-footer">
                 <span className="heading-company">Company</span>
                 <div className="links-container">
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">About</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">FAQ's</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Blog</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Careers</span>
-                  </motion.div>
+                  </motion.a>
                 </div>
               </motion.div>
               
               <motion.div className="sdbox-footer">
                 <span className="enterprise-solutions">Enterprise Solutions</span>
                 <div className="links-container">
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Gaming Rigs</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Accounts</span>
-                  </motion.div>
+                  </motion.a>
                 </div>
               </motion.div>
               
               <motion.div className="thrdbox-footer">
                 <span className="store">Store</span>
                 <div className="links-container">
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">PC's</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Peripherals</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Gear</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Accessories</span>
-                  </motion.div>
+                  </motion.a>
                 </div>
               </motion.div>
               
               <motion.div className="forthbox-footer">
                 <span className="soluthions">Solutions</span>
                 <div className="links-container">
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Home PC's</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Gaming PC's</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Workstations</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Enterprise Solutions</span>
-                  </motion.div>
+                  </motion.a>
                 </div>
               </motion.div>
               
               <motion.div className="fifthbox-footer">
                 <span className="legal">Legal</span>
                 <div className="links-container">
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Privacy Policy</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Cookie Policy</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Terms And Conditions</span>
-                  </motion.div>
-                  <motion.div variants={itemHoverVariants} whileHover="hover" className="footer-link">
+                  </motion.a>
+                  <motion.a href="#" variants={itemHoverVariants} whileHover="hover" className="footer-link">
                     <span className="list-company">Return And Refunds</span>
-                  </motion.div>
+                  </motion.a>
                 </div>
               </motion.div>
             </div>
@@ -250,30 +269,39 @@ function Footer() {
                 <div className="social-underline"></div>
               </div>
               <div className="social-icons">
-                <motion.div
+                <motion.a
+                  href="https://wa.me/917920938981"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.2, y: -5 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   className="social-icon-container"
                 >
                   <FaWhatsapp className="social-iconszz"/>
-                </motion.div>
-                <motion.div
+                </motion.a>
+                <motion.a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.2, y: -5 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   className="social-icon-container"
                 >
                   <SlSocialFacebook className="social-iconszz"/>
-                </motion.div>
-                <motion.div
+                </motion.a>
+                <motion.a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.2, y: -5 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   className="social-icon-container"
                 >
                   <FaInstagram className="social-iconszz"/>
-                </motion.div>
+                </motion.a>
               </div>
               <div className="all-rights">
                 <motion.div

@@ -8,6 +8,7 @@ import FeedBack from "../../../components/user/FeedBack/FeedBack";
 import PriorityOne from "../../../components/user/PriorityOne/PriorityOne";
 import GamingPage from "../../user/Gamingpage/Gamingpage";
 import Footer from "../../../components/user/Footer/Footer";
+import ProductFooter from "../Footer/ProductFooter"
 import NavBar from "../NavBar/NavBar";
 import WelcomeSection from "./welcomepage";
 import Tokyo from "../Tokyo/Tokyo";
@@ -68,9 +69,9 @@ const WelcomeHome = () => {
         Tokyo,
         Quick,
         Gaming,
+        PriorityOne,
         FeedBack,
         GamingPage,
-        PriorityOne,
         Footer,
       ].map((Component, index) => (
         <motion.div

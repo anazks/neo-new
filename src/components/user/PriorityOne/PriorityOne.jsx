@@ -11,7 +11,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function PriorityOne() {
-  const [darkMode, setDarkMode] = useState(false); // Default to light mode
+  const [darkMode, setDarkMode] = useState(true);
   
   useEffect(() => {
     AOS.init({
@@ -61,7 +61,7 @@ function PriorityOne() {
   ];
 
   return (
-    <div className={`priority-one-container ${darkMode ? 'dark-mode' : ''}`}>
+    <div className={`priority-one-container ${!darkMode ? 'light-mode' : ''}`}>
       <div className="theme-toggle">
         <motion.button
           className="toggle-button"
@@ -76,7 +76,7 @@ function PriorityOne() {
       <div className="header" data-aos="fade-up">
         <div>
           <h1 className="title">Priority One by Neo Tokyo</h1>
-          {/* <p className="subtitle">For the One's who want the best we offer</p> */}
+          <p className="subtitle">For the One's who want the best we offer</p>
         </div>
       </div>
 
