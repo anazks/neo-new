@@ -114,7 +114,7 @@ const ParallaxRevealSection = () => {
           }
 
           .text-left, .text-right {
-            font-size: 3.5rem;
+            font-size: 3.5rem; /* Keeping original desktop size */
             font-weight: 400;
             font-family: 'Niveau Grotesk', sans-serif;
             color: #111;
@@ -175,13 +175,13 @@ const ParallaxRevealSection = () => {
           }
 
           .headline-right {
-            font-size: 1rem;
+            font-size: 1rem; /* Keep original size */
             color: #333;
             font-weight: 700;
             font-family: 'Raleway', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            margin: 2.5rem 0 0.5rem;
+            margin: 2.5rem 0 0.5rem; /* Keep original spacing */
             padding-left: 2px;
           }
 
@@ -195,14 +195,14 @@ const ParallaxRevealSection = () => {
           }
 
           .tagline {
-            font-size: 0.9rem;
+            font-size: 0.9rem; /* Keep original size */
             color: #555;
             font-weight: 400;
             font-family: 'Raleway', sans-serif;
             letter-spacing: 0.1em;
             line-height: 1.6;
-            margin-top: 1rem;
-            max-width: 300px;
+            margin-top: 1rem; /* Keep original spacing */
+            max-width: 300px; /* Keep original width */
           }
 
           .tagline-bold {
@@ -261,24 +261,24 @@ const ParallaxRevealSection = () => {
           /* Responsive Styles */
           @media (max-width: 1200px) {
             .text-left, .text-right {
-              font-size: 3.5rem;
+              font-size: 3.5rem; /* Keep original size */
             }
             .tagline {
-              max-width: 280px;
+              max-width: 280px; /* Keep original size */
             }
           }
 
           @media (max-width: 992px) {
             .text-left, .text-right {
-              font-size: 3rem;
+              font-size: 3rem; /* Keep original size */
             }
             .headline-right {
-              font-size: 0.9rem;
-              margin: 2rem 0 0.5rem;
+              font-size: 0.9rem; /* Keep original size */
+              margin: 2rem 0 0.5rem; /* Keep original spacing */
             }
             .tagline {
-              font-size: 0.85rem;
-              max-width: 250px;
+              font-size: 0.85rem; /* Keep original size */
+              max-width: 250px; /* Keep original size */
             }
             .content-wrapper {
               top: 62%;
@@ -293,7 +293,7 @@ const ParallaxRevealSection = () => {
             }
             
             .text-left, .text-right {
-              font-size: 2.5rem;
+              font-size: 3.2rem; /* Increased from 2.5rem to 3.2rem for mobile */
               letter-spacing: 0.7em;
             }
             
@@ -321,21 +321,21 @@ const ParallaxRevealSection = () => {
             }
             
             .headline-right {
-              font-size: 0.8rem;
+              font-size: 0.95rem; /* Increased from 0.8rem to 0.95rem for mobile */
               letter-spacing: 0.15em;
-              margin-top: 1.5rem;
+              margin-top: 1.8rem; /* Slightly increased for mobile */
             }
             
             .tagline {
-              font-size: 0.8rem;
+              font-size: 0.9rem; /* Increased from 0.8rem to 0.9rem for mobile */
               max-width: 90%;
-              margin: 0.8rem 0;
+              margin: 1rem 0; /* Increased spacing for mobile */
             }
           }
 
           @media (max-width: 576px) {
             .text-left, .text-right {
-              font-size: 1.8rem;
+              font-size: 2.4rem; /* Increased from 1.8rem to 2.4rem for mobile */
               letter-spacing: 0.5em;
             }
             
@@ -348,13 +348,13 @@ const ParallaxRevealSection = () => {
             }
             
             .headline-right {
-              font-size: 0.7rem;
-              margin-top: 1.2rem;
+              font-size: 0.85rem; /* Increased from 0.7rem to 0.85rem for mobile */
+              margin-top: 1.5rem; /* Slightly increased for mobile */
               letter-spacing: 0.12em;
             }
             
             .tagline {
-              font-size: 0.75rem;
+              font-size: 0.85rem; /* Increased from 0.75rem to 0.85rem for mobile */
               line-height: 1.5;
             }
             
@@ -370,7 +370,7 @@ const ParallaxRevealSection = () => {
 
           @media (max-width: 480px) {
             .text-left, .text-right {
-              font-size: 1.5rem;
+              font-size: 2rem; /* Increased from 1.5rem to 2rem for mobile */
               letter-spacing: 0.4em;
             }
             
@@ -383,12 +383,13 @@ const ParallaxRevealSection = () => {
             }
             
             .headline-right {
-              font-size: 0.65rem;
+              font-size: 0.8rem; /* Increased from 0.65rem to 0.8rem for mobile */
               letter-spacing: 0.1em;
+              margin-top: 1.3rem; /* Slightly increased for mobile */
             }
             
             .tagline {
-              font-size: 0.7rem;
+              font-size: 0.8rem; /* Increased from 0.7rem to 0.8rem for mobile */
               line-height: 1.4;
               max-width: 95%;
             }
@@ -406,18 +407,18 @@ const ParallaxRevealSection = () => {
           /* Handle very small devices */
           @media (max-width: 360px) {
             .text-left, .text-right {
-              font-size: 1.2rem;
+              font-size: 1.6rem; /* Increased from 1.2rem to 1.6rem for mobile */
               letter-spacing: 0.3em;
             }
             
             .headline-right {
-              font-size: 0.6rem;
+              font-size: 0.75rem; /* Increased from 0.6rem to 0.75rem for mobile */
               letter-spacing: 0.08em;
-              margin-top: 1rem;
+              margin-top: 1.2rem; /* Slightly increased for mobile */
             }
             
             .tagline {
-              font-size: 0.65rem;
+              font-size: 0.75rem; /* Increased from 0.65rem to 0.75rem for mobile */
             }
             
             .content-wrapper {

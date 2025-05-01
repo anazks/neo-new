@@ -69,8 +69,8 @@ const WelcomeHome = () => {
         Quick,
         Gaming,
         FeedBack,
-        PriorityOne,
         GamingPage,
+        PriorityOne,
         Footer,
       ].map((Component, index) => (
         <motion.div
