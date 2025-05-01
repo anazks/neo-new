@@ -3,6 +3,25 @@ import { useState, useEffect } from "react";
 export default function FeedbackComponent() {
   const [counter, setCounter] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      text: "Neo Tokyo delivered a gaming system that exceeded all my expectations. The attention to detail and build quality is outstanding.",
+      author: "Alex Chen",
+      role: "Professional Gamer"
+    },
+    {
+      text: "As a content creator, I needed a powerful workstation that could handle demanding tasks. Neo Tokyo built me the perfect system.",
+      author: "Sarah Johnson",
+      role: "Digital Artist"
+    },
+    {
+      text: "The enterprise solution Neo Tokyo designed for our startup has been flawless. Their technical support is second to none.",
+      author: "Michael Torres",
+      role: "Tech Entrepreneur"
+    }
+  ];
 
   useEffect(() => {
     // Set visibility after a small delay to trigger animations
@@ -22,11 +41,17 @@ export default function FeedbackComponent() {
       });
     }, 30);
 
+    // Rotate testimonials
+    const testimonialInterval = setInterval(() => {
+      setActiveTestimonial(prev => (prev + 1) % testimonials.length);
+    }, 5000);
+
     return () => {
       clearTimeout(visibilityTimer);
       clearInterval(counterInterval);
+      clearInterval(testimonialInterval);
     };
-  }, []);
+  }, [testimonials.length]);
 
   return (
     <div className={`feedback-wrapper ${isVisible ? 'feedback-visible' : ''}`}>
@@ -53,16 +78,65 @@ export default function FeedbackComponent() {
       </div>
       
       <div className="feedback-right-section">
-        <div className="feedback-content-box"></div>
+        <div className="feedback-content-box">
+          <div className="testimonial-container">
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={index} 
+                className={`testimonial ${activeTestimonial === index ? 'active' : ''}`}
+              >
+                <div className="testimonial-text">"{testimonial.text}"</div>
+                <div className="testimonial-author">{testimonial.author}</div>
+                <div className="testimonial-role">{testimonial.role}</div>
+              </div>
+            ))}
+          </div>
+          <div className="testimonial-indicators">
+            {testimonials.map((_, index) => (
+              <span 
+                key={index} 
+                className={`indicator ${activeTestimonial === index ? 'active' : ''}`}
+                onClick={() => setActiveTestimonial(index)}
+              ></span>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      {/* Mobile testimonial box that appears below stats in mobile view */}
+      <div className="mobile-testimonial-section">
+        <div className="mobile-testimonial-box">
+          <div className="mobile-testimonial-container">
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={index} 
+                className={`mobile-testimonial ${activeTestimonial === index ? 'active' : ''}`}
+              >
+                <div className="mobile-testimonial-text">"{testimonial.text}"</div>
+                <div className="mobile-testimonial-author">{testimonial.author}</div>
+                <div className="mobile-testimonial-role">{testimonial.role}</div>
+              </div>
+            ))}
+          </div>
+          <div className="mobile-testimonial-indicators">
+            {testimonials.map((_, index) => (
+              <span 
+                key={index} 
+                className={`mobile-indicator ${activeTestimonial === index ? 'active' : ''}`}
+                onClick={() => setActiveTestimonial(index)}
+              ></span>
+            ))}
+          </div>
+        </div>
       </div>
       
       <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Poppins:wght@300;400;600;700&display=swap');
         
         .feedback-wrapper {
-           width: 100%;
+          width: 100%;
           max-width: 1200px;
-          height: 98vh;
+        height: 98vh;
           padding: 40px;
           background-color: white;
           border-radius: 20px;
@@ -292,6 +366,11 @@ export default function FeedbackComponent() {
           transition: transform 0.5s ease, box-shadow 0.5s ease;
           position: relative;
           overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 30px;
         }
         
         .feedback-content-box:hover {
@@ -316,19 +395,192 @@ export default function FeedbackComponent() {
           transform: scaleX(1);
         }
         
+        /* Testimonial styling for desktop */
+        .testimonial-container {
+          width: 100%;
+          position: relative;
+          height: 70%;
+        }
+        
+        .testimonial {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          padding: 20px;
+          opacity: 0;
+          transform: translateX(50px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .testimonial.active {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .testimonial-text {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 1.3rem;
+          line-height: 1.6;
+          color: #333;
+          margin-bottom: 20px;
+        }
+        
+        .testimonial-author {
+          font-family: 'Poppins', sans-serif;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #222;
+        }
+        
+        .testimonial-role {
+          font-family: 'Poppins', sans-serif;
+          font-size: 0.9rem;
+          color: #666;
+          margin-top: 5px;
+        }
+        
+        .testimonial-indicators {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          margin-top: 20px;
+        }
+        
+        .indicator {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: #ddd;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        
+        .indicator.active {
+          background-color: #ff0055;
+        }
+        
+        /* Mobile testimonial box - hidden by default */
+        .mobile-testimonial-section {
+          display: none;
+          width: 100%;
+          margin-top: 30px;
+        }
+        
+        .mobile-testimonial-box {
+          width: 100%;
+          background-color: #f5f5f5;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+          padding: 20px;
+          position: relative;
+        }
+        
+        .mobile-testimonial-box::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background: linear-gradient(90deg, #ff0055, #ff6b6b);
+        }
+        
+        .mobile-testimonial-container {
+          position: relative;
+          height: 160px;
+        }
+        
+        .mobile-testimonial {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+          opacity: 0;
+          transform: translateY(10px);
+          transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        .mobile-testimonial.active {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .mobile-testimonial-text {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 0.95rem;
+          line-height: 1.5;
+          color: #333;
+          margin-bottom: 15px;
+        }
+        
+        .mobile-testimonial-author {
+          font-family: 'Poppins', sans-serif;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #222;
+        }
+        
+        .mobile-testimonial-role {
+          font-family: 'Poppins', sans-serif;
+          font-size: 0.8rem;
+          color: #666;
+          margin-top: 3px;
+        }
+        
+        .mobile-testimonial-indicators {
+          display: flex;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 10px;
+        }
+        
+        .mobile-indicator {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #ddd;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        
+        .mobile-indicator.active {
+          background-color: #ff0055;
+        }
+        
         /* Media Queries for Responsive Design */
         @media screen and (max-width: 992px) {
           .feedback-wrapper {
             flex-direction: column;
             padding: 30px;
+            height: 98vh;
           }
           
           .feedback-left-section {
             width: 100%;
+            margin-bottom: 30px;
           }
           
           .feedback-right-section {
             display: none; /* Hide the right box in responsive view */
+          }
+          
+          .mobile-testimonial-section {
+            display: block; /* Show mobile testimonial section */
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: 2s;
+            opacity: 0;
           }
           
           .feedback-red-line {
@@ -359,6 +611,7 @@ export default function FeedbackComponent() {
         @media screen and (max-width: 576px) {
           .feedback-wrapper {
             padding: 25px 20px;
+            height: 98vh;
           }
           
           .feedback-additional-stats {
@@ -386,6 +639,10 @@ export default function FeedbackComponent() {
           .feedback-stat-item {
             width: 100%;
             text-align: center;
+          }
+          
+          .mobile-testimonial-text {
+            font-size: 0.9rem;
           }
         }
       `}</style>

@@ -1,10 +1,11 @@
-/* PriorityOne.css */
+/* PriorityOne.css - Improved Responsive Design */
 .priority-one-container {
   width: 100%;
   max-width: 1200px;
   border-radius: 30px;
   min-height: 100vh;
-  padding: 0.5rem 2rem;
+  padding: 2rem 1.5rem;
+  margin: 0 auto;
   background-color: white;
   font-family: 'Raleway', Arial, sans-serif;
   color: #222;
@@ -26,7 +27,6 @@
 }
 
 .content-wrappers {
-  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
   flex: 1;
@@ -36,18 +36,19 @@
 }
 
 .header {
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
-  margin-top: 0;
+  margin-bottom: 2rem;
+  text-align: center;
+  padding: 0 0.5rem;
 }
 
 .title {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.8rem, 5vw, 3rem);
   font-weight: 700;
   line-height: 1.1;
   margin: 0;
   color: #222;
   position: relative;
+  display: inline-block;
 }
 
 .title::after {
@@ -56,7 +57,7 @@
   width: 80px;
   height: 3px;
   background-color: #3498db;
-  margin-top: 10px;
+  margin: 10px auto 0;
 }
 
 .subtitle {
@@ -68,20 +69,22 @@
 
 .team-container {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1rem;
-  flex: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.5rem;
+  width: 100%;
 }
 
 .team-member {
-  width: calc(33.333% - 1rem);
+  width: 100%;
+  max-width: 350px;
   text-align: center;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .image-wrapper {
@@ -99,6 +102,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-wrapper:hover .person-image {
+  transform: scale(1.05);
 }
 
 .specialty-tag {
@@ -145,53 +153,83 @@
   color: #333;
   font-size: 1.1rem;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-@media (max-width: 1024px) {
+.social-icon:hover {
+  background-color: #3498db;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Medium devices (tablets) */
+@media (min-width: 768px) {
   .priority-one-container {
-    padding: 1.5rem;
+    padding: 2.5rem;
+  }
+  
+  .header {
+    text-align: left;
+    padding: 0 1rem;
+  }
+  
+  .title::after {
+    margin-left: 0;
+    margin-right: auto;
   }
   
   .team-container {
-    gap: 1rem;
+    justify-content: space-around;
+  }
+  
+  .team-member {
+    width: calc(50% - 2rem);
+    max-width: none;
+  }
+}
+
+/* Large devices (desktops) */
+@media (min-width: 992px) {
+  .team-container {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  
+  .team-member {
+    width: calc(33.333% - 1.5rem);
+  }
+}
+
+/* Extra small devices (phones) */
+@media (max-width: 576px) {
+  .priority-one-container {
+    padding: 1.5rem 1rem;
+    border-radius: 20px;
+  }
+  
+  .header {
+    margin-bottom: 1.5rem;
   }
   
   .image-wrapper {
     max-width: 200px;
   }
-}
-
-@media (max-width: 768px) {
-  .team-container {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    padding-top: 1rem;
+  
+  .specialty-tag {
+    padding: 6px 0;
+    font-size: 0.8rem;
   }
   
-  .team-member {
-    width: 30%;
-  }
-  
-  .image-wrapper {
-    max-width: 100%;
+  .person-name {
+    font-size: 1.1rem;
   }
   
   .person-position {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .priority-one-container {
-    padding: 1rem;
+    font-size: 0.75rem;
   }
   
-  .header {
-    margin-bottom: 1rem;
-  }
-  
-  .title::after {
-    width: 60px;
-    height: 2px;
+  .social-icon {
+    width: 32px;
+    height: 32px;
   }
 }
