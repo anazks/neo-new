@@ -3,6 +3,7 @@ import { IoArrowForwardCircleSharp } from 'react-icons/io5';
 import { FaComputer, FaFire, FaMemory, FaHardDrive, FaMoon, FaSun } from 'react-icons/fa6';
 import "@fontsource/rajdhani"; // Default font weight
 import "@fontsource/rajdhani/700.css"; // Optional: specific font weight (700)
+import image from '../../../Images/Rectangle 532.jpg'
 
 function ProductBanner() {
   // State to track dark mode
@@ -113,13 +114,13 @@ function ProductBanner() {
       ></div>
       
       {/* Theme toggle button */}
-      <button 
+      {/* <button 
         className={`fixed top-5 right-5 w-12 h-12 rounded-full flex items-center justify-center z-50 shadow-md transition-transform duration-300 hover:scale-110 ${darkMode ? 'bg-gray-100' : 'bg-gray-800'}`}
         onClick={toggleDarkMode}
         aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
       >
         {darkMode ? <FaSun className="text-2xl text-gray-800" /> : <FaMoon className="text-2xl text-gray-100" />}
-      </button>
+      </button> */}
 
       {/* Animated shapes - positioned absolutely */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -181,7 +182,7 @@ function ProductBanner() {
         <div className="hidden md:block w-full md:w-[45%] max-w-lg h-auto relative">
           <div className="relative w-full h-full">
             <img 
-              src="/api/placeholder/500/600" 
+              src={image}
               alt="gaming pc" 
               className="w-full h-auto max-h-[80vh] rounded-3xl transition-transform duration-500 ease-in-out hover:scale-[1.02] object-cover relative z-10"
             />
@@ -349,3 +350,4 @@ function ProductBanner() {
 }
 
 export default ProductBanner;
+

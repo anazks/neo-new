@@ -15,6 +15,7 @@
     position: relative;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
 
   /* Add subtle background animation */

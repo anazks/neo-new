@@ -5,7 +5,6 @@ function Inside({ product }) {
   const [isAnimated, setIsAnimated] = useState(false);
 
   useEffect(() => {
-    // Add animation after component mounts
     const timer = setTimeout(() => {
       setIsAnimated(true);
     }, 100);
@@ -15,18 +14,16 @@ function Inside({ product }) {
 
   if (!product) {
     return (
-      <div className="dark-loading">
-        <div className="dark-spinner"></div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
         <h2>Loading specifications...</h2>
       </div>
     );
   }
 
-  // Extract warranty info and inside box content dynamically
-  const warrantyInfo = "1 Year Onsite Warranty";  // You might want to extract from API if available
+  const warrantyInfo = "1 Year Onsite Warranty";
   const insideBox = product.whats_inside || "No information available";
 
-  // Group attributes by category for better organization
   const groupAttributesByCategory = () => {
     if (!product.attributes || !product.attributes.length) return {};
     
@@ -45,21 +42,18 @@ function Inside({ product }) {
   const groupedAttributes = groupAttributesByCategory();
 
   return (
-    <div className={`dark-container ${isAnimated ? 'dark-fade-in' : ''}`}>
-      <div className="dark-header">
+    <div className={`container ${isAnimated ? 'fade-in' : ''}`}>
+      <div className="header">
         <h1>WHAT'S INSIDE</h1>
-        <p className="dark-package-content">{insideBox}</p>
+        <p className="package-content">{insideBox}</p>
       </div>
 
-      
-
-      {/* Display specifications in enhanced table format grouped by category */}
       {Object.keys(groupedAttributes).length > 0 ? (
         Object.entries(groupedAttributes).map(([categoryName, attributes]) => (
-          <div key={categoryName} className="dark-specs-section">
-            <h3 className="dark-specs-category-title">{categoryName.toUpperCase()}</h3>
-            <div className="dark-specs-table-container">
-              <table className="dark-specs-table">
+          <div key={categoryName} className="specs-section">
+            <h3 className="specs-category-title">{categoryName.toUpperCase()}</h3>
+            <div className="specs-table-container">
+              <table className="specs-table">
                 <thead>
                   <tr>
                     <th>Specification</th>
@@ -68,11 +62,11 @@ function Inside({ product }) {
                 </thead>
                 <tbody>
                   {attributes.map((attr) => (
-                    <tr key={attr.id} className="dark-specs-row">
-                      <td className="dark-specs-label">{attr.attribute.name}</td>
-                      <td className="dark-specs-value">
+                    <tr key={attr.id} className="specs-row">
+                      <td className="specs-label">{attr.attribute.name}</td>
+                      <td className="specs-value">
                         {attr.details.map((detail, idx) => (
-                          <span key={detail.id} className="dark-specs-detail-chip">
+                          <span key={detail.id} className="specs-detail-chip">
                             {detail.value}
                           </span>
                         ))}
@@ -85,7 +79,7 @@ function Inside({ product }) {
           </div>
         ))
       ) : (
-        <div className="dark-specs-section">
+        <div className="specs-section">
           <h2>SPECIFICATIONS</h2>
           <p>No specifications available.</p>
         </div>
