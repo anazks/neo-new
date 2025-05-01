@@ -1,58 +1,47 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaShoppingCart, FaBars } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaBars, FaUser, FaShoppingCart } from "react-icons/fa";
 import logo from "../../../Images/LoginWith/neo_tokyo-logo.png";
 import "./nav.css";
-import LoginPopup from "../Login/LoginPopup";
-import { useAuth } from "../../../Context/UserContext";
-import { getUserInfo as fetchUserInfo } from '../../../Services/userApi';
-import SideBar from "../SIdeBar/SideBar";
+import SideBar from "../SIdeBar/SideBar"; // Adjust import path as needed
 
-function NavBar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { token, setToken, user, setUser } = useAuth();
-  const [userFetched, setUserFetched] = useState(false);
+const ModernNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [lastScroll, setLastScroll] = useState(0);
-  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Load Poppins font from Google Fonts
   useEffect(() => {
     const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
-    
-    return () => {
-      document.head.removeChild(link);
-    };
+    return () => document.head.removeChild(link);
   }, []);
 
-  // Handle scroll effect for navbar
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.pageYOffset;
       const navbar = document.querySelector('.navbar');
-      
+
       if (currentScroll <= 0) {
+        setScrolled(false);
         navbar.classList.remove('hidden');
         return;
       }
-      
+
       if (currentScroll > lastScroll && !navbar.classList.contains('hidden')) {
         navbar.classList.add('hidden');
       } else if (currentScroll < lastScroll && navbar.classList.contains('hidden')) {
         navbar.classList.remove('hidden');
       }
-      
-      if (currentScroll > 100) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-      
+
+      setScrolled(currentScroll > 50);
       setLastScroll(currentScroll);
     };
 
@@ -60,140 +49,48 @@ function NavBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScroll]);
 
-  // Handle click outside for dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isDropdownOpen && !event.target.closest('.user-dropdown')) {
-        setIsDropdownOpen(false);
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isDropdownOpen]);
-
-  const fetchUserData = useCallback(async () => {
-    if (token && !userFetched) {
-      try {
-        const userInfo = await fetchUserInfo();
-        if (userInfo) {
-          setUser(userInfo);
-          setUserFetched(true);
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        setUserFetched(true);
-      }
-    } else if (!token) {
-      setUser(null);
-      setUserFetched(false);
-    }
-  }, [token, userFetched, setUser]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
-  const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem("token");
-    setUser(null);
-    setUserFetched(false);
-    setIsDropdownOpen(false);
-    navigate("/");
+  const openSidebar = () => {
+    setIsSidebarOpen(true);
+    document.body.style.overflow = 'hidden';
   };
 
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const closeSidebar = () => setIsSidebarOpen(false);
-  const openLogin = () => {
-    setIsLoginOpen(true);
-    closeSidebar(); // Close sidebar when opening login popup
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+    document.body.style.overflow = 'auto';
   };
-  const closeLogin = () => setIsLoginOpen(false);
-
-  const navigateToCart = () => navigate("/cart");
-  const navigateToProfile = () => navigate("/profile");
 
   return (
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
-          {/* Left Navigation Links */}
-          <div className="nav-links left-links">
-            <Link to="/products" className="nav-link-item">Products</Link>
-            <Link to="#" className="nav-link-item">Solutions</Link>
-          </div>
+      <div className="nav-container">
+  {/* This logo will only show on mobile */}
+  <div className="logo-container mobile-only" style={{ display: isMobile ? 'block' : 'none' }}>
+    <a href="/"><img src={logo} className="logo-img" alt="Logo" /></a>
+  </div>
 
-          {/* Centered Logo */}
-          <div className="logo-container">
-            <Link to="/">
-              <img src={logo} className="logo-img" alt="Neo Tokyo Logo" />
-            </Link>
-          </div>
+  <div className="nav-links">
+    <a href="/products" className="nav-link">Products</a>
+    <a href="/solutions" className="nav-link">Solutions</a>
+    {/* This center logo will only show on desktop */}
+    <a href="/" className="center-logo desktop-only"><img src={logo} className="logo-img" alt="Logo" /></a>
+    <a href="/store" className="nav-link">Store</a>
+    <a href="/support" className="nav-link">Support</a>
+  </div>
 
-          {/* Right Navigation Links */}
-          <div className="nav-links right-links">
-            <Link to="/store" className="nav-link-item">Store</Link>
-            <Link to="/support" className="nav-link-item">Support</Link>
-          </div>
-
-          {/* Right Side Buttons */}
-          <div className="nav-buttons">
-            <Link to="/cart" className="cart-btn">
-              Cart
-            </Link>
-
-            {token ? (
-              <div className="user-dropdown">
-                <button className="user-btn" onClick={toggleDropdown}>
-                  <FaUser className="user-icon" />
-                  <span className="user-name">
-                    {user?.data?.first_name || "User"}
-                  </span>
-                  {isDropdownOpen ? '▲' : '▼'}
-                </button>
-
-                {isDropdownOpen && (
-                  <div className="dropdown-menu">
-                    <button onClick={navigateToProfile}>
-                      <FaUser className="dropdown-icon" /> Profile
-                    </button>
-                    <button onClick={handleLogout}>
-                      <FaSignOutAlt className="dropdown-icon" /> Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button className="login-btn" onClick={openLogin}>
-                Login
-              </button>
-            )}
-
-            {/* Menu Button - Always on Right */}
-            <button className="menu-btn" onClick={toggleSidebar}>
-              <FaBars />
-            </button>
-          </div>
-        </div>
+  <div className="nav-actions">
+    {/* <a href="/cart" className="cart-btn"><FaShoppingCart /><span>Cart</span></a> */}
+    {/* <a href="/login" className="login-btn"><FaUser /><span>Login</span></a> */}
+    <button className="offcanvas-toggle" onClick={openSidebar}><FaBars /></button>
+  </div>
+</div>
       </nav>
 
-      {/* Sidebar */}
-      <SideBar isOpen={isSidebarOpen} onClose={closeSidebar} openLogin={openLogin} />
-      
-      {/* Login Popup */}
-      <LoginPopup isOpen={isLoginOpen} onClose={closeLogin} />
-      
-      {/* Overlay */}
-      {(isSidebarOpen || isLoginOpen) && (
-        <div className="overlay active" onClick={() => {
-          if (isSidebarOpen) closeSidebar();
-          if (isLoginOpen) closeLogin();
-        }} />
+      {/* Custom Sidebar Component */}
+      {isSidebarOpen && (
+        <SideBar isOpen={isSidebarOpen} onClose={closeSidebar} />
       )}
     </>
   );
-}
+};
 
-export default NavBar;
+export default ModernNavbar;
