@@ -68,11 +68,14 @@ const WelcomeHome = () => {
         WelcomeSection,
         Tokyo,
         Quick,
-        Gaming,
-        PriorityOne,
         FeedBack,
+        PriorityOne,
         GamingPage,
+        Gaming,
         Footer,
+        Gaming,
+        Gaming,
+
       ].map((Component, index) => (
         <motion.div
           key={index}

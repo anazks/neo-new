@@ -60,7 +60,8 @@ export default function FeedbackComponent() {
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Poppins:wght@300;400;600;700&display=swap');
         
         .feedback-wrapper {
-          width: 97vw;
+           width: 100%;
+          max-width: 1200px;
           height: 98vh;
           padding: 40px;
           background-color: white;
