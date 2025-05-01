@@ -1,173 +1,169 @@
-/* Base Styles */
-.gaming-container {
+/* Base Styles - Single View */
+.gsv-container {
   background-color: white;
   color: #333;
   font-family: 'Arial', sans-serif;
-  width: 100%;
-  max-width: 1200px;
+  width: 95%; /* Slightly wider for better space usage */
+  height: 98vh;
+  border-radius: 30px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* Header Section */
-.header {
-  padding: 1rem 0;
+/* Compact Header Section */
+.gsv-header {
+  padding: 0.3rem 0;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.3rem; /* Slightly reduced margin */
+  flex-shrink: 0;
 }
 
-.text-content {
+.gsv-text-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.2rem; /* Slightly tighter spacing */
 }
 
-.main-title {
+.gsv-main-title {
   color: #666;
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: 0.8rem;
   font-weight: 600;
   margin: 0;
   text-transform: uppercase;
-  line-height: 1.3;
-  max-width: 800px;
+  line-height: 1.2;
 }
 
-.quote-marks {
+.gsv-quote-marks {
   color: #ff0044;
-  font-size: 1.2em;
+  font-size: 1em;
   vertical-align: middle;
 }
 
-.typing-wrapper {
-  min-height: 3.5rem;
+.gsv-typing-wrapper {
+  min-height: 1.6rem; /* Slightly reduced */
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.5rem 0;
+  margin: 0.15rem 0; /* Slightly reduced */
 }
 
-.typing-text {
+.gsv-typing-text {
   color: #000;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: 1.2rem;
   font-weight: 700;
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
-.cursor {
+.gsv-cursor {
   display: inline-block;
   margin-left: 2px;
   width: 2px;
   background-color: #000;
-  animation: blink 1s infinite;
+  animation: gsv-blink 1s infinite;
 }
 
-@keyframes blink {
+@keyframes gsv-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
-.subheading {
-  font-size: clamp(0.8rem, 2vw, 1rem);
+.gsv-subheading {
+  font-size: 0.7rem;
   color: #888;
   margin: 0;
-  max-width: 600px;
 }
 
-.divider {
-  height: 2px;
-  width: 80%;
-  max-width: 500px;
-  background-color: #ff0044;
-  margin: 1rem auto;
-}
-
-/* Content Section */
-.content-section {
+/* Content Section - Single View */
+.gsv-content-sections {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.flex-container {
+.gsv-flex-container {
   display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  flex: 1;
+  gap: 0.8rem; /* Slightly reduced gap */
+  margin-bottom: 0.5rem;
+  flex: 0.8; /* Reduced from 1 to 0.8 to make it take up less vertical space */
+  min-height: 0;
+  max-height: 80%; /* Added maximum height constraint */
 }
 
 /* Left Text Box */
-.text-box {
-  flex: 1;
+.gsv-text-box {
+  flex: 0.9; /* Slightly smaller proportion */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-right: 1rem;
-  border-right: 2px solid #ff0044;
+  padding-right: 0.5rem;
+  border-right: 1px solid #ff0044;
 }
 
-.staggered-content {
+.gsv-staggered-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.1rem; /* Reduced gap for tighter text */
 }
 
-.staggered-text {
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+.gsv-staggered-text {
+  font-size: 1.4rem; /* Increased font size as requested */
   margin: 0;
-  line-height: 1.1;
+  line-height: 1.1; /* Slightly increased for better readability */
   font-weight: 700;
+  letter-spacing: 0.5px; /* Added letter spacing */
 }
 
-.highlight-text {
+.gsv-highlight-text {
   color: #ff0044;
 }
 
-.possibilities-text {
+.gsv-possibilities-text {
   color: #666;
-  font-size: clamp(0.9rem, 2vw, 1rem);
-  margin-top: 0.5rem;
+  font-size: 0.8rem; /* Slightly increased */
+  margin-top: 0.3rem;
 }
 
 /* Right Triangle Box */
-.triangle-box {
-  flex: 1;
+.gsv-triangle-box {
+  flex: 1.1; /* Increased proportion */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 1rem;
+  padding-left: 0.4rem; /* Slightly reduced padding */
 }
 
-.triangle-container {
+.gsv-triangle-container {
   width: 100%;
-  max-width: 300px;
+  max-width: 240px; /* Increased maximum width for the triangle */
 }
 
-.interactive-triangle-wrapper {
+.gsv-interactive-triangle {
   position: relative;
   width: 100%;
 }
 
-.triangle-image {
+.gsv-triangle-image {
   width: 100%;
   height: auto;
   display: block;
 }
 
-.triangle-indicator {
+.gsv-triangle-indicator {
   position: absolute;
-  border: 2px dashed #ff0044;
+  border: 1px dashed #ff0044;
   opacity: 0.7;
   pointer-events: none;
   transition: all 0.3s ease;
 }
 
-.triangle-indicator-0 {
+.gsv-triangle-indicator-0 {
   top: 35%;
   left: 28%;
   width: 22%;
@@ -175,7 +171,7 @@
   clip-path: polygon(0 100%, 100% 100%, 50% 0);
 }
 
-.triangle-indicator-1 {
+.gsv-triangle-indicator-1 {
   top: 35%;
   right: 28%;
   width: 22%;
@@ -183,7 +179,7 @@
   clip-path: polygon(0 100%, 100% 100%, 50% 0);
 }
 
-.triangle-indicator-2 {
+.gsv-triangle-indicator-2 {
   bottom: 15%;
   left: 40%;
   width: 22%;
@@ -191,182 +187,152 @@
   clip-path: polygon(0 100%, 100% 100%, 50% 0);
 }
 
-/* Project Eden Section */
-.project-eden {
+/* Compact Project Eden Section */
+.gsv-project-eden {
   display: flex;
   background-color: #f7f7f7;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  flex-shrink: 0;
+  height: 28%; /* Slightly reduced height */
+  min-height: 110px; /* Slightly reduced min-height */
 }
 
-.eden-left {
+.gsv-project-eden.gsv-content-change {
+  opacity: 0.5;
+}
+
+.gsv-eden-left {
   flex: 1;
-  padding: 1.5rem;
+  padding: 0.7rem; /* Slightly reduced padding */
   background-color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 200px;
+  min-width: 120px;
 }
 
-.eden-logo {
+.gsv-eden-logo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.4rem; /* Slightly reduced gap */
 }
 
-.eden-circles {
+.gsv-eden-circles {
   position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.circle {
-  position: absolute;
   width: 50px;
   height: 50px;
+}
+
+.gsv-circle {
+  position: absolute;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
 }
 
-.blue-circle {
+.gsv-blue-circle {
   background: linear-gradient(135deg, #0047ab, #6a5acd);
   top: 0;
   left: 5px;
 }
 
-.purple-circle {
+.gsv-purple-circle {
   background: linear-gradient(135deg, #8a2be2, #da70d6);
   bottom: 0;
   right: 5px;
 }
 
-.eden-title {
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
-  letter-spacing: 1px;
+.gsv-eden-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   color: #333;
   margin: 0;
   text-align: center;
 }
 
-.eden-right {
+.gsv-eden-right {
   flex: 2;
-  padding: 1.5rem;
+  padding: 0.7rem; /* Slightly reduced padding */
   display: flex;
   align-items: center;
+  overflow-y: auto;
 }
 
-.eden-description {
-  font-size: clamp(0.85rem, 2vw, 1rem);
-  line-height: 1.5;
+.gsv-eden-description {
+  font-size: 0.7rem;
+  line-height: 1.4;
   margin: 0;
 }
 
-.highlight {
+.gsv-highlight {
   color: #ff0044;
   font-weight: bold;
 }
 
 /* Responsive Breakpoints */
-@media (max-width: 992px) {
-  .gaming-container {
-    padding: 1.2rem;
-  }
-  
-  .flex-container {
-    gap: 1.5rem;
-  }
-  
-  .eden-left, .eden-right {
-    padding: 1.2rem;
-  }
-}
-
 @media (max-width: 768px) {
-  .flex-container {
+  .gsv-flex-container {
     flex-direction: column;
-    gap: 2rem;
+    gap: 0.6rem; /* Slightly reduced gap */
   }
   
-  .text-box {
+  .gsv-text-box {
     border-right: none;
-    border-bottom: 2px solid #ff0044;
+    border-bottom: 1px solid #ff0044;
     padding-right: 0;
-    padding-bottom: 1.5rem;
+    padding-bottom: 0.4rem; /* Slightly reduced padding */
     align-items: center;
     text-align: center;
   }
   
-  .triangle-box {
+  .gsv-staggered-text {
+    font-size: 1.3rem; /* Keep large for mobile */
+  }
+  
+  .gsv-triangle-box {
     padding-left: 0;
-    padding-top: 1rem;
+    padding-top: 0.4rem; /* Slightly reduced padding */
   }
   
-  .project-eden {
+  .gsv-triangle-container {
+    max-width: 180px; /* Increased from 150px */
+  }
+  
+  .gsv-project-eden {
     flex-direction: column;
+    height: auto;
   }
   
-  .eden-left {
-    padding: 1.5rem;
+  .gsv-eden-left {
+    padding: 0.5rem;
   }
   
-  .eden-right {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .gaming-container {
-    padding: 1rem;
-  }
-  
-  .header {
-    padding: 0.5rem 0;
-  }
-  
-  .typing-wrapper {
-    min-height: 3rem;
-  }
-  
-  .typing-text {
-    font-size: clamp(1.3rem, 6vw, 1.8rem);
-  }
-  
-  .staggered-text {
-    font-size: clamp(1.1rem, 5vw, 1.5rem);
-  }
-  
-  .eden-left, .eden-right {
-    padding: 1rem;
-  }
-  
-  .eden-circles {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .circle {
-    width: 45px;
-    height: 45px;
+  .gsv-eden-right {
+    padding: 0.5rem;
   }
 }
 
 @media (max-width: 400px) {
-  .main-title {
-    font-size: 0.9rem;
+  .gsv-main-title {
+    font-size: 0.7rem;
   }
   
-  .typing-text {
-    font-size: 1.4rem;
+  .gsv-typing-text {
+    font-size: 1rem;
   }
   
-  .subheading {
-    font-size: 0.8rem;
+  .gsv-staggered-text {
+    font-size: 1.1rem; /* Still larger than original */
   }
   
-  .eden-description {
-    font-size: 0.8rem;
+  .gsv-eden-title {
+    font-size: 0.6rem;
+  }
+  
+  .gsv-eden-description {
+    font-size: 0.65rem;
   }
 }

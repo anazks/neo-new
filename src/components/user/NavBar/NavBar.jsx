@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { FaBars, FaUser, FaShoppingCart } from "react-icons/fa";
 import logo from "../../../Images/LoginWith/neo_tokyo-logo.png";
 import "./nav.css";
-import SideBar from "../SIdeBar/SideBar"; // Adjust import path as needed
+import SideBar from "../SIdeBar/SideBar";
 
 const ModernNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [lastScroll, setLastScroll] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -19,7 +19,11 @@ const ModernNavbar = () => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024); // Changed to 1024px for laptop screens
+    };
+    
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -31,14 +35,14 @@ const ModernNavbar = () => {
 
       if (currentScroll <= 0) {
         setScrolled(false);
-        navbar.classList.remove('hidden');
+        navbar?.classList.remove('hidden');
         return;
       }
 
-      if (currentScroll > lastScroll && !navbar.classList.contains('hidden')) {
-        navbar.classList.add('hidden');
-      } else if (currentScroll < lastScroll && navbar.classList.contains('hidden')) {
-        navbar.classList.remove('hidden');
+      if (currentScroll > lastScroll && !navbar?.classList.contains('hidden')) {
+        navbar?.classList.add('hidden');
+      } else if (currentScroll < lastScroll && navbar?.classList.contains('hidden')) {
+        navbar?.classList.remove('hidden');
       }
 
       setScrolled(currentScroll > 50);
@@ -62,33 +66,47 @@ const ModernNavbar = () => {
   return (
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-container">
-  {/* This logo will only show on mobile */}
-  <div className="logo-container mobile-only" style={{ display: isMobile ? 'block' : 'none' }}>
-    <a href="/"><img src={logo} className="logo-img" alt="Logo" /></a>
-  </div>
+        <div className="nav-container">
+          {/* Mobile Logo */}
+          <div className="logo-container mobile-only">
+            <a href="/"><img src={logo} className="logo-img" alt="Logo" /></a>
+          </div>
 
-  <div className="nav-links">
-    <a href="/products" className="nav-link">Products</a>
-    <a href="/solutions" className="nav-link">Solutions</a>
-    {/* This center logo will only show on desktop */}
-    <a href="/" className="center-logo desktop-only"><img src={logo} className="logo-img" alt="Logo" /></a>
-    <a href="/store" className="nav-link">Store</a>
-    <a href="/support" className="nav-link">Support</a>
-  </div>
+          {/* Desktop Navigation Links - Hidden on laptop screens */}
+          <div className="nav-links desktop-nav">
+            <a href="/products" className="nav-link">Products</a>
+            <a href="/solutions" className="nav-link">Solutions</a>
+            
+            {/* Center Logo - Desktop Only */}
+            <a href="/" className="center-logo desktop-only">
+              <img src={logo} className="logo-img" alt="Logo" />
+            </a>
+            
+            <a href="/store" className="nav-link">Store</a>
+            <a href="/support" className="nav-link">Support</a>
+          </div>
 
-  <div className="nav-actions">
-    {/* <a href="/cart" className="cart-btn"><FaShoppingCart /><span>Cart</span></a> */}
-    {/* <a href="/login" className="login-btn"><FaUser /><span>Login</span></a> */}
-    <button className="offcanvas-toggle" onClick={openSidebar}><FaBars /></button>
-  </div>
-</div>
+          {/* Mobile Auth Buttons */}
+          <div className="auth-buttons mobile-only">
+            <a href="/register" className="auth-btn register-btn" style={{backgroundColor:"black"}}>Register</a>
+            <a href="/signin" className="auth-btn signin-btn">Sign In</a>
+          </div>
+
+          {/* Desktop Auth Buttons - Now includes menu button for laptops */}
+          <div className="auth-buttons desktop-only">
+            <button className="offcanvas-toggle" onClick={openSidebar}>
+              <FaBars />
+            </button>
+            {/* <a href="/signin" className="auth-btn signin-btn">
+              <FaUser className="auth-icon" />
+              <span>Sign In</span>
+            </a> */}
+          </div>
+        </div>
       </nav>
 
       {/* Custom Sidebar Component */}
-      {isSidebarOpen && (
-        <SideBar isOpen={isSidebarOpen} onClose={closeSidebar} />
-      )}
+      <SideBar isOpen={isSidebarOpen} onClose={closeSidebar} />
     </>
   );
 };

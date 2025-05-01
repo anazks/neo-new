@@ -26,7 +26,7 @@ function Quick() {
       price: '$1,40,000/-', 
       description: 'Performance Minimal, Sleek',
       image: "http://www.pngmart.com/files/4/Gaming-Computer-PNG-Free-Download.png",
-      color: "linear-gradient(135deg, #1a0022 0%, #8b0000 74%)" // Dark purple to dark red
+
     },
     { 
       id: 'ion', 
@@ -34,7 +34,7 @@ function Quick() {
       price: '$95,000/-', 
       description: 'Compact Power',
       image: "https://static.vecteezy.com/system/resources/previews/048/412/757/non_2x/modern-gaming-pc-isolated-on-transparent-free-png.png",
-      color: "linear-gradient(135deg, #000000 0%, #550000 74%)" // Black to dark red
+    
     },
     { 
       id: 'e75', 
@@ -42,7 +42,7 @@ function Quick() {
       price: '$1,20,000/-', 
       description: 'Professional Grade',
       image: "https://parspng.com/wp-content/uploads/2023/02/computerpng.parspng.com-4.png",
-      color: "linear-gradient(135deg, #2d0036 0%, #ff3333 94%)" // Dark purple to bright red
+  
     },
     { 
       id: 'phantom', 
@@ -50,7 +50,7 @@ function Quick() {
       price: '$1,60,000/-', 
       description: 'Ultimate Gaming',
       image: "https://parspng.com/wp-content/uploads/2023/02/computerpng.parspng.com-4.png",
-      color: "linear-gradient(135deg, #120036 0%, #c00000 94%)" // Dark blue to red
+
     },
   ];
 

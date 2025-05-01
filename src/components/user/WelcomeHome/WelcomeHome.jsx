@@ -69,7 +69,7 @@ const WelcomeHome = () => {
         Tokyo,
         Quick,
         FeedBack,
-        PriorityOne,
+        // PriorityOne,
         GamingPage,
         Gaming,
         Footer
