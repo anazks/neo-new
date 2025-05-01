@@ -70,7 +70,7 @@ export default function GamingSingleView() {
   };
   
   return (
-    <div className="w-full h-screen bg-white overflow-hidden flex flex-col" style={{width:'95vw', height:'97vh', borderRadius:"30px"}}>
+    <div className="w-full h-screen bg-white overflow-hidden flex flex-col" style={{maxWidth:"1200px", height:'97vh', borderRadius:"30px"}}>
       {/* Logo in top-left corner */}
       <div className="absolute top-4 left-4 z-10">
         
