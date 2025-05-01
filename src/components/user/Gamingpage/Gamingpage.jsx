@@ -99,7 +99,7 @@ export default function GamingPage() {
   const currentSpecs = isGaming ? gamingSpecs : proSpecs;
 
   return (
-    <div className={`w-full max-w-6xl mx-auto p-3 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} rounded-lg shadow-xl flex flex-col font-sans relative overflow-hidden transition-all duration-300`} style={{height: '97vh'}}>
+    <div className={`w-full max-w-6xl mx-auto p-3 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} rounded-lg shadow-xl flex flex-col font-sans relative overflow-hidden transition-all duration-300`} style={{height: '97vh', width: "100%", maxWidth: "1200px",borderRadius:"30px"}}>
       
       {/* System Toggle - Fixed at top */}
       <div className="flex justify-center gap-2 mb-3 w-full z-10 flex-wrap">

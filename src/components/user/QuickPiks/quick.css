@@ -2,12 +2,12 @@
 .fullWindow {
   width: 100%;
   max-width: 1200px;
+  height: 98vh;
   position: relative;
   overflow: hidden;
   padding: 1rem;
   border-radius: 30px;
   background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   box-sizing: border-box;
   margin: 0 auto;
 }

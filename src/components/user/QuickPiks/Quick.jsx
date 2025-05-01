@@ -131,7 +131,7 @@ function Quick() {
   };
 
   return (
-    <div className="fullWindow dark-theme">
+    <div className="fullWindow">
       <div className="mainBox">
         {/* Banner Section */}
         <div className="banner parallax" ref={bannerRef}>
