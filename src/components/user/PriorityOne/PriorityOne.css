@@ -1,6 +1,8 @@
 /* PriorityOne.css */
 .priority-one-container {
   width: 100%;
+  max-width: 1200px;
+  border-radius: 30px;
   min-height: 100vh;
   padding: 0.5rem 2rem;
   background-color: white;

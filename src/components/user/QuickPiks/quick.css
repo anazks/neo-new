@@ -1,7 +1,7 @@
 /* Base styling with dark theme */
 .fullWindow {
-  width: 90vw;
-  height: 90vh; /* Reduced from 95vh to ensure full visibility */
+  width: 100%;
+  max-width: 1200px; /* Reduced from 95vh to ensure full visibility */
   position: relative;
   overflow: hidden;
   padding: 1rem; /* Reduced padding */

@@ -72,9 +72,7 @@ const WelcomeHome = () => {
         PriorityOne,
         GamingPage,
         Gaming,
-        Footer,
-        Gaming,
-        Gaming,
+        Footer
 
       ].map((Component, index) => (
         <motion.div
