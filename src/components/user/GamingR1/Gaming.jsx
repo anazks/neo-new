@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-
-// CSS is included in a separate artifact
 import triangle from '../../../Images/triangle.png';
 import './gaming.css';
+
 export default function Gaming() {
-  // State for typing effect
   const [displayText, setDisplayText] = useState("");
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const phrases = ["GAMING R1", "PROFESSIONAL SYSTEM", "ENTERPRISE SYSTEM"];
-  
-  // State for triangle selection
   const [activeTriangle, setActiveTriangle] = useState(0);
   
-  // Project Eden content for each triangle
   const edenContent = [
     {
       title: "PROJECT EDEN",
@@ -36,45 +31,34 @@ export default function Gaming() {
     let timer;
     
     const typeEffect = () => {
-      // Current text
       const current = fullText.substring(0, currentIndex);
       setDisplayText(current);
       
-      // Speed factors
       const typingSpeed = isDeleting ? 75 : 150;
       
       if (!isDeleting && currentIndex === fullText.length) {
-        // Start deleting after a pause
         setTimeout(() => {
           isDeleting = true;
           timer = setTimeout(typeEffect, 1000);
         }, 1500);
       } else if (isDeleting && currentIndex === 0) {
-        // Move to next phrase
         isDeleting = false;
         setCurrentPhrase((prev) => (prev + 1) % phrases.length);
         timer = setTimeout(typeEffect, 500);
       } else {
-        // Update index based on deleting or typing
         currentIndex = isDeleting ? currentIndex - 1 : currentIndex + 1;
         timer = setTimeout(typeEffect, typingSpeed);
       }
     };
     
     timer = setTimeout(typeEffect, 100);
-    
     return () => clearTimeout(timer);
   }, [currentPhrase]);
   
-  // Handle triangle click
   const handleTriangleClick = (index) => {
     setActiveTriangle(index);
-    
-    // Add animation class to Project Eden section
     const edenSection = document.querySelector('.project-eden');
     edenSection.classList.add('content-change');
-    
-    // Remove animation class after animation completes
     setTimeout(() => {
       edenSection.classList.remove('content-change');
     }, 500);
@@ -82,10 +66,10 @@ export default function Gaming() {
   
   return (
     <div className='gaming-container'>
-      {/* Header section - more compact design */}
+      {/* Header section */}
       <header className="header">
         <div className="text-content">
-          <h1 className="main-title animate-fade-in">
+          <h1 className="main-title">
             <span className="quote-marks">"</span>DOESN'T HAVE TO BE A BOX IN A CORNER. IT CAN BE A...<span className="quote-marks">"</span>
           </h1>
           
@@ -96,11 +80,11 @@ export default function Gaming() {
             </h2>
           </div>
           
-          <p className="subheading animate-fade-in">
+          <p className="subheading">
             Built with latest in PC hardware, highest quality components and backed by lifetime support
           </p>
           
-          <div className="divider animate-grow"></div>
+          <div className="divider"></div>
         </div>
       </header>
 
@@ -110,12 +94,12 @@ export default function Gaming() {
           {/* Left side with staggered text */}
           <div className="text-box">
             <div className="staggered-content">
-              <h2 className="staggered-text animate-slide-in">NEW</h2>
-              <h2 className="staggered-text animate-slide-in-delay-1">
+              <h2 className="staggered-text">NEW</h2>
+              <h2 className="staggered-text">
                 <span className="highlight-text">EXP</span>ERIENCES
               </h2>
-              <h2 className="staggered-text animate-slide-in-delay-2">BEGINS HERE</h2>
-              <p className="possibilities-text animate-fade-in-delay">Endless Possibilities</p>
+              <h2 className="staggered-text">BEGINS HERE</h2>
+              <p className="possibilities-text">Endless Possibilities</p>
             </div>
           </div>
           
@@ -123,7 +107,6 @@ export default function Gaming() {
           <div className="triangle-box">
             <div className="triangle-container">
               <div className="interactive-triangle-wrapper">
-                {/* Triangle image with click regions */}
                 <img 
                   src={triangle} 
                   alt="Triangle Design" 
@@ -131,23 +114,19 @@ export default function Gaming() {
                   useMap="#triangleMap"
                 />
                 
-                {/* Image map for clickable regions */}
                 <map name="triangleMap">
-                  {/* Left region */}
                   <area 
                     shape="poly" 
                     coords="150,50, 150,240, 50,240" 
                     alt="Left triangle" 
                     onClick={() => handleTriangleClick(0)}
                   />
-                  {/* Right region */}
                   <area 
                     shape="poly" 
                     coords="150,50, 250,240, 150,240" 
                     alt="Right triangle" 
                     onClick={() => handleTriangleClick(1)}
                   />
-                  {/* Center region */}
                   <area 
                     shape="poly" 
                     coords="150,120, 200,240, 100,240" 
@@ -156,7 +135,6 @@ export default function Gaming() {
                   />
                 </map>
                 
-                {/* Visual indicator for active triangle */}
                 <div className={`triangle-indicator triangle-indicator-${activeTriangle}`}></div>
               </div>
             </div>
