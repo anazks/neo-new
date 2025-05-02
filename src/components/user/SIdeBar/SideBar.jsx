@@ -6,6 +6,7 @@ import {
   FiUser, FiLogOut, FiMenu, FiLogIn, FiUserPlus, FiMapPin 
 } from 'react-icons/fi';
 import Logo from '../../../Images/LoginWith/neo_tokyo-logo.png';
+import { BsFillTicketFill } from 'react-icons/bs';
 
 function SideBar({ isOpen, onClose }) {
   const { token, setToken, user } = useAuth();
@@ -108,6 +109,12 @@ function SideBar({ isOpen, onClose }) {
                 <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                   <FiHome className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                   <span>Store</span>
+                </Link>
+              </li>
+              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                <Link to="/tickets" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                  <BsFillTicketFill className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                  <span>Tickets</span>
                 </Link>
               </li>
               

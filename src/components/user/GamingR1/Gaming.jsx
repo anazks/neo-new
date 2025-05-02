@@ -77,19 +77,19 @@ export default function GamingSingleView() {
       </div>
 
       {/* Main container with reduced padding to fit everything */}
-      <div className="flex flex-col h-full p-2">
+      <div className="flex flex-col h-full p-4">
         {/* Header section with quote - taking less space */}
-        <div className="text-center mb-1 pt-10">
+        <div className="text-center mb-2 pt-8 md:pt-10">
           <div className="flex items-center justify-center">
-            <span className="text-pink-600 text-3xl font-bold mr-1">"</span>
-            <h1 className="text-gray-600 text-xl font-semibold tracking-wide">
+            <span className="text-pink-600 text-2xl md:text-3xl font-bold mr-1">"</span>
+            <h1 className="text-gray-600 text-lg md:text-xl font-semibold tracking-wide">
               DOESN'T HAVE TO BE A BOX IN A CORNER. IT CAN BE A ...
             </h1>
-            <span className="text-pink-600 text-3xl font-bold ml-1">"</span>
+            <span className="text-pink-600 text-2xl md:text-3xl font-bold ml-1">"</span>
           </div>
           
-          <div className="my-1">
-            <h2 className="text-3xl font-bold text-pink-600">
+          <div className="my-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-pink-600">
               {displayText}
               <span className="inline-block w-1 h-8 bg-black ml-1 animate-blink"></span>
             </h2>
@@ -98,25 +98,25 @@ export default function GamingSingleView() {
           <p className="text-gray-500 text-xs">
             Built with latest in PC hardware, highest quality components and backed by lifetime support
           </p>
-          <div className="w-full max-w-2xl mx-auto h-px bg-pink-600 mt-1"></div>
+          <div className="w-full max-w-2xl mx-auto h-px bg-pink-600 mt-2" style={{height: "3px"}}></div>
         </div>
 
         {/* Middle content section - matching the image layout */}
-        <div className="flex flex-col md:flex-row gap-4 mb-4 flex-grow">
+        <div className="flex flex-col md:flex-row gap-4 mb-4 flex-grow p-4">
           {/* Left side text */}
-          <div className="md:w-1/3 border-r border-pink-600 pr-6">
+          <div className="md:w-1/3 border-r border-pink-600 pr-6" style={{borderRightWidth: "3px"}}>
             <div className="flex flex-col items-start">
-              <h2 className="text-3xl font-bold mb-1">NEW</h2>
-              <h2 className="text-3xl font-bold mb-2">
+              <h2 className="text-2xl md:text-3xl font-bold mb-1">NEW</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
                 <span className="text-pink-600">EXP</span>ERIENCES
               </h2>
-              <h2 className="text-3xl font-bold mb-2">BEGINS HERE</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">BEGINS HERE</h2>
               <p className="text-gray-600 mt-4">Endless Possibilities</p>
             </div>
           </div>
           
           {/* Right side triangles - Improved to match the image */}
-          <div className="md:w-2/3">
+          <div className="md:w-2/3 px-2">
             <div className="flex justify-center items-center h-full">
               <div className="relative w-full">
                 <svg viewBox="0 0 600 200" className="w-full">
@@ -169,7 +169,7 @@ export default function GamingSingleView() {
                     </filter>
                   </defs>
                   
-                  {/* Triangles with better styling, tilted upwards and overlapping */}
+                  {/* Triangles with better styling, no tilting and overlapping */}
                   <g>
                     {/* First triangle - blue/pink gradient */}
                     <polygon 
@@ -180,67 +180,61 @@ export default function GamingSingleView() {
                       filter="url(#glossy)"
                       onClick={() => handleTriangleClick(0)} 
                       style={{cursor: 'pointer'}}
-                      transform="rotate(-15, 45, 100)"
                     />
                     
                     {/* Second triangle - dark car theme - overlapping first */}
                     <polygon 
-                      points="130,30 185,130 75,130" 
+                      points="130,40 185,140 75,140" 
                       fill="url(#darkGradient)" 
                       stroke={activeTriangle === 1 ? "white" : "transparent"}
                       strokeWidth="2"
                       filter="url(#glossy)"
                       onClick={() => handleTriangleClick(1)} 
                       style={{cursor: 'pointer'}}
-                      transform="rotate(-10, 130, 90)"
                     />
                     
                     {/* Third triangle - neon cityscape - overlapping second */}
                     <polygon 
-                      points="215,35 270,135 160,135" 
+                      points="215,40 270,140 160,140" 
                       fill="url(#neonGradient)" 
                       stroke={activeTriangle === 2 ? "white" : "transparent"}
                       strokeWidth="2"
                       filter="url(#glossy)"
                       onClick={() => handleTriangleClick(2)} 
                       style={{cursor: 'pointer'}}
-                      transform="rotate(-20, 215, 95)"
                     />
                     
                     {/* Fourth triangle - purple theme - overlapping third */}
                     <polygon 
-                      points="300,25 355,125 245,125" 
+                      points="300,40 355,140 245,140" 
                       fill="url(#purpleGradient)" 
                       stroke={activeTriangle === 3 ? "white" : "transparent"}
                       strokeWidth="2"
                       filter="url(#glossy)"
                       onClick={() => handleTriangleClick(3)} 
                       style={{cursor: 'pointer'}}
-                      transform="rotate(-12, 300, 85)"
                     />
                     
                     {/* Fifth triangle - city blue - overlapping fourth */}
                     <polygon 
-                      points="385,30 440,130 330,130" 
+                      points="385,40 440,140 330,140" 
                       fill="url(#cityGradient)" 
                       stroke={activeTriangle === 4 ? "white" : "transparent"}
                       strokeWidth="2"
                       filter="url(#glossy)"
                       onClick={() => handleTriangleClick(4)} 
                       style={{cursor: 'pointer'}}
-                      transform="rotate(-18, 385, 90)"
                     />
                     
                     {/* Sixth triangle - cyberpunk city - overlapping fifth */}
                     <polygon 
-                      points="470,35 525,135 415,135" 
+                      points="470,40 525,140 415,140" 
                       fill="url(#cyberpunkGradient)" 
                       stroke={activeTriangle === 5 ? "white" : "transparent"}
                       strokeWidth="2"
                       filter="url(#glossy)"
                       onClick={() => handleTriangleClick(5)} 
                       style={{cursor: 'pointer'}}
-                      transform="rotate(-14, 470, 95)"
                     />
                     
                     {/* Overlay effects to simulate the image textures */}
@@ -250,56 +244,50 @@ export default function GamingSingleView() {
                         points="45,40 100,140 -10,140" 
                         fill="url(#blueGradient)" 
                         opacity="0.6"
-                        transform="rotate(-15, 45, 100)"
                       >
                         <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3s" repeatCount="indefinite" />
                       </polygon>
                       
                       {/* Second triangle car pattern */}
                       <polygon 
-                        points="130,30 185,130 75,130" 
+                        points="130,40 185,140 75,140" 
                         opacity="0.7"
-                        transform="rotate(-10, 130, 90)"
                       >
                         <animate attributeName="opacity" values="0.7;0.9;0.7" dur="4s" repeatCount="indefinite" />
                       </polygon>
                       
                       {/* Third triangle city pattern */}
                       <polygon 
-                        points="215,35 270,135 160,135" 
+                        points="215,40 270,140 160,140" 
                         fill="url(#neonGradient)" 
                         opacity="0.5"
-                        transform="rotate(-20, 215, 95)"
                       >
                         <animate attributeName="opacity" values="0.5;0.7;0.5" dur="2.5s" repeatCount="indefinite" />
                       </polygon>
                       
                       {/* Fourth triangle pattern */}
                       <polygon 
-                        points="300,25 355,125 245,125" 
+                        points="300,40 355,140 245,140" 
                         fill="url(#purpleGradient)" 
                         opacity="0.6"
-                        transform="rotate(-12, 300, 85)"
                       >
                         <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3.5s" repeatCount="indefinite" />
                       </polygon>
                       
                       {/* Fifth triangle pattern */}
                       <polygon 
-                        points="385,30 440,130 330,130" 
+                        points="385,40 440,140 330,140" 
                         fill="url(#cityGradient)" 
                         opacity="0.7"
-                        transform="rotate(-18, 385, 90)"
                       >
                         <animate attributeName="opacity" values="0.7;0.9;0.7" dur="4s" repeatCount="indefinite" />
                       </polygon>
                       
                       {/* Sixth triangle pattern */}
                       <polygon 
-                        points="470,35 525,135 415,135" 
+                        points="470,40 525,140 415,140" 
                         fill="url(#cyberpunkGradient)" 
                         opacity="0.6"
-                        transform="rotate(-14, 470, 95)"
                       >
                         <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3s" repeatCount="indefinite" />
                       </polygon>
@@ -307,22 +295,22 @@ export default function GamingSingleView() {
                     
                     {/* Light reflections and gleam effects */}
                     <g opacity="0.3">
-                      <polygon points="45,40 55,60 35,60" fill="white" transform="rotate(-15, 45, 100)">
+                      <polygon points="45,40 55,60 35,60" fill="white">
                         <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite" />
                       </polygon>
-                      <polygon points="130,30 140,50 120,50" fill="white" transform="rotate(-10, 130, 90)">
+                      <polygon points="130,40 140,60 120,60" fill="white">
                         <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.5s" repeatCount="indefinite" />
                       </polygon>
-                      <polygon points="215,35 225,55 205,55" fill="white" transform="rotate(-20, 215, 95)">
+                      <polygon points="215,40 225,60 205,60" fill="white">
                         <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite" />
                       </polygon>
-                      <polygon points="300,25 310,45 290,45" fill="white" transform="rotate(-12, 300, 85)">
+                      <polygon points="300,40 310,60 290,60" fill="white">
                         <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.8s" repeatCount="indefinite" />
                       </polygon>
-                      <polygon points="385,30 395,50 375,50" fill="white" transform="rotate(-18, 385, 90)">
+                      <polygon points="385,40 395,60 375,60" fill="white">
                         <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3.2s" repeatCount="indefinite" />
                       </polygon>
-                      <polygon points="470,35 480,55 460,55" fill="white" transform="rotate(-14, 470, 95)">
+                      <polygon points="470,40 480,60 460,60" fill="white">
                         <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.7s" repeatCount="indefinite" />
                       </polygon>
                     </g>
@@ -333,19 +321,19 @@ export default function GamingSingleView() {
           </div>
         </div>
 
-        {/* Project Eden section - condensed to fit in the screen without scrolling */}
-        <div className="bg-gray-100 rounded-lg flex flex-col md:flex-row shadow-md mt-1">
-          <div className="md:w-1/4 bg-gray-200 p-4 flex items-center justify-center">
+        {/* Project Eden section - moved up */}
+        <div className="bg-gray-100 rounded-lg flex flex-col md:flex-row shadow-md mt-1 mb-6">
+          <div className="md:w-1/4 bg-gray-200 p-3 md:p-4 flex items-center justify-center">
             <div className="text-center">
-              <div className="relative w-12 h-12 mx-auto mb-2">
-                <div className="absolute top-0 left-1 w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-500"></div>
-                <div className="absolute bottom-0 right-1 w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-pink-500"></div>
+              <div className="relative w-10 h-10 md:w-12 md:h-12 mx-auto mb-2">
+                <div className="absolute top-0 left-1 w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-500"></div>
+                <div className="absolute bottom-0 right-1 w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-purple-600 to-pink-500"></div>
               </div>
               <h3 className="uppercase text-xs font-bold tracking-wider">{edenContent[activeTriangle].title}</h3>
             </div>
           </div>
-          <div className="md:w-3/4 p-4 flex items-center">
-            <p className="text-gray-800 text-sm">
+          <div className="md:w-3/4 p-3 md:p-4 flex items-center">
+            <p className="text-gray-800 text-xs md:text-sm">
               <span className="text-pink-600 font-bold">{edenContent[activeTriangle].title.split(" ")[0]}</span> {edenContent[activeTriangle].description}
             </p>
           </div>

@@ -117,8 +117,9 @@ function ProductsList() {
   };
 
   const handleBuyNow = (product, event) => {
-    event.stopPropagation();
-    navigate(`/checkout/${product.id}`);
+    console.log(product, "buy now product");
+    // event.stopPropagation();
+    // navigate(`/checkout/${product.id}`);
   };
 
   const navigateToDetails = (id) => {

@@ -73,7 +73,6 @@ const WelcomeHome = () => {
         // PriorityOne,
         GamingPage,
         Gaming,
-        Tickets,
         Footer
 
       ].map((Component, index) => (

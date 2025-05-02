@@ -262,7 +262,20 @@ export const CreateOrder = async(id)=>{
     return error
   }
 }
-
+export const CreateSIngeleOrder = async(data)=>{
+  try {
+    let delivery_address_id = data.address_id
+    let product_id = data.product_id
+    let newData = {delivery_address_id,product_id}
+    console.log(data,"data in single order")
+    let payments = await Axios.post(`/orders/order/single-product/`,newData)
+    console.log(payments,"paymnets...callback")
+    return payments 
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
 export const AddDelievryAddress = async(data)=>{
   try {
     console.log(data,"in api--------")

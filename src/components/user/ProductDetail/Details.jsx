@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaCartPlus, FaCheck, FaPlay, FaDownload, FaYoutube } from "react-icons/fa";
+import {getMyPrimaryAddress,CreateSIngeleOrder} from "../../../Services/userApi"
+import SingeProductOverview from '../CardPage/SingleProductOverView'
 import BaseURL from '../../../Static/Static';
 import NavBar from '../NavBar/NavBar'
 import { addTocart } from '../../../Services/userApi';
@@ -13,6 +15,7 @@ function Details({ product }) {
   const [showOptions, setShowOptions] = useState(false);
   const [showVideoPopup, setShowVideoPopup] = useState(false);
   const [cartData, setCartData] = useState(false);
+  const [overView,setOverView] = useState(false)
   // Refs for animations
   const imageRef = useRef(null);
   const detailsRef = useRef(null);
@@ -129,6 +132,16 @@ function Details({ product }) {
     return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "0";
   };
 
+
+const handleBuyNow = async () => {
+  try {
+    setOverView(true)
+  } catch (error) {
+    console.error("Error in buy now:", error);
+    alert("Error in buy now:", error);
+  }
+}
+
   if (!product) {
     return (
       <div className="flex flex-col items-center justify-center h-screen w-full bg-white">
@@ -152,6 +165,11 @@ function Details({ product }) {
             productId={null}
           />
         </div>
+      )
+    }
+    {
+      overView && (
+        <SingeProductOverview product={product}/>
       )
     }
      <div className="min-h-screen bg-white">
@@ -280,6 +298,7 @@ function Details({ product }) {
                 <FaCartPlus size={14} /> <span>Add To Cart</span>
               </button>
               <button 
+              onClick={handleBuyNow}
                 className="flex-1 h-10 rounded-lg font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all duration-300"
               >
                 <FaBolt size={14} /> <span>Buy Now</span>
