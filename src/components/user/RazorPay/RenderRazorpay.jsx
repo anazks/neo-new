@@ -30,14 +30,16 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
       console.log('Razorpay SDK failed to load. Are you online?');
       return;
     }
-
+   
+    console.log('Order Details:', orderDetails);
+    let {data} = orderDetails
     const options = {
-      key: orderDetails.keyId,
-      amount: orderDetails.amount,
+      key: data.key,
+      amount: data.amount,
       currency: "INR",
       name: "NEO TOKYO",
       description: "Order Payment",
-      order_id: orderDetails.razorpayOrderId,
+      order_id: data.raz_order_id,
       handler: async (response) => {
         console.log("Payment Success Response:", response);
         paymentId.current = response.razorpay_payment_id;

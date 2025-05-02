@@ -1,20 +1,29 @@
-import React from 'react';
-import './Loader.css';
+import React, { useEffect, useState } from 'react';
 
-function Loader() {
+export default function SimpleLoader() {
+  const [dots, setDots] = useState('');
+  
+  // Animate the dots
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots(prev => {
+        if (prev.length >= 3) return '';
+        return prev + '.';
+      });
+    }, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="loader-container">
-      <div className="loader-content">
-        <div className="spinner-container">
-          <div className="spinner-outer"></div>
-          <div className="spinner-middle"></div>
-          <div className="spinner-inner"></div>
-        </div>
-        <h2 className="loading-text">LOADING<span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></h2>
-        <p className="loading-subtext">ACCESSING NEO TOKYO DATABASE</p>
-      </div>
+    <div className="flex items-center justify-center p-4">
+      {/* Single spinner circle */}
+      <div className="w-6 h-6 mr-3 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+      
+      {/* Simple loading text */}
+      <span className="text-gray-700 font-medium">
+        Loading{dots}
+      </span>
     </div>
   );
 }
-
-export default Loader;

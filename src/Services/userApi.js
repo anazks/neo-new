@@ -5,6 +5,20 @@ import { jwtDecode } from "jwt-decode";
 
 const SECRET_KEY = "your_secret_key_123";
 
+export const RegisterUser = async (data) => {
+  try {
+      console.log(data, "in js")
+      const response = await Axios.post('/authentication/user_registration/', data, {
+        headers: { "Content-Type": "application/json" }
+      });
+      console.log(response.data, "userAPI from register user")
+      return response;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    return error;
+  }
+}
+
 export const submitOTP = async (email) => {
   try {
     console.log(email, "in js");
@@ -20,7 +34,7 @@ export const submitOTP = async (email) => {
   } catch (error) {
     console.error(
       "Error sending OTP:",
-      error.response ? error.response.data : error.message
+      error
     );
     return null;
   }

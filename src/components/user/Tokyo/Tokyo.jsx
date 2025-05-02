@@ -29,15 +29,14 @@ export default function NeoTokyo() {
           className={`text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold font-mono tracking-wider text-white 
             ${isExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}
             transition-all duration-1000 ease-out
-            shadow-[0_0_8px_rgba(0,0,0,0.8),0_0_4px_#fff]
-            border-0 outline-none`}
+             outline-none`}
         >
           NEO TOKYO
         </h1>
         
         {/* Tagline */}
         <div 
-          className={`absolute -bottom-8 sm:-bottom-10 w-full text-center font-sans text-sm sm:text-base md:text-lg font-light tracking-wider sm:tracking-widest text-white
+          className={`absolute -bottom-10 sm:-bottom-10 w-full text-center font-sans text-sm sm:text-base md:text-lg font-light tracking-wider sm:tracking-widest text-white
             ${isExpanded ? 'opacity-100' : 'opacity-0'}
             transition-opacity duration-1000 delay-500`}
         >
@@ -45,9 +44,9 @@ export default function NeoTokyo() {
         </div>
       </div>
       
-      {/* Endless Possibilities Text - Bottom Left */}
+      {/* Endless Possibilities Text - Repositioned higher from bottom */}
       <div 
-        className={`absolute bottom-4 sm:bottom-8 left-4 sm:left-8 font-serif text-sm sm:text-base md:text-lg text-white opacity-0
+        className={`absolute bottom-16 sm:bottom-24 md:bottom-32 left-4 sm:left-8 font-serif text-sm sm:text-base md:text-lg text-white opacity-0
           ${isAnimated ? 'animate-pulse opacity-80' : ''}
           transition-opacity duration-1000`}
       >

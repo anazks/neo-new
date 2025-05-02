@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaCartPlus, FaCheck, FaPlay, FaDownload, FaYoutube } from "react-icons/fa";
 import BaseURL from '../../../Static/Static';
 import NavBar from '../NavBar/NavBar'
-
+import { addTocart } from '../../../Services/userApi';
+import Alert from '../Alert/Alert';
 function Details({ product }) {
   // State for selected options and UI
   const [selectedStorage, setSelectedStorage] = useState('.5');
@@ -11,7 +12,7 @@ function Details({ product }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showVideoPopup, setShowVideoPopup] = useState(false);
-  
+  const [cartData, setCartData] = useState(false);
   // Refs for animations
   const imageRef = useRef(null);
   const detailsRef = useRef(null);
@@ -69,7 +70,18 @@ function Details({ product }) {
   const handleRamSelect = (ram) => {
     setSelectedRam(ram);
   };
-
+  const handleAddToCart =  async(id) => {
+    try {
+        console.log("Adding to cart:", id);
+        let cartData = await addTocart(id)
+        console.log("Cart data:", cartData);
+        setCartData(cartData);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      
+      
+    }
+  }
   // Get YouTube video ID from URL
   const getYoutubeVideoId = (url) => {
     if (!url) return null;
@@ -120,7 +132,7 @@ function Details({ product }) {
   if (!product) {
     return (
       <div className="flex flex-col items-center justify-center h-screen w-full bg-white">
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-6"></div>
+        <div className="w-16 h-16 border-4 border-black border-t-transparent rounded-full animate-spin mb-6"></div>
         <h2 className="text-xl font-semibold text-gray-800">Loading product details...</h2>
       </div>
     );
@@ -131,6 +143,17 @@ function Details({ product }) {
   return (
    <>
     <NavBar/>
+    {
+      cartData && (
+        <div>
+          <Alert
+            type="success"
+            message="Added to cart successfully"
+            productId={null}
+          />
+        </div>
+      )
+    }
      <div className="min-h-screen bg-white">
       {/* Main product container */}
       <div className="w-full min-h-screen">
@@ -139,7 +162,7 @@ function Details({ product }) {
           <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50 animate-fade-in">
             <div className="relative w-11/12 max-w-4xl" ref={videoPopupRef}>
               <div 
-                className="absolute -top-10 -right-10 w-10 h-10 bg-black bg-opacity-60 rounded-full flex items-center justify-center text-white text-2xl cursor-pointer hover:bg-blue-500 hover:scale-110 transition-all duration-300"
+                className="absolute -top-10 -right-10 w-10 h-10 bg-black bg-opacity-60 rounded-full flex items-center justify-center text-white text-2xl cursor-pointer hover:bg-black hover:scale-110 transition-all duration-300"
                 onClick={() => setShowVideoPopup(false)}
               >
                 ×
@@ -177,7 +200,7 @@ function Details({ product }) {
                       className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer" 
                       onClick={handlePlayVideo}
                     >
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600 text-white transform transition-transform duration-300 hover:scale-105">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center bg-black text-white transform transition-transform duration-300 hover:scale-105">
                         <FaPlay />
                       </div>
                     </div>
@@ -194,7 +217,7 @@ function Details({ product }) {
             <div className="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
               {videoId && (
                 <button 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-100 border border-blue-300 text-blue-700 hover:bg-blue-200 transition-all duration-300" 
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 border border-gray-300 text-black hover:bg-gray-200 transition-all duration-300" 
                   onClick={handlePlayVideo}
                 >
                   <FaPlay size={12} /> <span>Watch Video</span>
@@ -202,7 +225,7 @@ function Details({ product }) {
               )}
               {product?.broacher && (
                 <button 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-cyan-100 border border-cyan-300 text-cyan-700 hover:bg-cyan-200 transition-all duration-300"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 border border-gray-300 text-black hover:bg-gray-200 transition-all duration-300"
                   onClick={handleDownloadBrochure}
                 >
                   <FaDownload size={12} /> <span>Download Brochure</span>
@@ -210,7 +233,7 @@ function Details({ product }) {
               )}
               {videoId && (
                 <button 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-red-100 border border-red-300 text-red-700 hover:bg-red-200 transition-all duration-300"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 border border-gray-300 text-black hover:bg-gray-200 transition-all duration-300"
                   onClick={handleWatchYoutube}
                 >
                   <FaYoutube size={14} /> <span>Watch on YouTube</span>
@@ -223,37 +246,41 @@ function Details({ product }) {
           <div 
           style={{marginTop: "50px"}}
             ref={detailsRef}
-            className="w-full md:w-3/5 flex flex-col rounded-xl p-5 lg:p-6 bg-white border border-gray-100 relative overflow-hidden"
+            className="w-full md:w-3/5 flex flex-col rounded-xl p-5 lg:p-6   relative overflow-hidden"
           >
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+            <div className="absolute top-0 left-0 w-full h-1 "></div>
             
             <div className="mb-4">
-              <h1 className="text-2xl md:text-3xl font-bold mb-1 uppercase font-rajdhani tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">
+              <h1 className="text-2xl md:text-3xl font-bold mb-1 uppercase font-rajdhani tracking-tight text-black">
                 {product.name || "THE SPECTRE SERIES"}
               </h1>
               
-              <h3 className="relative uppercase tracking-wider text-xs pl-3 mb-3 font-medium text-gray-500 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-3 before:bg-gradient-to-b before:from-blue-500 before:to-blue-600">
+              <h3 className="relative uppercase tracking-wider text-xs pl-3 mb-3 font-medium text-gray-500 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-3 before:bg-black">
                 {product.subtitle || "GAMING PC"}
               </h3>
               
-              <div className="text-2xl font-bold mb-3 pb-3 border-b border-gray-200 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">
-                {product.originalPrice && <del className="text-base mr-3 font-normal opacity-60 align-super">₹ {formatPrice(product.originalPrice)}</del>}  
-                <span>₹ {formatPrice(price)}/-</span>
-              </div>
+              <div className="text-2xl font-bold mb-3 pb-3 border-b border-gray-200"style={{ color: '#63A375' }}>
+                  {product.originalPrice && (
+                    <del className="text-base mr-3 font-normal opacity-60 align-super">
+                      ₹ {formatPrice(product.originalPrice)}
+                    </del>
+                  )}
+                  <span>₹ {formatPrice(price)}/-</span>
+                </div>
             </div>
             
-            <div className="text-sm leading-relaxed mb-4 pb-4 max-h-24 overflow-y-auto text-gray-600 border-b border-gray-200 font-questrial scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+            <div className="text-sm leading-relaxed mb-4 pb-4 max-h-24 overflow-y-auto text-gray-600 border-b border-gray-200 font-questrial scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200">
               {product.description || "Experience the ultimate gaming performance with our custom-built gaming PC, featuring the latest technology and components designed to deliver exceptional speed, graphics, and reliability for all your gaming needs."}
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 mt-4">
-              <button 
-                className="flex-1 h-10 rounded-lg font-semibold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 bg-blue-100 border border-blue-400 text-blue-700 hover:bg-blue-200"
+              <button  onClick={()=>handleAddToCart(product.id)}
+                className="flex-1 h-10 rounded-lg font-semibold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 bg-gray-100 border border-gray-400 text-black hover:bg-gray-200"
               >
                 <FaCartPlus size={14} /> <span>Add To Cart</span>
               </button>
               <button 
-                className="flex-1 h-10 rounded-lg font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
+                className="flex-1 h-10 rounded-lg font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all duration-300"
               >
                 <FaBolt size={14} /> <span>Buy Now</span>
               </button>
@@ -335,8 +362,8 @@ style.textContent = `
     width: 5px;
   }
   
-  .scrollbar-thumb-blue-500::-webkit-scrollbar-thumb {
-    background: #3B82F6;
+  .scrollbar-thumb-black::-webkit-scrollbar-thumb {
+    background: #000000;
     border-radius: 3px;
   }
   

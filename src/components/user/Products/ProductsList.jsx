@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { 
-  FaCartPlus, 
   FaSearch, 
   FaSpinner, 
-  FaMoon, 
-  FaSun, 
   FaFilter, 
   FaSort,
   FaShoppingCart,
@@ -28,13 +25,12 @@ function ProductsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [addingToCart, setAddingToCart] = useState(null);
   const [alertData, setAlertData] = useState(null);
-  const [darkMode, setDarkMode] = useState(false); // Default to light mode
+  const [darkMode, setDarkMode] = useState(false);
   const alertTimeoutRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
-    // Apply theme class to body
     if (darkMode) {
       document.body.classList.add('dark');
       document.body.classList.remove('light');
@@ -65,23 +61,18 @@ function ProductsList() {
     fetchProducts();
   }, []);
 
-  // Function to show alert with automatic timeout
   const showAlert = (data) => {
-    // Clear any existing timeout
     if (alertTimeoutRef.current) {
       clearTimeout(alertTimeoutRef.current);
     }
     
-    // Set the alert data
     setAlertData(data);
     
-    // Set timeout to clear the alert after 3 seconds
     alertTimeoutRef.current = setTimeout(() => {
       setAlertData(null);
     }, 3000);
   };
 
-  // Clean up timeout on component unmount
   useEffect(() => {
     return () => {
       if (alertTimeoutRef.current) {
@@ -91,16 +82,14 @@ function ProductsList() {
   }, []);
   
   const addTocart = async (id, event) => {
-    event.stopPropagation(); // Prevent navigation when clicking add to cart
+    event.stopPropagation();
     try {
-      if (!user?.data) {
-        // Show login required alert
+      if (!user) {
         showAlert({
           type: "warning",
           message: "Please log in to add items to cart"
         });
         
-        // Navigate after a short delay to allow alert to be seen
         setTimeout(() => {
           navigate("/login");
         }, 1000);
@@ -110,7 +99,6 @@ function ProductsList() {
       setAddingToCart(id);
       let addToCart = await addToCartService(id);
       if (addToCart) {
-        // Success notification
         showAlert({
           type: "success",
           message: "Item successfully added to cart",
@@ -119,7 +107,6 @@ function ProductsList() {
       }
     } catch (error) {
       console.log(error);
-      // Error notification
       showAlert({
         type: "error",
         message: `Failed to add to cart: ${error.message || "Unknown error"}`,
@@ -130,7 +117,7 @@ function ProductsList() {
   };
 
   const handleBuyNow = (product, event) => {
-    event.stopPropagation(); // Prevent navigation
+    event.stopPropagation();
     navigate(`/checkout/${product.id}`);
   };
 
@@ -213,17 +200,6 @@ function ProductsList() {
                   <FaSort className={`${sort ? 'text-white' : darkMode ? 'text-blue-400' : 'text-blue-500'}`} />
                   <span>SORT</span>
                 </button>
-                
-                {/* <button 
-                  className={`flex items-center justify-center w-10 h-10 rounded-full shadow-sm ${darkMode 
-                    ? 'bg-gray-700 text-yellow-300 border border-gray-600 hover:bg-gray-600' 
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
-                  } transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md`}
-                  onClick={toggleDarkMode}
-                  aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
-                >
-                  {darkMode ? <FaSun className="text-yellow-300" /> : <FaMoon className="text-blue-600" />}
-                </button> */}
               </div>
             </div>
           </div>
@@ -243,7 +219,7 @@ function ProductsList() {
           </div>
         )}
 
-        {/* Products Grid or Loading State */}
+        {/* Products Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <Loader />
@@ -258,13 +234,10 @@ function ProductsList() {
               <div 
                 key={product.id}
                 onClick={() => navigateToDetails(product.id)}
-                className={`group rounded-xl overflow-hidden shadow-md hover:shadow-xl ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.01] cursor-pointer relative`}
+                className="group rounded-xl overflow-hidden shadow-md hover:shadow-xl bg-[#393939] transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.01] cursor-pointer"
               >
-                {/* Gradient Border Effect on Hover */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 opacity-0 group-hover:opacity-100 -z-10 transition-opacity duration-500 scale-[1.02]"></div>
-                
                 {/* Image Container */}
-                <div className={`relative h-56 p-4 flex items-center justify-center ${darkMode ? 'bg-gray-900/60' : 'bg-gray-50/80'} overflow-hidden group-hover:bg-opacity-100 transition-all duration-500`}>
+                <div className="relative h-56 p-4 flex items-center justify-center bg-[#393939] overflow-hidden">
                   <img 
                     src={product.images?.[0]?.image 
                       ? baseUrl + product.images[0].image 
@@ -273,20 +246,16 @@ function ProductsList() {
                     alt={product.name}
                     className="max-h-48 max-w-[85%] object-contain transition-all duration-700 filter drop-shadow-md group-hover:drop-shadow-xl group-hover:scale-110 group-hover:-translate-y-2"
                   />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-gray-100/80 to-transparent dark:from-gray-900/80"></div>
                 </div>
                 
                 {/* Product Content */}
-                <div className={`p-5 ${darkMode ? 'bg-gray-800' : 'bg-white'} flex flex-col h-64`}>
-                  <h2 className={`font-[Rajdhani] text-xl font-semibold mb-4 line-clamp-2 h-14 ${darkMode ? 'text-blue-400 group-hover:text-white' : 'text-blue-600 group-hover:text-gray-800'} transition-colors duration-300`}>
+                <div className="p-5 flex flex-col h-64">
+                  <h2 className="font-[Rajdhani] text-xl font-semibold mb-4 line-clamp-2 h-14 text-white group-hover:text-blue-400 transition-colors duration-300">
                     {product.name}
                   </h2>
                   
-                  <span className={`text-2xl font-bold mb-5 font-[Montserrat] ${darkMode ? 'text-pink-400' : 'text-pink-600'} relative inline-block`}>
+                  <span className="text-2xl font-bold mb-5 font-[Rajdhani] text-[#CECECE]">
                     ₹ {product.price?.toLocaleString()}
-                    <span className="absolute bottom-[-6px] left-0 w-12 h-1 bg-gradient-to-r from-pink-500 to-transparent rounded-full"></span>
                   </span>
                   
                   <div className="mt-auto flex flex-col gap-3">
@@ -295,8 +264,8 @@ function ProductsList() {
                       disabled={addingToCart === product.id}
                       className={`w-full py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm font-[Rajdhani] font-semibold tracking-wide transition-all duration-300 ${
                         addingToCart === product.id
-                          ? `${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-400'} cursor-not-allowed`
-                          : `${darkMode ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-blue-50 text-blue-600 border border-blue-200'} hover:bg-blue-100 hover:text-blue-700 hover:shadow-md hover:-translate-y-0.5`
+                          ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                          : 'text-[#CECECE] hover:text-white'
                       }`}
                     >
                       {addingToCart === product.id ? (
@@ -314,7 +283,7 @@ function ProductsList() {
                     
                     <button 
                       onClick={(e) => handleBuyNow(product, e)}
-                      className="w-full py-2.5 rounded-lg text-sm font-[Rajdhani] font-bold tracking-wider text-white bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-md"
+                      className="w-full py-2.5 rounded-lg text-sm font-[Rajdhani] font-bold tracking-wider text-gray-900 bg-[#D9D9D9] hover:bg-gray-200 flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-md"
                     >
                       <FaBolt className="text-sm" />
                       <span>BUY NOW</span>
