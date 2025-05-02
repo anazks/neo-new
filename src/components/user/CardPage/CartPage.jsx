@@ -1,16 +1,22 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "./cartpage.css";
-import "@fontsource/rajdhani";
-import "@fontsource/rajdhani/700.css";
-import { getMyCart, RemoveFromCart, cartIncrement, cartDecrement, CreateOrder, AddDelievryAddress, getMyDeliveryAddress ,getMyPrimaryAddress} from "../../../Services/userApi";
+import { Link } from "react-router-dom";
 import NavBar from '../NavBar/NavBar';
-import { Link } from "react-router-dom"; // Assuming you're using React Router
-import BaseURL from "../../../Static/Static";
-import Loader from '../Loader/Loader'
+import Loader from '../Loader/Loader';
 import RenderRazorpay from "../RazorPay/RenderRazorpay";
+import BaseURL from "../../../Static/Static";
+import { 
+  getMyCart, 
+  RemoveFromCart, 
+  cartIncrement, 
+  cartDecrement, 
+  CreateOrder, 
+  AddDelievryAddress, 
+  getMyDeliveryAddress,
+  getMyPrimaryAddress 
+} from "../../../Services/userApi";
 
-
+// Using the Rajadhanai color scheme with #63A375 (green) and black
 const CartPage = () => {
   const [cartItems, setCartItems] = useState({ items: [], id: null });
   const [isLoading, setIsLoading] = useState(true);
@@ -42,35 +48,25 @@ const CartPage = () => {
   });
 
   const handleCreateOrder = async () => {
-      try {
-        let getPrimaryAddress = await  getMyPrimaryAddress()
-        
-        console.log(selectedAddressId,getPrimaryAddress,"get prim--")
-          let order = await CreateOrder(selectedAddressId)
-          console.log(order,"order--")
-          let newData = order.data
-          console.log(newData,"order data--")
-          setOrderDetails({
-            razorpayOrderId: newData.raz_order_id,
-            currency: newData.currency,
-            amount: newData.amount,
-            keyId: newData.key,
-          })
-          console.log(orderDetails,"order details--")
-          setDisplayRazorpay(true);
-  //         if(data){
-  //           setOrderDetails({
-  //             orderId: data.raz_order_id,
-  //             currency: data.currency,
-  //             amount: data.amount,
-  //           });
-  //           console.log(orderDetails,"order details--")
-  //           setDisplayRazorpay(true);   
-  // }
-} catch (error) {
-        
-  }
-  }
+    try {
+      let getPrimaryAddress = await getMyPrimaryAddress();
+      
+      let order = await CreateOrder(selectedAddressId);
+      let newData = order.data;
+      
+      setOrderDetails({
+        razorpayOrderId: newData.raz_order_id,
+        currency: newData.currency,
+        amount: newData.amount,
+        keyId: newData.key,
+      });
+      
+      setDisplayRazorpay(true);
+    } catch (error) {
+      console.error("Error creating order:", error);
+    }
+  };
+
   const fetchCartItems = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -90,7 +86,6 @@ const CartPage = () => {
   const fetchAddresses = useCallback(async () => {
     try {
       const response = await getMyDeliveryAddress();
-      console.log("Fetched addresses:", response);
       
       // If we have real addresses from the API, use them
       if (response && response.data && Array.isArray(response.data)) {
@@ -103,29 +98,6 @@ const CartPage = () => {
           // If no primary address, select the first one
           setSelectedAddressId(response.data[0].id);
         }
-        return;
-      }
-      
-      // Fallback to mock data if API doesn't return expected data
-      const mockAddresses = [
-        {
-          id: 1,
-          delivery_person_name: "John Doe",
-          phone_number: "9876543210",
-          district: "Central District",
-          state: "Karnataka",
-          country: "India",
-          zip_code: "560001",
-          address: "123, Main Street, Bangalore",
-          is_primary: true
-        }
-      ];
-      
-      setAddresses(mockAddresses);
-      // Set primary address as selected by default
-      const primaryAddress = mockAddresses.find(addr => addr.is_primary);
-      if (primaryAddress) {
-        setSelectedAddressId(primaryAddress.id);
       }
     } catch (error) {
       console.error("Error fetching addresses:", error);
@@ -134,7 +106,7 @@ const CartPage = () => {
 
   useEffect(() => {
     fetchCartItems();
-    fetchAddresses(); // Consolidated address fetching into one function
+    fetchAddresses();
   }, [fetchCartItems, fetchAddresses]);
 
   const handleQuantityChange = async (productId, action) => {
@@ -152,7 +124,7 @@ const CartPage = () => {
         await cartDecrement(productId, cartId);
       }
       
-      await fetchCartItems(); // Refresh cart data after update
+      await fetchCartItems();
     } catch (error) {
       console.error(`Error ${action}ing quantity:`, error);
       setError(`Unable to update quantity. Please try again.`);
@@ -165,7 +137,7 @@ const CartPage = () => {
     try {
       setIsLoading(true);
       await RemoveFromCart(itemId);
-      await fetchCartItems(); // Refresh cart data after removal
+      await fetchCartItems();
     } catch (error) {
       console.error("Error removing item:", error);
       setError("Failed to remove item. Please try again.");
@@ -179,7 +151,7 @@ const CartPage = () => {
       setPromoApplied(true);
     } else {
       setError("Invalid promo code");
-      setTimeout(() => setError(null), 3000); // Clear error after 3 seconds
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -196,7 +168,6 @@ const CartPage = () => {
     try {
       setIsLoading(true);
       
-      // Create a copy of the address object (without any id field)
       const addressToAdd = {
         delivery_person_name: newAddress.delivery_person_name,
         phone_number: newAddress.phone_number,
@@ -208,34 +179,10 @@ const CartPage = () => {
         is_primary: newAddress.is_primary,
       };
       
-      // Send address to the API
       const response = await AddDelievryAddress(addressToAdd);
       
-      // If API call successful
       if (response && response.data) {
-        // Add new address to state with the ID from response
-        const addedAddress = { 
-          ...addressToAdd,
-          id: response.data.id || Date.now() // Use API-provided ID or fallback to timestamp
-        };
-        
-        // If this is marked as primary or it's the first address
-        if (addedAddress.is_primary || addresses.length === 0) {
-          // Update existing addresses to not be primary if the new one is
-          const updatedAddresses = addresses.map(addr => ({
-            ...addr,
-            is_primary: false
-          }));
-          
-          setAddresses([...updatedAddresses, addedAddress]);
-        } else {
-          setAddresses([...addresses, addedAddress]);
-        }
-        
-        // Select the new address
-        setSelectedAddressId(addedAddress.id);
-        
-        // Close form and reset fields
+        await fetchAddresses();
         setShowAddressForm(false);
         setNewAddress({
           delivery_person_name: "",
@@ -247,9 +194,6 @@ const CartPage = () => {
           address: "",
           is_primary: false,
         });
-        
-        // Fetch addresses again to ensure we have updated data
-        fetchAddresses();
       }
     } catch (error) {
       console.error("Error adding address:", error);
@@ -268,7 +212,7 @@ const CartPage = () => {
     }, 0);
   };
 
-  // Memoize calculations to prevent unnecessary re-calculations
+  // Calculations
   const subtotal = calculateSubtotal();
   const discount = promoApplied ? 500 : 0;
   const shipping = subtotal > 0 ? 1200 : 0;
@@ -276,44 +220,36 @@ const CartPage = () => {
 
   const isCartEmpty = !cartItems?.items || cartItems.items.length === 0;
 
-  // Animation variants for consistent animations
-  const fadeIn = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
-
   return (
-    <div className="cart-container">
-      
+    <div className="min-h-screen bg-gray-100 font-sans">
       {displayRazorpay && (
         <RenderRazorpay
-           orderDetails={orderDetails}
-           setDisplayRazorpay={setDisplayRazorpay}
+          orderDetails={orderDetails}
+          setDisplayRazorpay={setDisplayRazorpay}
         />
       )}
       
       <NavBar />
-      <div className="cart-content" style={{ marginTop: "120px" }}>
+      
+      <motion.div 
+        className="max-w-7xl mx-auto px-4 pt-32 pb-16 sm:px-6 lg:px-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
         {isLoading ? (
-          <div className="loading-container">
-            {/* <motion.div 
-              className="loading-spinner"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-            <p>Loading your cart...</p> */}
-            <Loader/>
+          <div className="flex flex-col items-center justify-center py-12">
+            <Loader />
           </div>
         ) : error ? (
           <motion.div 
-            className="error-container"
-            {...fadeIn}
-            transition={{ delay: 0.2 }}
+            className="text-center py-12 bg-white rounded-lg shadow-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            <p className="error-message">{error}</p>
+            <p className="text-red-600 text-lg mb-4">{error}</p>
             <motion.button 
-              className="retry-button"
+              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
@@ -325,34 +261,28 @@ const CartPage = () => {
             </motion.button>
           </motion.div>
         ) : (
-          <>
-            {/* Cart Items */}
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Cart Items Section */}
             <motion.div 
-              className="cart-items"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
+              className="lg:w-2/3 bg-white rounded-lg shadow-md p-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
             >
-              <motion.h2 
-                className="section-title"
-                {...fadeIn}
-                transition={{ delay: 0.2 }}
-              >
-                Your Cart
-              </motion.h2>
+              <h2 className="text-2xl font-bold text-black mb-6">YOUR CART</h2>
 
               {isCartEmpty ? (
                 <motion.div 
-                  className="empty-cart"
-                  {...fadeIn}
-                  transition={{ delay: 0.3 }}
+                  className="text-center py-12"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                 >
-                  <div className="empty-cart-icon">🛒</div>
-                  <p>Your cart is empty</p>
-                  <Link to="/products" className="link">
+                  <div className="text-5xl mb-4">🛒</div>
+                  <p className="text-xl text-gray-600 mb-6">Your cart is empty</p>
+                  <Link to="/products">
                     <motion.button 
-                      className="continue-shopping"
-                      whileHover={{ scale: 1.05, backgroundColor: "#ff4081" }}
+                      className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors"
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Continue Shopping
@@ -360,395 +290,355 @@ const CartPage = () => {
                   </Link>
                 </motion.div>
               ) : (
-                <AnimatePresence>
-                  {cartItems.items.map((item, index) => (
-                    <motion.div 
-                      key={item.id} 
-                      className="cart-item"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, x: -100 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ backgroundColor: "rgba(255, 64, 129, 0.05)" }}
-                    >
-                      <div className="item-image-container">
-                        <img
-                          src={BaseURL + (item.primary_image ? item.primary_image.image : '')}
-                          alt={item.product_name || "Product"}
-                          className="item-image"
-                          loading="lazy" // Lazy load images for better performance
-                          onError={(e) => {e.target.src = "/path/to/placeholder.jpg"}} // Fallback image
-                        />
-                      </div>
-                      <div className="item-info">
-                        <p className="item-type">{item.type}</p>
-                        <p className="item-name">{item.product_name}</p>
-                        <p className={`item-status ${item.status === "In Stock" ? "in-stock" : "out-of-stock"}`}>
-                          <span className={`status-dot ${item.status === "In Stock" ? "in-stock-dot" : "out-of-stock-dot"}`}></span>
-                          {item.status === "In Stock" ? "In Stock" : "Out of Stock"}
-                        </p>
-                        <div className="item-actions">
-                          <motion.button 
-                            onClick={() => handleRemoveItem(item.id)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            disabled={isLoading}
-                          >
-                            Remove
-                          </motion.button>
-                          <motion.button 
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            Save for Later
-                          </motion.button>
-                        </div>
-                      </div>
-                      <div className="item-price" style={{color:'white'}}>
-                        ₹ {item.price.toLocaleString("en-IN")}/-
-                      </div>
-                      <div className="item-quantity">
-                        <div className="quantity-control">
-                          <motion.button 
-                            className="quantity-btn"
-                            onClick={() => handleQuantityChange(item.product, 'decrease')}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            disabled={isLoading || item.quantity <= 1}
-                          >
-                            -
-                          </motion.button>
-                          <input 
-                            type="text" 
-                            value={item.quantity} 
-                            readOnly
-                            className="quantity-input"
-                            aria-label="Item quantity"
+                <div className="space-y-6">
+                  <AnimatePresence>
+                    {cartItems.items.map((item, index) => (
+                      <motion.div 
+                        key={item.id} 
+                        className="flex flex-col sm:flex-row border-b border-gray-200 pb-6"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <div className="sm:w-32 sm:h-32 mb-4 sm:mb-0 flex-shrink-0">
+                          <img
+                            src={BaseURL + (item.primary_image ? item.primary_image.image : '')}
+                            alt={item.product_name || "Product"}
+                            className="w-full h-full object-cover rounded-md"
+                            loading="lazy"
+                            onError={(e) => {e.target.src = "/path/to/placeholder.jpg"}}
                           />
-                          <motion.button 
-                            className="quantity-btn"
-                            onClick={() => handleQuantityChange(item.product, 'increase')}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            disabled={isLoading}
-                          >
-                            +
-                          </motion.button>
                         </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                        
+                        <div className="flex-grow sm:ml-6">
+                          <div className="flex flex-col sm:flex-row justify-between">
+                            <div>
+                              <p className="text-sm text-gray-500">{item.type}</p>
+                              <p className="text-lg font-medium text-black">{item.product_name}</p>
+                              <div className="flex items-center mt-1">
+                                <span 
+                                  className="inline-block w-2 h-2 rounded-full mr-1" 
+                                  style={{backgroundColor: item.status === "In Stock" ? "#63A375" : "red"}}
+                                ></span>
+                                <span 
+                                  className="text-xs" 
+                                  style={{color: item.status === "In Stock" ? "#63A375" : "red"}}
+                                >
+                                  {item.status === "In Stock" ? "In Stock" : "Out of Stock"}
+                                </span>
+                              </div>
+                              
+                              <div className="mt-4 space-x-2">
+                                <motion.button 
+                                  onClick={() => handleRemoveItem(item.id)}
+                                  className="text-sm text-gray-500 hover:text-black flex items-center"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  disabled={isLoading}
+                                >
+                                  <span className="mr-1">○</span> REMOVE
+                                </motion.button>
+                                <motion.button 
+                                  className="text-sm text-gray-500 hover:text-black flex items-center"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <span className="mr-1">○</span> SAVE FOR LATER
+                                </motion.button>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-4 sm:mt-0 flex sm:flex-col sm:items-end justify-between">
+                              <div className="text-lg font-bold text-black">
+                                ₹ {item.price.toLocaleString("en-IN")}/-
+                              </div>
+                              
+                              <div className="flex items-center border border-gray-300 rounded-md mt-2">
+                                <motion.button 
+                                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                                  onClick={() => handleQuantityChange(item.product, 'decrease')}
+                                  whileHover={{ backgroundColor: "#f3f4f6" }}
+                                  whileTap={{ scale: 0.95 }}
+                                  disabled={isLoading || item.quantity <= 1}
+                                >
+                                  -
+                                </motion.button>
+                                <input 
+                                  type="text" 
+                                  value={item.quantity} 
+                                  readOnly
+                                  className="w-12 text-center border-none focus:outline-none"
+                                  aria-label="Item quantity"
+                                />
+                                <motion.button 
+                                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                                  onClick={() => handleQuantityChange(item.product, 'increase')}
+                                  whileHover={{ backgroundColor: "#f3f4f6" }}
+                                  whileTap={{ scale: 0.95 }}
+                                  disabled={isLoading}
+                                >
+                                  +
+                                </motion.button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
               )}
             </motion.div>
 
-            {/* Order Summary */}
+            {/* Order Summary Section */}
             {!isCartEmpty && (
               <motion.div 
-                className="order-summary"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
+                className="lg:w-1/3 bg-white rounded-lg shadow-md p-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
               >
-                <motion.h1 
-                  {...fadeIn}
-                  transition={{ delay: 0.6 }}
-                >
-                  ORDER SUMMARY
-                </motion.h1>
+                <h2 className="text-2xl font-bold text-black mb-2">ORDER SUMMARY</h2>
                 
-                <AnimatePresence>
-                  {promoApplied ? (
-                    <motion.p 
-                      className="promo-success"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      Promo code applied successfully!
-                    </motion.p>
-                  ) : (
-                    <motion.p 
-                      className="sub-title"
-                      {...fadeIn}
-                      transition={{ delay: 0.7 }}
-                    >
-                      COMPLETE YOUR ORDER
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-                
-                {/* Delivery Address Section */}
-                <motion.div 
-                  className="delivery-address-section"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
+                {/* Promo Code Section */}
+                <div 
+                  className="border-dashed border-2 rounded-lg p-4 mb-6" 
+                  style={{backgroundColor: "rgba(99, 163, 117, 0.2)", borderColor: "#63A375"}}
                 >
-                  <h2 className="address-title">Delivery Address</h2>
+                  <p className="text-center font-medium mb-2" style={{color: "#63A375"}}>HAVE A PROMO CODE?</p>
                   
-                  {/* Address Cards */}
-                  <div className="address-cards">
-                    <AnimatePresence>
-                      {addresses.map((addr) => (
-                        <motion.div 
+                  <AnimatePresence>
+                    {promoApplied ? (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      >
+                        <div className="bg-white rounded p-2 flex justify-between items-center">
+                          <span className="text-sm font-medium">GEEKY2023</span>
+                          <button 
+                            className="text-xs text-gray-500"
+                            onClick={() => setPromoApplied(false)}
+                          >
+                            REMOVE
+                          </button>
+                        </div>
+                        <p className="text-sm mt-2 text-center" style={{color: "#63A375"}}>Hurray! You've got a discount</p>
+                      </motion.div>
+                    ) : (
+                      <motion.div 
+                        className="flex"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      >
+                        <input 
+                          type="text" 
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value)}
+                          placeholder="Enter promo code"
+                          className="flex-grow rounded-l border border-gray-300 px-3 py-2 focus:outline-none"
+                        />
+                        <motion.button 
+                          className="bg-black text-white px-4 py-2 rounded-r"
+                          onClick={handleApplyPromo}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          disabled={!promoCode}
+                        >
+                          APPLY
+                        </motion.button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                
+                {/* Address Section */}
+                {addresses.length > 0 && (
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium mb-2">Delivery Address</h3>
+                    <div className="space-y-2">
+                      {addresses.map(addr => (
+                        <motion.div
                           key={addr.id}
-                          className={`address-card ${selectedAddressId === addr.id ? 'selected' : ''}`}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          whileHover={{ scale: 1.02 }}
+                          className={`border p-3 rounded-md cursor-pointer ${selectedAddressId === addr.id ? 'border-green-500 bg-green-50' : 'border-gray-200'}`}
+                          style={selectedAddressId === addr.id ? {borderColor: "#63A375", backgroundColor: "rgba(99, 163, 117, 0.1)"} : {}}
+                          whileHover={{ scale: 1.01 }}
                           onClick={() => setSelectedAddressId(addr.id)}
                         >
-                          <div className="address-card-header">
-                            <h3>{addr.delivery_person_name}</h3>
-                            {addr.is_primary && <span className="primary-badge">Primary</span>}
+                          <div className="flex justify-between">
+                            <h4 className="font-medium">{addr.delivery_person_name}</h4>
+                            {addr.is_primary && (
+                              <span className="text-xs px-2 py-1 rounded" style={{backgroundColor: "rgba(99, 163, 117, 0.2)", color: "#63A375"}}>Primary</span>
+                            )}
                           </div>
-                          <p className="address-phone">{addr.phone_number}</p>
-                          <p className="address-full">{addr.address}</p>
-                          <p className="address-location">
-                            {addr.district}, {addr.state}, {addr.country} - {addr.zip_code}
-                          </p>
-                          <div className="address-actions">
-                            <motion.button
-                              className="edit-address-btn"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Edit
-                            </motion.button>
-                            <motion.button
-                              className="remove-address-btn"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Remove
-                            </motion.button>
-                          </div>
+                          <p className="text-sm text-gray-600">{addr.phone_number}</p>
+                          <p className="text-sm text-gray-600">{addr.address}, {addr.district}, {addr.state}, {addr.country} - {addr.zip_code}</p>
                         </motion.div>
                       ))}
-                    </AnimatePresence>
-                    
-                    {/* Add Address Button */}
+                    </div>
                     <motion.button
-                      className="add-address-btn"
-                      onClick={() => setShowAddressForm(!showAddressForm)}
-                      whileHover={{ scale: 1.05, backgroundColor: "#444" }}
+                      className="mt-2 text-sm font-medium"
+                      style={{color: "#63A375"}}
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => setShowAddressForm(!showAddressForm)}
                     >
                       {showAddressForm ? 'Cancel' : '+ Add New Address'}
                     </motion.button>
                   </div>
-                  
-                  {/* Address Form */}
-                  <AnimatePresence>
-                    {showAddressForm && (
-                      <motion.form
-                        className="address-form"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        onSubmit={handleAddAddress}
-                      >
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label htmlFor="delivery_person_name">Full Name *</label>
-                            <input
-                              type="text"
-                              id="delivery_person_name"
-                              name="delivery_person_name"
-                              value={newAddress.delivery_person_name}
-                              onChange={handleInputChange}
-                              required
-                              maxLength={255}
-                              minLength={1}
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="phone_number">Phone Number *</label>
-                            <input
-                              type="text"
-                              id="phone_number"
-                              name="phone_number"
-                              value={newAddress.phone_number}
-                              onChange={handleInputChange}
-                              required
-                              maxLength={20}
-                              minLength={1}
-                            />
-                          </div>
+                )}
+                
+                {/* Address Form */}
+                <AnimatePresence>
+                  {showAddressForm && (
+                    <motion.form
+                      className="mb-4 border border-gray-200 rounded-md p-4"
+                      initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      onSubmit={handleAddAddress}
+                    >
+                      {/* Form fields */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="col-span-2 md:col-span-1">
+                          <label className="block text-sm text-gray-600 mb-1">Full Name</label>
+                          <input
+                            type="text"
+                            name="delivery_person_name"
+                            value={newAddress.delivery_person_name}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                          />
                         </div>
-                        
-                        <div className="form-group full-width">
-                          <label htmlFor="address">Address *</label>
+                        <div className="col-span-2 md:col-span-1">
+                          <label className="block text-sm text-gray-600 mb-1">Phone</label>
+                          <input
+                            type="text"
+                            name="phone_number"
+                            value={newAddress.phone_number}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-sm text-gray-600 mb-1">Address</label>
                           <textarea
-                            id="address"
                             name="address"
                             value={newAddress.address}
                             onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            rows="2"
                             required
-                            minLength={1}
-                            rows={3}
+                          ></textarea>
+                        </div>
+                        <div className="col-span-1">
+                          <label className="block text-sm text-gray-600 mb-1">District</label>
+                          <input
+                            type="text"
+                            name="district"
+                            value={newAddress.district}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
                           />
                         </div>
-                        
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label htmlFor="district">District *</label>
-                            <input
-                              type="text"
-                              id="district"
-                              name="district"
-                              value={newAddress.district}
-                              onChange={handleInputChange}
-                              required
-                              maxLength={20}
-                              minLength={1}
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="state">State *</label>
-                            <input
-                              type="text"
-                              id="state"
-                              name="state"
-                              value={newAddress.state}
-                              onChange={handleInputChange}
-                              required
-                              maxLength={20}
-                              minLength={1}
-                            />
-                          </div>
+                        <div className="col-span-1">
+                          <label className="block text-sm text-gray-600 mb-1">State</label>
+                          <input
+                            type="text"
+                            name="state"
+                            value={newAddress.state}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                          />
                         </div>
-                        
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label htmlFor="country">Country *</label>
-                            <input
-                              type="text"
-                              id="country"
-                              name="country"
-                              value={newAddress.country}
-                              onChange={handleInputChange}
-                              required
-                              maxLength={20}
-                              minLength={1}
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="zip_code">Zip Code *</label>
-                            <input
-                              type="text"
-                              id="zip_code"
-                              name="zip_code"
-                              value={newAddress.zip_code}
-                              onChange={handleInputChange}
-                              required
-                              maxLength={10}
-                              minLength={1}
-                            />
-                          </div>
+                        <div className="col-span-1">
+                          <label className="block text-sm text-gray-600 mb-1">Country</label>
+                          <input
+                            type="text"
+                            name="country"
+                            value={newAddress.country}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                          />
                         </div>
-                        
-                        <div className="form-group checkbox-group">
+                        <div className="col-span-1">
+                          <label className="block text-sm text-gray-600 mb-1">Zip Code</label>
+                          <input
+                            type="text"
+                            name="zip_code"
+                            value={newAddress.zip_code}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                          />
+                        </div>
+                        <div className="col-span-2 flex items-center mt-1">
                           <input
                             type="checkbox"
                             id="is_primary"
                             name="is_primary"
                             checked={newAddress.is_primary}
                             onChange={handleInputChange}
+                            className="mr-2"
                           />
-                          <label htmlFor="is_primary">Set as primary address</label>
+                          <label htmlFor="is_primary" className="text-sm text-gray-700">Set as primary address</label>
                         </div>
-                        
-                        <div className="form-actions">
-                          <motion.button
-                            type="submit"
-                            className="save-address-btn"
-                            whileHover={{ scale: 1.05, backgroundColor: "#ff4081" }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            Save Address
-                          </motion.button>
-                        </div>
-                      </motion.form>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-
-                <div className="promo-code">
-                  <p>Have a Promo Code?</p>
-                  <div className="promo-input-container">
-                    <input 
-                      type="text" 
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
-                      placeholder="Enter promo code"
-                      className="promo-input"
-                      disabled={promoApplied || isLoading}
-                    />
-                    <motion.button 
-                      className="apply-promo-btn"
-                      onClick={handleApplyPromo}
-                      whileHover={{ scale: 1.05, backgroundColor: "#444" }}
-                      whileTap={{ scale: 0.95 }}
-                      disabled={promoApplied || !promoCode || isLoading}
-                    >
-                      Apply
-                    </motion.button>
+                      </div>
+                      <motion.button
+                        type="submit"
+                        className="w-full mt-3 bg-black text-white p-2 rounded"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Save Address
+                      </motion.button>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+                
+                {/* Price Summary */}
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-700">DISCOUNT</span>
+                    <span className="text-gray-700 font-medium">₹ {discount}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-gray-700">SUB TOTAL</span>
+                    <span className="text-gray-700 font-medium">₹ {subtotal.toLocaleString('en-IN')}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-gray-700">SHIPPING</span>
+                    <span className="text-gray-700 font-medium">₹ {shipping}</span>
+                  </div>
+                  
+                  <div className="flex justify-between pt-3 border-t border-gray-200">
+                    <span className="font-bold text-black">GRAND TOTAL</span>
+                    <span className="font-bold text-black">₹ {(cartItems.total_price || grandTotal).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
                 
-                <motion.div 
-                  className="summary-details"
-                  {...fadeIn}
-                  transition={{ delay: 0.8 }}
-                >
-                  <p>
-                    Sub Total <span>₹ {subtotal.toLocaleString("en-IN")}</span>
-                  </p>
-                  {promoApplied && (
-                    <motion.p
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      className="discount-row"
-                    >
-                      Discount <span>- ₹ {discount.toLocaleString("en-IN")}</span>
-                    </motion.p>
-                  )}
-                  <p>
-                    Shipping <span>₹ {shipping.toLocaleString("en-IN")}</span>
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  className="grand-total-container"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.9 }}
-                >
-                  <p className="grand-total">
-                    GRAND TOTAL <span>₹ {cartItems.total_price ? cartItems.total_price.toLocaleString("en-IN") : grandTotal.toLocaleString("en-IN")}</span>
-                  </p>
-                </motion.div>
-                
+                {/* Checkout Button */}
                 <motion.button 
-                  onClick={() => handleCreateOrder(cartItems.total_price || grandTotal, 'INR')}
-                  className="checkout-button"
-                  whileHover={{ scale: 1.05, backgroundColor: "#ff4081" }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 }}
-                  disabled={isLoading || (addresses.length > 0 && !selectedAddressId)}
+                  className="w-full bg-black text-white py-3 rounded font-bold mt-6 hover:bg-gray-800"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleCreateOrder}
+                  disabled={isLoading || !selectedAddressId}
                 >
                   PROCEED TO CHECKOUT
                 </motion.button>
               </motion.div>
             )}
-          </>
+          </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

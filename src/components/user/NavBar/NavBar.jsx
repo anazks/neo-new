@@ -3,12 +3,14 @@ import { FaBars, FaUser, FaShoppingCart } from "react-icons/fa";
 import logo from "../../../Images/LoginWith/neo_tokyo-logo.png";
 import "./nav.css";
 import SideBar from "../SIdeBar/SideBar";
+import { useAuth } from '../../../Context/UserContext';
 
 const ModernNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [lastScroll, setLastScroll] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { token, setToken, user } = useAuth();
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -88,12 +90,24 @@ const ModernNavbar = () => {
 
           {/* Mobile Auth Buttons */}
           <div className="auth-buttons mobile-only">
-            <a href="/register" className="auth-btn register-btn" style={{backgroundColor:"black"}}>Register</a>
-            <a href="/signin" className="auth-btn signin-btn">Sign In</a>
+            {user ? (
+              ""
+            ) : (
+              <>
+                <a href="/myorder" className="auth-btn register-btn" style={{backgroundColor:"black"}}>Sign up</a>
+                <a href="/signin" className="auth-btn signin-btn">Sign In</a>
+              </>
+            )}
           </div>
 
           {/* Desktop Auth Buttons - Now includes menu button for laptops */}
           <div className="auth-buttons desktop-only">
+            {
+              user ?(
+                   <a href="/cart" className="auth-btn signin-btn">Cart</a>
+
+              ):""
+            }
             <button className="offcanvas-toggle" onClick={openSidebar}>
               <FaBars />
             </button>

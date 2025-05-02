@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import CryptoJS from "crypto-js";
-
+import {getUserInfo} from '../Services/userApi'
 const SECRET_KEY = "your_secret_key_123"; // Encryption key
 const AuthContext = createContext();
 
@@ -55,7 +55,8 @@ const AuthProvider = ({ children }) => {
       if (token) {
         try {
           // Call an API to fetch the user data (you can replace this with your actual function)
-          const response = await axios.get("/user/info"); // Replace with the correct API endpoint
+          const response = await getUserInfo(); // Replace with the correct API endpoint
+          console.log(response.data, "User data from API");
           setUser(response.data); // Set user data globally
         } catch (error) {
           console.error("Error fetching user info:", error);

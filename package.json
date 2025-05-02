@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@fontsource/rajdhani": "^5.1.1",
+    "@fontsource/raleway": "^5.2.5",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

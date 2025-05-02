@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { IoArrowForwardCircleSharp, IoArrowBackCircleSharp } from 'react-icons/io5';
-import './login.css';
 import { useNavigate } from 'react-router-dom';
 
 // Import your images
@@ -10,71 +9,25 @@ import Google from '../../../Images/LoginWith/Google.png';
 import logo from '../../../Images/LoginWith/neo_tokyo-logo.png';
 import OtpInput from '../OtpSubmit/otp';
 import { submitOTP } from '../../../Services/userApi';
-import Alert from '../Alert/Alert'
-// import GoogleAuth from '../Google/GoogleAuth';
+import Alert from '../Alert/Alert';
+import Pro from '../../../Images/pro.jpg';
+
 const Login = () => {
   const navigate = useNavigate();
-
   const [isLogin, setIsLogin] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
-  const [googleAuth,setGoogleAuth] = useState(false)
+  const [googleAuth, setGoogleAuth] = useState(false);
   const [sentingotp, setsentingtOtp] = useState(false);
-  // const [FormData,setFormData] = useState("")
   
-  const LoginWith = async(data)=>{
+  const LoginWith = async (data) => {
     try {
-          console.log(isHovered)
-          setGoogleAuth(true)
-          navigate('/GoogleAuth')
-          console.log(googleAuth,"googleAuth")
-          
+      setGoogleAuth(true);
+      navigate('/GoogleAuth');
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
-  const handleChangeOTP = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
-  
-  const handleSendOTP = async () => {
-    const email = formData.email;
-    // Send OTP logic here using the email
-    console.log('Sending OTP to:', email);
-    if(email === ""){
-      setsentingtOtp(false)
-    }else{
-      setsentingtOtp(true)
-    }
-    localStorage.setItem("email",email)
 
-    let  OTPResponse = await submitOTP(email)
-    console.log(OTPResponse)
-    // Add your OTP request logic here (e.g., API call)
-  };
-  
-
-  // Sample data for development/testing
-  const sampleData = {
-    email: "anazksunil2@gmail.com",
-    password: "anazksunil@123",
-    first_name: "John",
-    last_name: "Doe",
-    phone_number: "+918606414384",
-    date_of_birth: "1990-01-01",
-    pin_code: "123456",
-    age: "33",
-    district: "Sample District",
-    state: "Sample State",
-    address: "123 Sample Street",
-    role: "user"
-  };
-  
-  // Initialize form data with empty values (or sample data for testing)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -89,7 +42,27 @@ const Login = () => {
     address: '',
     role: 'user'
   });
+
+  const handleChangeOTP = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   
+  const handleSendOTP = async () => {
+    const email = formData.email;
+    if (email === "") {
+      setsentingtOtp(false);
+    } else {
+      setsentingtOtp(true);
+    }
+    localStorage.setItem("email", email);
+    let OTPResponse = await submitOTP(email);
+    console.log(OTPResponse);
+  };
+
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [currentField, setCurrentField] = useState('email');
   const [formFieldsVisible, setFormFieldsVisible] = useState({
@@ -106,12 +79,11 @@ const Login = () => {
     address: false,
     submit: false
   });
-  
-  // Define the sequence of fields to show
+
   const registrationFields = [
     'email',
     'password',
-    'terms', // Special case for checkbox
+    'terms',
     'first_name',
     'last_name',
     'phone_number',
@@ -120,17 +92,15 @@ const Login = () => {
     'district',
     'state',
     'address',
-    'submit'  // Special case for submit button
+    'submit'
   ];
 
-  // Calculate the current progress percentage
   const calculateProgress = () => {
     const currentIndex = registrationFields.indexOf(currentField);
     if (currentIndex === -1) return 0;
     return (currentIndex / (registrationFields.length - 1)) * 100;
   };
 
-  // Calculate age based on date of birth
   useEffect(() => {
     if (formData.date_of_birth) {
       const birthDate = new Date(formData.date_of_birth);
@@ -153,23 +123,35 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    // Here you would typically make an API call to register the user
+    // Collect all registration data
+    const registrationData = {
+      email: formData.email,
+      password: formData.password,
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      phone_number: formData.phone_number,
+      date_of_birth: formData.date_of_birth,
+      pin_code: formData.pin_code,
+      age: formData.age,
+      district: formData.district,
+      state: formData.state,
+      address: formData.address,
+      role: 'user'
+    };
+    
+    console.log("Registration Data:", registrationData);
     alert("Registration successful!");
     setIsLogin(true);
   };
 
-  // Move to the next field in the sequence
   const moveToNextField = () => {
     const currentIndex = registrationFields.indexOf(currentField);
     if (currentIndex < registrationFields.length - 1) {
       const nextField = registrationFields[currentIndex + 1];
       setCurrentField(nextField);
       
-      // Update visibility of fields
       setFormFieldsVisible(prev => {
         const updated = { ...prev };
-        // Keep all previous fields visible
         for (let i = 0; i <= currentIndex + 1; i++) {
           updated[registrationFields[i]] = true;
         }
@@ -178,7 +160,6 @@ const Login = () => {
     }
   };
 
-  // Move to the previous field in the sequence
   const moveToPreviousField = () => {
     const currentIndex = registrationFields.indexOf(currentField);
     if (currentIndex > 0) {
@@ -186,7 +167,6 @@ const Login = () => {
     }
   };
 
-  // Group fields by section for progress display
   const getStepFromField = (field) => {
     if (['email', 'password', 'terms'].includes(field)) return 1;
     if (['first_name', 'last_name', 'phone_number'].includes(field)) return 2;
@@ -195,95 +175,89 @@ const Login = () => {
     return 1;
   };
 
-  // Get current step (1-4) for progress indicator
   const getCurrentStep = () => {
     return getStepFromField(currentField);
   };
 
-  // Check if the current field has a value
   const isFieldValid = (fieldName) => {
     if (fieldName === 'terms') return agreedToTerms;
     if (fieldName === 'submit') return true;
-    if (fieldName === 'last_name') return true; // Last name is optional
-    if (fieldName === 'address') return true; // Address can be optional
+    if (fieldName === 'last_name') return true;
+    if (fieldName === 'address') return true;
     return !!formData[fieldName];
   };
 
-  // Render the sequential registration form
   const renderSequentialRegistration = () => {
     const currentStep = getCurrentStep();
     
     return (
-      
-      <>
-    
+      <div className="w-full max-w-md mx-auto">
         {/* Step indicator */}
-       
-        <div className="step-indicator">
-          <div className="steps">
+        <div className="flex flex-col mb-8">
+          <div className="flex justify-between mb-2">
             {[1, 2, 3, 4].map(step => (
               <div 
                 key={step} 
-                className={`step ${currentStep >= step ? 'active' : ''}`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  currentStep >= step ? 'bg-black text-white' : 'bg-gray-200 text-gray-600'
+                }`}
               >
                 {step}
               </div>
             ))}
           </div>
-          <div className="step-progress-bar">
+          <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className="progress" 
+              className="bg-black h-2 rounded-full" 
               style={{ width: `${calculateProgress()}%` }}
             ></div>
           </div>
         </div>
         
-        {/* Display headings based on current step */}
-        {currentStep === 1 && (
-          <>
-            <h2>What's Your Email</h2>
-            <p>Psst.. It's a secret. we've got your back</p>
-          </>
-        )}
-        
-        {currentStep === 2 && (
-          <>
-            <h2>Personal Information</h2>
-            <p>Tell us a bit about yourself</p>
-          </>
-        )}
-        
-        {currentStep === 3 && (
-          <>
-            <h2>Date & Location</h2>
-            <p>Help us know you better</p>
-          </>
-        )}
-        
-        {currentStep === 4 && (
-          <>
-            <h2>Address Information</h2>
-            <p>Almost there!</p>
-          </>
-        )}
+        {/* Headings */}
+        <div className="mb-6">
+          {currentStep === 1 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2">What's Your Email</h2>
+              <p className="text-gray-600">Psst.. It's a secret. we've got your back</p>
+            </>
+          )}
+          {currentStep === 2 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2">Personal Information</h2>
+              <p className="text-gray-600">Tell us a bit about yourself</p>
+            </>
+          )}
+          {currentStep === 3 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2">Date & Location</h2>
+              <p className="text-gray-600">Help us know you better</p>
+            </>
+          )}
+          {currentStep === 4 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2">Address Information</h2>
+              <p className="text-gray-600">Almost there!</p>
+            </>
+          )}
+        </div>
         
         {/* Form fields */}
-        <div className="sequential-fields-container">
-          {/* Email field - always visible first */}
+        <div className="space-y-4">
           {formFieldsVisible.email && (
-            <div className={`field-container ${currentField === 'email' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'email' ? '' : 'hidden'}`}>
               <input 
                 type="email" 
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'email' && isFieldValid('email') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -292,13 +266,15 @@ const Login = () => {
             </div>
           )}
           
-          {/* Password field */}
           {formFieldsVisible.password && (
-            <div className={`field-container ${currentField === 'password' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'password' ? '' : 'hidden'}`}>
               {currentField === 'password' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
                 type="password" 
@@ -306,12 +282,12 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'password' && isFieldValid('password') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -320,69 +296,49 @@ const Login = () => {
             </div>
           )}
           
-          {/* Terms checkbox */}
           {formFieldsVisible.terms && (
-            <div className={`field-container ${currentField === 'terms' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'terms' ? '' : 'hidden'}`}>
               {currentField === 'terms' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
-              <div className="check">
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox"
-                    checked={agreedToTerms}
-                    onChange={() => setAgreedToTerms(!agreedToTerms)}
-                    required
-                  />
-                  <span>
-                    Yes; NEO TOKYO may use and share my email to enable personalized advertising with third parties (e.g. Google, Twitch) and to send me info about new releases, updates, events, or other related content.
-                  </span>
-                </div>
+              <div className="flex items-start gap-3">
+                <input 
+                  type="checkbox"
+                  checked={agreedToTerms}
+                  onChange={() => setAgreedToTerms(!agreedToTerms)}
+                  className="mt-1"
+                  required
+                />
+                <span className="text-sm text-gray-600">
+                  Yes; NEO TOKYO may use and share my email to enable personalized advertising with third parties (e.g. Google, Twitch) and to send me info about new releases, updates, events, or other related content.
+                </span>
               </div>
               {currentField === 'terms' && isFieldValid('terms') && (
                 <button 
-                  className="next-field-button terms-next"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
                 </button>
               )}
-              
-              {currentField === 'terms' && (
-                <>
-                  {/* Social login options */}
-                  <p className="text-gray-500 uppercase text-sm font-medium mt-6">
-                    YOU CAN ALSO CREATE AN aCCOUNT WITH
-                  </p>
-                  
-                  <div className="icons">
-                    {[Google, Apple, Linkedin].map((icon, index) => (
-                      <div 
-                        key={index}
-                        onMouseEnter={() => setIsHovered(index)}
-                        onMouseLeave={() => setIsHovered(false)}
-                      >
-                        <img 
-                          src={icon} 
-                          alt={`Social ${index + 1}`} 
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
             </div>
           )}
           
-          {/* First name field */}
+          {/* First Name field */}
           {formFieldsVisible.first_name && (
-            <div className={`field-container ${currentField === 'first_name' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'first_name' ? '' : 'hidden'}`}>
               {currentField === 'first_name' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
                 type="text" 
@@ -390,12 +346,12 @@ const Login = () => {
                 value={formData.first_name}
                 onChange={handleChange}
                 placeholder="First Name" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'first_name' && isFieldValid('first_name') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -404,13 +360,16 @@ const Login = () => {
             </div>
           )}
           
-          {/* Last name field */}
+          {/* Last Name field */}
           {formFieldsVisible.last_name && (
-            <div className={`field-container ${currentField === 'last_name' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'last_name' ? '' : 'hidden'}`}>
               {currentField === 'last_name' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
                 type="text" 
@@ -418,11 +377,11 @@ const Login = () => {
                 value={formData.last_name}
                 onChange={handleChange}
                 placeholder="Last Name" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {currentField === 'last_name' && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -431,13 +390,16 @@ const Login = () => {
             </div>
           )}
           
-          {/* Phone number field */}
+          {/* Phone Number field */}
           {formFieldsVisible.phone_number && (
-            <div className={`field-container ${currentField === 'phone_number' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'phone_number' ? '' : 'hidden'}`}>
               {currentField === 'phone_number' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
                 type="tel" 
@@ -445,12 +407,12 @@ const Login = () => {
                 value={formData.phone_number}
                 onChange={handleChange}
                 placeholder="Phone Number" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'phone_number' && isFieldValid('phone_number') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -459,33 +421,28 @@ const Login = () => {
             </div>
           )}
           
-          {/* Date of birth field */}
+          {/* Date of Birth field */}
           {formFieldsVisible.date_of_birth && (
-            <div className={`field-container ${currentField === 'date_of_birth' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'date_of_birth' ? '' : 'hidden'}`}>
               {currentField === 'date_of_birth' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
-              <label>Date of Birth</label>
               <input 
                 type="date" 
                 name="date_of_birth"
                 value={formData.date_of_birth}
                 onChange={handleChange}
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-              
-              {formData.age && (
-                <div className="age-display">
-                  <span>Age: {formData.age}</span>
-                </div>
-              )}
-              
               {currentField === 'date_of_birth' && isFieldValid('date_of_birth') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -494,26 +451,29 @@ const Login = () => {
             </div>
           )}
           
-          {/* PIN code field */}
+          {/* Pin Code field */}
           {formFieldsVisible.pin_code && (
-            <div className={`field-container ${currentField === 'pin_code' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'pin_code' ? '' : 'hidden'}`}>
               {currentField === 'pin_code' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
-                type="number" 
+                type="text" 
                 name="pin_code"
                 value={formData.pin_code}
                 onChange={handleChange}
-                placeholder="PIN Code" 
-                className="input-box" 
+                placeholder="Pin Code" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'pin_code' && isFieldValid('pin_code') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -524,11 +484,14 @@ const Login = () => {
           
           {/* District field */}
           {formFieldsVisible.district && (
-            <div className={`field-container ${currentField === 'district' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'district' ? '' : 'hidden'}`}>
               {currentField === 'district' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
                 type="text" 
@@ -536,12 +499,12 @@ const Login = () => {
                 value={formData.district}
                 onChange={handleChange}
                 placeholder="District" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'district' && isFieldValid('district') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -552,11 +515,14 @@ const Login = () => {
           
           {/* State field */}
           {formFieldsVisible.state && (
-            <div className={`field-container ${currentField === 'state' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'state' ? '' : 'hidden'}`}>
               {currentField === 'state' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <input 
                 type="text" 
@@ -564,12 +530,12 @@ const Login = () => {
                 value={formData.state}
                 onChange={handleChange}
                 placeholder="State" 
-                className="input-box" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {currentField === 'state' && isFieldValid('state') && (
                 <button 
-                  className="next-field-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -580,22 +546,25 @@ const Login = () => {
           
           {/* Address field */}
           {formFieldsVisible.address && (
-            <div className={`field-container ${currentField === 'address' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'address' ? '' : 'hidden'}`}>
               {currentField === 'address' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
               <textarea 
                 name="address"
-                value={formData.address || ''}
+                value={formData.address}
                 onChange={handleChange}
                 placeholder="Full Address" 
-                className="input-box textarea" 
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
               />
               {currentField === 'address' && (
                 <button 
-                  className="next-field-button address-next"
+                  className="absolute right-2 top-1/4 transform -translate-y-1/2 text-blue-600"
                   onClick={moveToNextField}
                 >
                   <IoArrowForwardCircleSharp className="text-2xl" />
@@ -604,171 +573,181 @@ const Login = () => {
             </div>
           )}
           
-          {/* Submit button */}
           {formFieldsVisible.submit && (
-            <div className={`field-container ${currentField === 'submit' ? 'active-field' : ''}`}>
+            <div className={`relative ${currentField === 'submit' ? '' : 'hidden'}`}>
               {currentField === 'submit' && (
-                <div className="back-button-small" onClick={moveToPreviousField}>
-                  <IoArrowBackCircleSharp />
-                </div>
+                <button 
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-600"
+                  onClick={moveToPreviousField}
+                >
+                  <IoArrowBackCircleSharp className="text-xl" />
+                </button>
               )}
-              <p>Please review your information and submit when ready:</p>
+              <div className="bg-gray-100 p-4 rounded-lg mb-4">
+                <h3 className="font-medium mb-2">Review Your Information:</h3>
+                <div className="space-y-1 text-sm">
+                  <p><strong>Email:</strong> {formData.email}</p>
+                  <p><strong>Name:</strong> {formData.first_name} {formData.last_name}</p>
+                  <p><strong>Phone:</strong> {formData.phone_number}</p>
+                  <p><strong>Date of Birth:</strong> {formData.date_of_birth} (Age: {formData.age})</p>
+                  <p><strong>Location:</strong> {formData.district}, {formData.state}, {formData.pin_code}</p>
+                  <p><strong>Address:</strong> {formData.address}</p>
+                </div>
+              </div>
               <button 
-                className="team-buttons submit-button"
+                className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors"
                 onClick={handleSubmit}
               >
-                <span className="teams">SUBMIT</span>
+                SUBMIT
               </button>
             </div>
           )}
+          
+          <div className="mt-6 text-center">
+            <p className="text-gray-600">
+              ALREADY HAVE AN ACCOUNT?{' '}
+              <button 
+                onClick={() => setIsLogin(true)}
+                className="text-blue-600 font-medium"
+              >
+                SIGN IN
+              </button>
+            </p>
+          </div>
         </div>
-        
-        <h3>
-          ALREADY HAVE AN ACCOUNT?{' '}
-          <button 
-            onClick={() => setIsLogin(true)}
-          >
-            SIGN IN
-          </button>
-        </h3>
-      </>
+      </div>
     );
   };
 
-  // Function to load sample data for testing
-  const loadSampleData = () => {
-    setFormData(sampleData);
-  };
-  console.log(loadSampleData)
-
   return (
-    <div className="login-container">
-      {
-        sentingotp && <div>
-             <Alert 
-              type={"success"}
-              message="OTP sent successfully!"
-              productId={null}
-              // onClose={() => setAlertData(null)}
-             />
-        </div> 
-      }
-      {/* Left Section */}
-      <div className="left-section">
-        <div className="logo">
-          <img src={logo} alt="Logo" />
-        </div>
-        <div className="quote-container">
-          <p className="quote animate-fade-in">
-            𝖭𝖤𝖶 𝖳𝖧𝖨𝖭𝖪𝖨𝖭𝖦 𝖤𝖭𝖣𝖫𝖤𝖲𝖲 𝖯𝖮𝖲𝖲𝖨𝖡𝖨𝖫𝖨𝖳𝖨𝖤𝖲
-          </p>
-        </div>
-      </div>
-
-      {/* Right Section */}
-      <div className="right-section">
-        <div className="button-container">
-          <button
-            className={`btn ${isLogin ? 'black-btn' : ''}`}
-            onClick={() => setIsLogin(true)}
-          >
-            Login
-          </button>
-          <button
-            className={`btn ${!isLogin ? 'black-btn' : ''}`}
-            onClick={() => {
-              setIsLogin(false);
-              setCurrentField('email');
-              setFormFieldsVisible({
-                email: true,
-                password: false,
-                terms: false,
-                first_name: false,
-                last_name: false,
-                phone_number: false,
-                date_of_birth: false,
-                pin_code: false,
-                district: false,
-                state: false,
-                address: false,
-                submit: false
-              });
-            }}
-          >
-            Register
-          </button>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="w-[95%] h-[98%] mx-auto shadow-xl rounded-xl overflow-hidden bg-white flex flex-col md:flex-row">
+        {/* Left Section - Now with Pro background image */}
+        <div className="md:w-1/2 relative text-white p-8 flex flex-col justify-between">
+          {/* Background image with overlay */}
+          <div className="absolute inset-0 z-0">
+            <div className="w-full h-full bg-black opacity-60 absolute z-10"></div>
+            <img src={Pro} alt="Background" className="w-full h-full object-cover" />
+          </div>
+          
+          {/* Content positioned over the background */}
+          <div className="mb-8 relative z-20">
+            <img src={logo} alt="Logo" className="h-12" />
+          </div>
+          <div className="text-center md:text-left relative z-20">
+            <p className="text-xl md:text-2xl font-light italic">
+              𝖭𝖤𝖶 𝖳𝖧𝖨𝖭𝖪𝖨𝖭𝖦 𝖤𝖭𝖣𝖫𝖤𝖲𝖲 𝖯𝖮𝖲𝖲𝖨𝖡𝖨𝖫𝖨𝖳𝖨𝖤𝖲
+            </p>
+          </div>
         </div>
 
-        {isLogin ? (
-          <div className="form-container animate-slide-up">
-            <h2>Welcome Back</h2>
-            
-            <input 
-              type="email" 
-              name="email"
-              value={formData.email}
-              onChange={handleChangeOTP}
-              placeholder="Email" 
-              className="input-box" 
-            />
-           <button onClick={handleSendOTP} className="send-otp-button">Send OTP</button>
-            {/* <input 
-              type="number"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter OTP " 
-              className="input-box" 
-            />
-            <button onClick={handleSendOTP}>Submit OTP</button> */}
-            <OtpInput/>
-            
-            <div className="remember-forgot">
-              <label>
-                <input type="checkbox" />
-                Remember me
-              </label>
-              <a href="#">Forgot Password?</a>
-            </div>
-            
-            <div className="icons">
-              {[Google, Apple, Linkedin].map((icon, index) => (
-                <div 
-                  key={index}
-                  onMouseEnter={() => setIsHovered(index)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  onClick={()=>LoginWith(index)}
-                >
-                  <img 
-                    src={icon} 
-                    alt={`Social ${index + 1}`} 
-                  />
-                </div>
-              ))}
-            </div>
-            
-            <button 
-              className="team-buttons"
-              onMouseEnter={() => setIsHovered('login')}
-              onMouseLeave={() => setIsHovered(false)}
+        {/* Right Section */}
+        <div className="md:w-1/2 p-8 flex flex-col justify-center">
+          <div className="flex justify-center space-x-4 mb-8">
+            <button
+              className={`px-6 py-2 rounded-full transition-colors ${isLogin ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              onClick={() => setIsLogin(true)}
             >
-              <IoArrowForwardCircleSharp className="text-2xl" />
-              <span className="teams">Login</span>
+              Login
+            </button>
+            <button
+              className={`px-6 py-2 rounded-full transition-colors ${!isLogin ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              onClick={() => {
+                setIsLogin(false);
+                setCurrentField('email');
+                setFormFieldsVisible({
+                  email: true,
+                  password: false,
+                  terms: false,
+                  first_name: false,
+                  last_name: false,
+                  phone_number: false,
+                  date_of_birth: false,
+                  pin_code: false,
+                  district: false,
+                  state: false,
+                  address: false,
+                  submit: false
+                });
+              }}
+            >
+              Register
             </button>
           </div>
-        ) : (
-          <div className="Register-Container animate-slide-up">
-            {renderSequentialRegistration()}
-          </div>
-        )}
-        
-        {/* For development only - comment this out in production */}
-        {/* <button 
-          onClick={loadSampleData} 
-          style={{position: 'fixed', bottom: '10px', right: '10px', background: '#ccc', padding: '5px', borderRadius: '5px'}}
-        >
-          Load Sample Data
-        </button> */}
+
+          {sentingotp && (
+            <div className="mb-4">
+              <Alert 
+                type="success"
+                message="OTP sent successfully!"
+                productId={null}
+              />
+            </div>
+          )}
+
+          {isLogin ? (
+            <div className="max-w-md mx-auto w-full">
+              <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
+              
+              <div className="space-y-4">
+                <div className="relative">
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChangeOTP}
+                    placeholder="Email" 
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button 
+                    onClick={handleSendOTP} 
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                  >
+                    Send OTP
+                  </button>
+                </div>
+                
+                <OtpInput />
+                
+                <div className="flex justify-between items-center">
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
+                    <span className="text-gray-700">Remember me</span>
+                  </label>
+                  <a href="#" className="text-blue-600 text-sm hover:text-blue-700 transition-colors">Forgot Password?</a>
+                </div>
+                
+                <div className="my-6">
+                  <p className="text-center text-gray-500 text-sm uppercase tracking-wider mb-4">
+                    OR LOGIN WITH
+                  </p>
+                  <div className="flex justify-center space-x-6">
+                    {[Google, Apple, Linkedin].map((icon, index) => (
+                      <div 
+                        key={index}
+                        className="cursor-pointer transform hover:scale-110 transition-transform"
+                        onClick={() => LoginWith(index)}
+                      >
+                        <img src={icon} alt={`Social ${index + 1}`} className="h-10 w-10" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <button 
+                  className="w-full bg-black text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors"
+                >
+                  <span>Login</span>
+                  <IoArrowForwardCircleSharp className="text-xl" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full">
+              {renderSequentialRegistration()}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
