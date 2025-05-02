@@ -94,8 +94,8 @@ const ModernNavbar = () => {
               ""
             ) : (
               <>
-                <a href="/myorder" className="auth-btn register-btn" style={{backgroundColor:"black"}}>Sign up</a>
-                <a href="/signin" className="auth-btn signin-btn">Sign In</a>
+                <a href="/login" className="auth-btn register-btn" style={{backgroundColor:"black"}}>Sign up</a>
+                <a href="/login" className="auth-btn signin-btn">Sign In</a>
               </>
             )}
           </div>
