@@ -17,6 +17,8 @@ import Myorders from "./Pages/user/Myorders";
 import GoogleLoginComponent from "./components/user/Google/GoogleLoginComponent";
 import AddProducts from "./components/Admin/Products/AddProducts/AddProducts";
 import Tokyo from "./components/user/Tickets/Tickets";
+import TicketsResolved from  "./components/user/Tickets/TicketsResolved"
+
 function App() {
   return (
     <>
@@ -35,6 +37,7 @@ function App() {
           <Route path="/myorder" element={<Myorders />} />
           <Route path="/GoogleAuth" element={<GoogleLoginComponent />} />
           <Route path="/ticket" element={<Tokyo/>} />
+          <Route path="/ticketResolved" element={<TicketsResolved/>} />
 
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
