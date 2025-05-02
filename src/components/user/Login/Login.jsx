@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoArrowForwardCircleSharp, IoArrowBackCircleSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-
+import {RegisterUser} from '../../../Services/userApi'
 // Import your images
 import Apple from '../../../Images/LoginWith/apple.png';
 import Linkedin from '../../../Images/LoginWith/Linkedin.png';
@@ -18,7 +18,8 @@ const Login = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [googleAuth, setGoogleAuth] = useState(false);
   const [sentingotp, setsentingtOtp] = useState(false);
-  
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const LoginWith = async (data) => {
     try {
       setGoogleAuth(true);
@@ -121,7 +122,7 @@ const Login = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // Collect all registration data
     const registrationData = {
@@ -140,7 +141,16 @@ const Login = () => {
     };
     
     console.log("Registration Data:", registrationData);
-    alert("Registration successful!");
+    // Call the API to register the user
+    let response = await RegisterUser(registrationData);
+    console.log(response, "response from register user");
+      if(response.status === 400) {
+        console.log(response.response.datal, "error message")
+        setErrorMessage(response.response.data.detail);
+      }else{
+        setMessage(response.data.message);
+      }
+  
     setIsLogin(true);
   };
 
@@ -685,6 +695,26 @@ const Login = () => {
             </div>
           )}
 
+          { message && (
+            <div className="mb-4">
+              <Alert
+                type="success"
+                message={message}
+                productId={null}
+              />
+            </div>
+          )}
+          {
+            errorMessage && (
+              <div className="mb-4">
+                <Alert
+                  type="error"
+                  message={errorMessage}
+                  productId={null}
+                />
+              </div>
+            )
+          }
           {isLogin ? (
             <div className="max-w-md mx-auto w-full">
               <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
