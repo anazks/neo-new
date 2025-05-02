@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaCartPlus, FaCheck, FaPlay, FaDownload, FaYoutube } from "react-icons/fa";
 import BaseURL from '../../../Static/Static';
 import NavBar from '../NavBar/NavBar'
-
+import { addTocart } from '../../../Services/userApi';
+import Alert from '../Alert/Alert';
 function Details({ product }) {
   // State for selected options and UI
   const [selectedStorage, setSelectedStorage] = useState('.5');
@@ -11,7 +12,7 @@ function Details({ product }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showVideoPopup, setShowVideoPopup] = useState(false);
-  
+  const [cartData, setCartData] = useState(false);
   // Refs for animations
   const imageRef = useRef(null);
   const detailsRef = useRef(null);
@@ -69,7 +70,18 @@ function Details({ product }) {
   const handleRamSelect = (ram) => {
     setSelectedRam(ram);
   };
-
+  const handleAddToCart =  async(id) => {
+    try {
+        console.log("Adding to cart:", id);
+        let cartData = await addTocart(id)
+        console.log("Cart data:", cartData);
+        setCartData(cartData);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      
+      
+    }
+  }
   // Get YouTube video ID from URL
   const getYoutubeVideoId = (url) => {
     if (!url) return null;
@@ -131,6 +143,17 @@ function Details({ product }) {
   return (
    <>
     <NavBar/>
+    {
+      cartData && (
+        <div>
+          <Alert
+            type="success"
+            message="Added to cart successfully"
+            productId={null}
+          />
+        </div>
+      )
+    }
      <div className="min-h-screen bg-white">
       {/* Main product container */}
       <div className="w-full min-h-screen">
@@ -251,7 +274,7 @@ function Details({ product }) {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 mt-4">
-              <button 
+              <button  onClick={()=>handleAddToCart(product.id)}
                 className="flex-1 h-10 rounded-lg font-semibold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 bg-gray-100 border border-gray-400 text-black hover:bg-gray-200"
               >
                 <FaCartPlus size={14} /> <span>Add To Cart</span>
