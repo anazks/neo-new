@@ -18,6 +18,8 @@ import AdminRoutes from "./Routes/AdminRoutes";
 import Myorders from "./Pages/user/Myorders";
 import GoogleLoginComponent from "./components/user/Google/GoogleLoginComponent";
 import AddProducts from "./components/Admin/Products/AddProducts/AddProducts";
+import OverView from "./components/user/CardPage/OverView"
+import OrderView from "./Pages/user/OrderView";
 function App() {
   return (
     <>
@@ -35,6 +37,7 @@ function App() {
             <Route path="/store" element={<Store/>}/>
             <Route path="/myorder" element={<Myorders/>}/>
             <Route path="/GoogleAuth" element={<GoogleLoginComponent/>}/>
+            <Route path="/overView" element={<OrderView/>}/>
 
 {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>

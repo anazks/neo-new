@@ -50,7 +50,7 @@ const CartPage = () => {
   const handleCreateOrder = async () => {
     try {
       let getPrimaryAddress = await getMyPrimaryAddress();
-      
+      console.log(getPrimaryAddress, "primary address")
       let order = await CreateOrder(selectedAddressId);
       let newData = order.data;
       
