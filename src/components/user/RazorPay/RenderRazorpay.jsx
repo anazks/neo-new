@@ -17,12 +17,12 @@ const loadScript = (src) => new Promise((resolve) => {
   document.body.appendChild(script);
 });
 
-const RenderRazorpay = ({ razorpayOrderId,amount,keyId, setDisplayRazorpay }) => {
+const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const paymentId = useRef(null);
   const paymentMethod = useRef(null);
   const rzpInstance = useRef(null); // Ref to store Razorpay instance
-console.log(razorpayOrderId,amount,keyId,"razorpayOrderId,amount,keyId")
+
   const displayRazorpay = async () => {
     const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
@@ -31,14 +31,15 @@ console.log(razorpayOrderId,amount,keyId,"razorpayOrderId,amount,keyId")
       return;
     }
    
-    // console.log('Order Details:', orderDetails);
+    console.log('Order Details:', orderDetails);
+    let {data} = orderDetails
     const options = {
-      key: keyId,
-      amount: amount,
+      key: data.key,
+      amount: data.amount,
       currency: "INR",
       name: "NEO TOKYO",
       description: "Order Payment",
-      order_id: razorpayOrderId,
+      order_id: data.raz_order_id,
       handler: async (response) => {
         console.log("Payment Success Response:", response);
         paymentId.current = response.razorpay_payment_id;
@@ -47,7 +48,7 @@ console.log(razorpayOrderId,amount,keyId,"razorpayOrderId,amount,keyId")
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_order_id: response.razorpay_order_id,
           razorpay_signature: response.razorpay_signature,
-          raz_order_id: razorpayOrderId,
+          raz_order_id: orderDetails.raz_order_id,
         });
         
         // Close the Razorpay modal
@@ -91,7 +92,7 @@ console.log(razorpayOrderId,amount,keyId,"razorpayOrderId,amount,keyId")
       paymentId.current = response.error.metadata?.payment_id || null;
       await handlePayment("failed", {
         ...response.error,
-        raz_order_id: razorpayOrderId,
+        raz_order_id: orderDetails.raz_order_id,
       });
       rzpInstance.current.close();
       setDisplayRazorpay(false);

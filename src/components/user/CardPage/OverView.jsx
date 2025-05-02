@@ -23,13 +23,7 @@ function Overview() {
         address: "",
         is_primary: false
     });
-  const [orderDetails, setOrderDetails] = useState({
-    amount: 0,
-    currency: "INR",
-    orderId: null,
-    keyId: null,
-    razorpayOrderId: null,
-  });
+  const [orderDetails, setOrderDetails] = useState({}); // Initialize with an empty object
     // Calculate order totals
     const subtotal = orders.total_price || 0; // Ensure subtotal has a default value
     const shipping = 5.99;
@@ -130,12 +124,7 @@ function Overview() {
           console.log(newData, "order data");
           
           // Update orderDetails state
-          setOrderDetails({
-            razorpayOrderId: newData.raz_order_id,
-            currency: newData.currency,
-            amount: newData.amount,
-            keyId: newData.key
-          });
+          setOrderDetails(newData);
           
           // Set display after state update
           setDisplayRazorpay(true);
@@ -168,7 +157,7 @@ function Overview() {
 
     return (
       <>
-      {displayRazorpay && orderDetails.razorpayOrderId && (
+      {displayRazorpay && orderDetails && (
       <RenderRazorpay
         orderDetails={orderDetails}
         setDisplayRazorpay={setDisplayRazorpay}

@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import NavBar from '../NavBar/NavBar';
 import Loader from '../Loader/Loader';
 import RenderRazorpay from "../RazorPay/RenderRazorpay";
 import BaseURL from "../../../Static/Static";
+import { useNavigate } from 'react-router-dom';
+
 import { 
   getMyCart, 
   RemoveFromCart, 
@@ -18,6 +20,7 @@ import {
 
 // Using the Rajadhanai color scheme with #63A375 (green) and black
 const CartPage = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState({ items: [], id: null });
   const [isLoading, setIsLoading] = useState(true);
   const [promoCode, setPromoCode] = useState("");
@@ -66,7 +69,13 @@ const CartPage = () => {
       console.error("Error creating order:", error);
     }
   };
-
+const checkoutHnadle = async () => {
+  try {
+    navigate("/overview");
+  } catch (error) {
+    console.error("Error during checkout:", error);
+  }
+}
   const fetchCartItems = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -629,7 +638,7 @@ const CartPage = () => {
                   className="w-full bg-black text-white py-3 rounded font-bold mt-6 hover:bg-gray-800"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handleCreateOrder}
+                  onClick={checkoutHnadle}
                   disabled={isLoading || !selectedAddressId}
                 >
                   PROCEED TO CHECKOUT
