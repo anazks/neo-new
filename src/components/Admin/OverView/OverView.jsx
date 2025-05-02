@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './over.css';
 import { AddOverViewCategory, viewOverView, addoverViewCate } from '../../../Services/Products';
 
 function OverView() {
@@ -14,20 +13,15 @@ function OverView() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
         const data = await viewOverView();
-        console.log("Fetched data:", data);
-        
-        // Ensure each category has an attributes array
         const formattedData = data.map(category => ({
           ...category,
           attributes: category.attributes || []
         }));
-        
         setCategories(formattedData);
         setError(null);
       } catch (err) {
@@ -41,14 +35,11 @@ function OverView() {
     fetchCategories();
   }, []);
 
-  // Add a new category
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) return;
 
     try {
       const data = await AddOverViewCategory({ name: newCategoryName });
-      console.log("Added category:", data);
-      
       const newCategory = {
         id: data.id || Date.now(),
         name: newCategoryName,
@@ -66,19 +57,15 @@ function OverView() {
     }
   };
 
-  // Add a new item to a category
   const handleAddItem = async () => {
     if (!newItemName.trim() || !selectedCategory) return;
 
     try {
-      // Call the API to add the attribute
       const data = await addoverViewCate({
         category_id: selectedCategory.id,
         name: newItemName
       });
-      console.log("Added attribute:", data);
 
-      // Update local state
       const updatedCategories = categories.map(category => {
         if (category.id === selectedCategory.id) {
           return {
@@ -101,23 +88,18 @@ function OverView() {
     }
   };
 
-  // Add an item through the Add Overview Items modal
   const handleAddItemFromSelect = async () => {
     if (!newItemName.trim() || !selectedCategoryId) return;
 
     try {
-      // Find the selected category
       const category = categories.find(c => c.id === parseInt(selectedCategoryId));
       if (!category) return;
 
-      // Call the API to add the attribute
       const data = await addoverViewCate({
         category_id: category.id,
         name: newItemName
       });
-      console.log("Added attribute:", data);
 
-      // Update local state
       const updatedCategories = categories.map(c => {
         if (c.id === category.id) {
           return {
@@ -141,29 +123,25 @@ function OverView() {
     }
   };
 
-  // Open the item modal for a specific category
   const openItemModal = (category) => {
     setSelectedCategory(category);
     setShowItemModal(true);
   };
 
-  // Open the add items modal
   const openAddItemsModal = () => {
     setNewItemName('');
     setSelectedCategoryId(categories.length > 0 ? categories[0].id.toString() : '');
     setShowAddItemsModal(true);
   };
 
-  // Close any modal when clicking outside
   const closeModal = (e) => {
-    if (e.target.className === 'modal-overlay') {
+    if (e.target.classList.contains('fixed')) {
       setShowCategoryModal(false);
       setShowItemModal(false);
       setShowAddItemsModal(false);
     }
   };
 
-  // Handle key press in input fields
   const handleKeyPress = (e, actionFunction) => {
     if (e.key === 'Enter') {
       actionFunction();
@@ -172,20 +150,20 @@ function OverView() {
 
   if (isLoading) {
     return (
-      <div className="overview-container loading">
-        <div className="loader"></div>
-        <p>Loading categories...</p>
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <p className="ml-4">Loading categories...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="overview-container error">
-        <div className="error-icon">⚠️</div>
-        <p>{error}</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani p-6">
+        <div className="text-red-500 text-4xl mb-4">⚠️</div>
+        <p className="text-xl mb-6">{error}</p>
         <button 
-          className="btn-primary" 
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium"
           onClick={() => window.location.reload()}
         >
           Retry
@@ -195,45 +173,42 @@ function OverView() {
   }
 
   return (
-    <div className="overview-container">
-      <h2 className="overview-title">Overview</h2>
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 font-rajdhani">
+      <h2 className="text-2xl font-bold mb-6">Overview</h2>
       
       {/* Table of categories and items */}
       {categories.length > 0 ? (
-        <div className="table-container">
-          <table className="overview-table">
-            <thead>
+        <div className="overflow-x-auto mb-6">
+          <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
+            <thead className="bg-gray-700">
               <tr>
-                <th>Category</th>
-                <th>Attributes/Items</th>
-                <th>Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Category</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Attributes/Items</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-700">
               {categories.map(category => (
-                <tr key={category.id}>
-                  <td>{category.name}</td>
-         
-
-                  <td>
-                    <div className="items-container">
+                <tr key={category.id} className="hover:bg-gray-750">
+                  <td className="px-6 py-4 whitespace-nowrap font-medium">{category.name}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-2">
                       {category.attributes.map(item => (
-                        <span key={item.id} className="item-badge">
+                        <span key={item.id} className="bg-gray-700 text-gray-200 px-3 py-1 rounded-full text-sm">
                           {item.name}
                         </span>
                       ))}
                       {category.attributes.length === 0 && (
-                        <span className="no-items">No items added</span>
+                        <span className="text-gray-400 italic">No items added</span>
                       )}
                     </div>
                   </td>
-                  <td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <button 
-                      className="btn-action" 
+                      className="flex items-center text-blue-400 hover:text-blue-300"
                       onClick={() => openItemModal(category)}
-                      aria-label={`Add item to ${category.name}`}
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-5 h-5 mr-1" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 3V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                         <path d="M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                       </svg>
@@ -246,15 +221,15 @@ function OverView() {
           </table>
         </div>
       ) : (
-        <div className="empty-state">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="flex flex-col items-center justify-center py-12 bg-gray-800 rounded-lg mb-6">
+          <svg className="w-12 h-12 text-gray-400 mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M12 8V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M8 12H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <p>No categories added yet</p>
+          <p className="text-gray-300 mb-4">No categories added yet</p>
           <button 
-            className="btn-primary" 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium"
             onClick={() => setShowCategoryModal(true)}
           >
             Add Your First Category
@@ -264,12 +239,12 @@ function OverView() {
       
       {/* Action Buttons */}
       {categories.length > 0 && (
-        <div className="action-buttons">
+        <div className="flex space-x-4 mb-6">
           <button 
-            className="btn-primary" 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium flex items-center"
             onClick={() => setShowCategoryModal(true)}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="btn-icon">
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 3V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               <path d="M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
@@ -277,10 +252,10 @@ function OverView() {
           </button>
           
           <button 
-            className="btn-secondary" 
+            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium flex items-center"
             onClick={openAddItemsModal}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="btn-icon">
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 3V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               <path d="M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
@@ -291,47 +266,48 @@ function OverView() {
       
       {/* Add Category Modal */}
       {showCategoryModal && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Add New Category</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeModal}>
+          <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
+              <h3 className="text-lg font-semibold">Add New Category</h3>
               <button 
-                className="close-button"
+                className="text-gray-400 hover:text-white"
                 onClick={() => setShowCategoryModal(false)}
-                aria-label="Close modal"
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-6 h-6" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 4L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </div>
-            <div className="form-group">
-              <label htmlFor="categoryName">Category Name</label>
-              <input 
-                id="categoryName"
-                type="text" 
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                onKeyPress={(e) => handleKeyPress(e, handleAddCategory)}
-                placeholder="Enter category name"
-                autoFocus
-              />
-            </div>
-            <div className="modal-actions">
-              <button 
-                className="btn-cancel" 
-                onClick={() => setShowCategoryModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className="btn-confirm" 
-                onClick={handleAddCategory}
-                disabled={!newCategoryName.trim()}
-              >
-                Add
-              </button>
+            <div className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Category Name</label>
+                <input 
+                  type="text" 
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  onKeyPress={(e) => handleKeyPress(e, handleAddCategory)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter category name"
+                  autoFocus
+                />
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button 
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
+                  onClick={() => setShowCategoryModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded font-medium disabled:opacity-50"
+                  onClick={handleAddCategory}
+                  disabled={!newCategoryName.trim()}
+                >
+                  Add
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -339,52 +315,52 @@ function OverView() {
       
       {/* Add Item Modal (from category) */}
       {showItemModal && selectedCategory && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Add New Item</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeModal}>
+          <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
+              <h3 className="text-lg font-semibold">Add New Item</h3>
               <button 
-                className="close-button"
+                className="text-gray-400 hover:text-white"
                 onClick={() => setShowItemModal(false)}
-                aria-label="Close modal"
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-6 h-6" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 4L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </div>
-            <div className="form-group">
-              <label>Category</label>
-              <div className="input-readonly">{selectedCategory.name}</div>
-              <input type="hidden" value={selectedCategory.id} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="itemName">Attribute Name</label>
-              <input 
-                id="itemName"
-                type="text" 
-                value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
-                onKeyPress={(e) => handleKeyPress(e, handleAddItem)}
-                placeholder="Enter attribute name"
-                autoFocus
-              />
-            </div>
-            <div className="modal-actions">
-              <button 
-                className="btn-cancel" 
-                onClick={() => setShowItemModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className="btn-confirm" 
-                onClick={handleAddItem}
-                disabled={!newItemName.trim()}
-              >
-                Add Item
-              </button>
+            <div className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                <div className="px-3 py-2 bg-gray-700 rounded-md">{selectedCategory.name}</div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Attribute Name</label>
+                <input 
+                  type="text" 
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  onKeyPress={(e) => handleKeyPress(e, handleAddItem)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter attribute name"
+                  autoFocus
+                />
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button 
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
+                  onClick={() => setShowItemModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded font-medium disabled:opacity-50"
+                  onClick={handleAddItem}
+                  disabled={!newItemName.trim()}
+                >
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -392,62 +368,62 @@ function OverView() {
       
       {/* Add Overview Items Modal (from button) */}
       {showAddItemsModal && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Add Overview Item</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeModal}>
+          <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
+              <h3 className="text-lg font-semibold">Add Overview Item</h3>
               <button 
-                className="close-button"
+                className="text-gray-400 hover:text-white"
                 onClick={() => setShowAddItemsModal(false)}
-                aria-label="Close modal"
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-6 h-6" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 4L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M4 4L12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </div>
-            <div className="form-group">
-              <label htmlFor="categorySelect">Select Category</label>
-              <select 
-                id="categorySelect"
-                value={selectedCategoryId} 
-                onChange={(e) => setSelectedCategoryId(e.target.value)}
-                className="select-dropdown"
-              >
-                {categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="attributeName">Attribute Name</label>
-              <input 
-                id="attributeName"
-                type="text" 
-                value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
-                onKeyPress={(e) => handleKeyPress(e, handleAddItemFromSelect)}
-                placeholder="Enter attribute name"
-                autoFocus
-              />
-            </div>
-            <div className="modal-actions">
-              <button 
-                className="btn-cancel" 
-                onClick={() => setShowAddItemsModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className="btn-confirm" 
-                onClick={handleAddItemFromSelect}
-                disabled={!newItemName.trim() || !selectedCategoryId}
-              >
-                Add Item
-              </button>
+            <div className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Select Category</label>
+                <select 
+                  value={selectedCategoryId} 
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Attribute Name</label>
+                <input 
+                  type="text" 
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  onKeyPress={(e) => handleKeyPress(e, handleAddItemFromSelect)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter attribute name"
+                  autoFocus
+                />
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button 
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
+                  onClick={() => setShowAddItemsModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded font-medium disabled:opacity-50"
+                  onClick={handleAddItemFromSelect}
+                  disabled={!newItemName.trim() || !selectedCategoryId}
+                >
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>

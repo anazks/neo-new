@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './update.css';
 import { getSingleProduct, updateProduct, uploadProductPhotos, addProductVideo, addProductVariant, addProductOverview } from '../../../../Services/Products';
 import { useParams, useNavigate } from 'react-router-dom';
 import Loader from '../../../../Loader/Loader';
@@ -174,60 +173,65 @@ function UpdateProduct() {
     };
 
     if (loading) return <Loader />;
-    if (error) return <div className="update-error">Error: {error}</div>;
-    if (!product) return <div className="update-not-found">Product not found</div>;
+    if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
+    if (!product) return <div className="p-4 text-gray-400">Product not found</div>;
 
     return (
-        <div className="update-container">
-            <h1 className="update-title">Update Product</h1>
+        <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+            <h1 className="text-2xl font-bold mb-6">Update Product</h1>
             
-            <form onSubmit={handleSubmit} className="update-form">
-                <div className="form-group">
-                    <label htmlFor="name">Product Name</label>
+            <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 shadow-lg">
+                <div className="mb-4">
+                    <label htmlFor="name" className="block mb-2">Product Name</label>
                     <input
                         type="text"
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                         required
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
+                <div className="mb-4">
+                    <label htmlFor="description" className="block mb-2">Description</label>
                     <textarea
                         id="description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        rows="4"
                         required
                     />
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="price">Price</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label htmlFor="price" className="block mb-2">Price</label>
                         <input
                             type="number"
                             id="price"
                             name="price"
                             value={formData.price}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                             min="0"
                             step="0.01"
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="mrp">MRP</label>
+                    <div>
+                        <label htmlFor="mrp" className="block mb-2">MRP</label>
                         <input
                             type="number"
                             id="mrp"
                             name="mrp"
                             value={formData.mrp}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                             min="0"
                             step="0.01"
@@ -235,189 +239,203 @@ function UpdateProduct() {
                     </div>
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="product_code">Product Code</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label htmlFor="product_code" className="block mb-2">Product Code</label>
                         <input
                             type="text"
                             id="product_code"
                             name="product_code"
                             value={formData.product_code}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="stock">Stock Quantity</label>
+                    <div>
+                        <label htmlFor="stock" className="block mb-2">Stock Quantity</label>
                         <input
                             type="number"
                             id="stock"
                             name="stock"
                             value={formData.stock}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                             min="0"
                         />
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="whats_inside">What's Inside</label>
+                <div className="mb-4">
+                    <label htmlFor="whats_inside" className="block mb-2">What's Inside</label>
                     <textarea
                         id="whats_inside"
                         name="whats_inside"
                         value={formData.whats_inside}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        rows="3"
                     />
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="category">Category ID</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label htmlFor="category" className="block mb-2">Category ID</label>
                         <input
                             type="number"
                             id="category"
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                             min="1"
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="brand">Brand ID</label>
+                    <div>
+                        <label htmlFor="brand" className="block mb-2">Brand ID</label>
                         <input
                             type="number"
                             id="brand"
                             name="brand"
                             value={formData.brand}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                             min="1"
                         />
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="youtube_url">YouTube URL</label>
+                <div className="mb-4">
+                    <label htmlFor="youtube_url" className="block mb-2">YouTube URL</label>
                     <input
                         type="url"
                         id="youtube_url"
                         name="youtube_url"
                         value={formData.youtube_url}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="broacher">Broacher URL</label>
+                <div className="mb-4">
+                    <label htmlFor="broacher" className="block mb-2">Broacher URL</label>
                     <input
                         type="text"
                         id="broacher"
                         name="broacher"
                         value={formData.broacher}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                     />
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="tax">Tax Type</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label htmlFor="tax" className="block mb-2">Tax Type</label>
                         <input
                             type="text"
                             id="tax"
                             name="tax"
                             value={formData.tax}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="tax_value">Tax Value</label>
+                    <div>
+                        <label htmlFor="tax_value" className="block mb-2">Tax Value</label>
                         <input
                             type="number"
                             id="tax_value"
                             name="tax_value"
                             value={formData.tax_value}
                             onChange={handleChange}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                         />
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="discount_price">Discount Price</label>
+                <div className="mb-4">
+                    <label htmlFor="discount_price" className="block mb-2">Discount Price</label>
                     <input
                         type="number"
                         id="discount_price"
                         name="discount_price"
                         value={formData.discount_price}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                         min="0"
                         step="0.01"
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="more_info">More Info</label>
+                <div className="mb-4">
+                    <label htmlFor="more_info" className="block mb-2">More Info</label>
                     <textarea
                         id="more_info"
                         name="more_info"
                         value={formData.more_info}
                         onChange={handleChange}
+                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                        rows="3"
                     />
                 </div>
 
-                <div className="extra-actions">
+                <div className="flex flex-wrap gap-3 mb-6">
                     <button 
                         type="button" 
-                        className="action-btn"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
                         onClick={() => setShowPhotosModal(true)}
                     >
                         Add Photos
                     </button>
                     <button 
                         type="button" 
-                        className="action-btn"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
                         onClick={() => setShowVideoModal(true)}
                     >
                         Add Video
                     </button>
                     <button 
                         type="button" 
-                        className="action-btn"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
                         onClick={() => setShowVariantModal(true)}
                     >
                         Add Variant
                     </button>
                     <button 
                         type="button" 
-                        className="action-btn"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
                         onClick={() => setShowOverviewModal(true)}
                     >
                         Add Overview
                     </button>
                 </div>
 
-                <div className="form-group checkbox-group">
+                <div className="flex items-center mb-6">
                     <input
                         type="checkbox"
                         id="is_available"
                         name="is_available"
                         checked={formData.is_available}
                         onChange={handleChange}
+                        className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
                     />
-                    <label htmlFor="is_available">Available for sale</label>
+                    <label htmlFor="is_available" className="ml-2">Available for sale</label>
                 </div>
 
-                <div className="form-actions">
-                    <button type="submit" className="update-btn">
+                <div className="flex gap-3">
+                    <button type="submit" className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded">
                         Update Product
                     </button>
                     <button 
                         type="button" 
-                        className="cancel-btn"
+                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
                         onClick={() => navigate('/admin/products')}
                     >
                         Cancel
@@ -427,35 +445,45 @@ function UpdateProduct() {
 
             {/* Photos Modal */}
             {showPhotosModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h3 className="modal-title">Add Photos</h3>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold">Add Photos</h3>
                             <button 
-                                className="modal-close-btn"
+                                className="text-gray-400 hover:text-white"
                                 onClick={() => setShowPhotosModal(false)}
                             >
                                 ×
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="mb-4">
                             <form onSubmit={handlePhotosSubmit}>
-                                <div className="form-group">
-                                    <label>Select Photos</label>
+                                <div className="mb-4">
+                                    <label className="block mb-2">Select Photos</label>
                                     <input 
                                         type="file" 
                                         multiple 
                                         onChange={(e) => setPhotos([...e.target.files])}
                                         accept="image/*"
+                                        className="block w-full text-sm text-gray-400
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-blue-500 file:text-white
+                                        hover:file:bg-blue-600"
                                     />
                                 </div>
-                                <div className="form-actions">
-                                    <button type="submit" disabled={loading || photos.length === 0}>
+                                <div className="flex gap-3">
+                                    <button 
+                                        type="submit" 
+                                        disabled={loading || photos.length === 0}
+                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+                                    >
                                         {loading ? 'Uploading...' : 'Upload Photos'}
                                     </button>
                                     <button 
                                         type="button" 
-                                        className="cancel-btn"
+                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
                                         onClick={() => setShowPhotosModal(false)}
                                     >
                                         Cancel
@@ -469,35 +497,40 @@ function UpdateProduct() {
 
             {/* Video Modal */}
             {showVideoModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h3 className="modal-title">Add Video</h3>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold">Add Video</h3>
                             <button 
-                                className="modal-close-btn"
+                                className="text-gray-400 hover:text-white"
                                 onClick={() => setShowVideoModal(false)}
                             >
                                 ×
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="mb-4">
                             <form onSubmit={handleVideoSubmit}>
-                                <div className="form-group">
-                                    <label>Video URL</label>
+                                <div className="mb-4">
+                                    <label className="block mb-2">Video URL</label>
                                     <input 
                                         type="url" 
                                         value={videoUrl}
                                         onChange={(e) => setVideoUrl(e.target.value)}
                                         placeholder="Enter YouTube or video URL"
+                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                                     />
                                 </div>
-                                <div className="form-actions">
-                                    <button type="submit" disabled={loading || !videoUrl}>
+                                <div className="flex gap-3">
+                                    <button 
+                                        type="submit" 
+                                        disabled={loading || !videoUrl}
+                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+                                    >
                                         {loading ? 'Adding...' : 'Add Video'}
                                     </button>
                                     <button 
                                         type="button" 
-                                        className="cancel-btn"
+                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
                                         onClick={() => setShowVideoModal(false)}
                                     >
                                         Cancel
@@ -511,58 +544,65 @@ function UpdateProduct() {
 
             {/* Variant Modal */}
             {showVariantModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h3 className="modal-title">Add Variant</h3>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold">Add Variant</h3>
                             <button 
-                                className="modal-close-btn"
+                                className="text-gray-400 hover:text-white"
                                 onClick={() => setShowVariantModal(false)}
                             >
                                 ×
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="mb-4">
                             <form onSubmit={handleVariantSubmit}>
-                                <div className="form-group">
-                                    <label>Variant Name</label>
+                                <div className="mb-4">
+                                    <label className="block mb-2">Variant Name</label>
                                     <input 
                                         type="text" 
                                         value={variantData.name}
                                         onChange={(e) => setVariantData({...variantData, name: e.target.value})}
+                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                                         required
                                     />
                                 </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>Price</label>
+                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label className="block mb-2">Price</label>
                                         <input 
                                             type="number" 
                                             value={variantData.price}
                                             onChange={(e) => setVariantData({...variantData, price: e.target.value})}
+                                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                                             min="0"
                                             step="0.01"
                                             required
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label>Stock</label>
+                                    <div>
+                                        <label className="block mb-2">Stock</label>
                                         <input 
                                             type="number" 
                                             value={variantData.stock}
                                             onChange={(e) => setVariantData({...variantData, stock: e.target.value})}
+                                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                                             min="0"
                                             required
                                         />
                                     </div>
                                 </div>
-                                <div className="form-actions">
-                                    <button type="submit" disabled={loading}>
+                                <div className="flex gap-3">
+                                    <button 
+                                        type="submit" 
+                                        disabled={loading}
+                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+                                    >
                                         {loading ? 'Adding...' : 'Add Variant'}
                                     </button>
                                     <button 
                                         type="button" 
-                                        className="cancel-btn"
+                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
                                         onClick={() => setShowVariantModal(false)}
                                     >
                                         Cancel
@@ -576,35 +616,40 @@ function UpdateProduct() {
 
             {/* Overview Modal */}
             {showOverviewModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h3 className="modal-title">Add Overview</h3>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold">Add Overview</h3>
                             <button 
-                                className="modal-close-btn"
+                                className="text-gray-400 hover:text-white"
                                 onClick={() => setShowOverviewModal(false)}
                             >
                                 ×
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="mb-4">
                             <form onSubmit={handleOverviewSubmit}>
-                                <div className="form-group">
-                                    <label>Overview Content</label>
+                                <div className="mb-4">
+                                    <label className="block mb-2">Overview Content</label>
                                     <textarea 
                                         value={overviewContent}
                                         onChange={(e) => setOverviewContent(e.target.value)}
+                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                                         rows="8"
                                         required
                                     />
                                 </div>
-                                <div className="form-actions">
-                                    <button type="submit" disabled={loading || !overviewContent}>
+                                <div className="flex gap-3">
+                                    <button 
+                                        type="submit" 
+                                        disabled={loading || !overviewContent}
+                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+                                    >
                                         {loading ? 'Adding...' : 'Add Overview'}
                                     </button>
                                     <button 
                                         type="button" 
-                                        className="cancel-btn"
+                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
                                         onClick={() => setShowOverviewModal(false)}
                                     >
                                         Cancel

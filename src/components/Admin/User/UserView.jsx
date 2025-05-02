@@ -1,6 +1,5 @@
 import React from 'react';
 import { FiUser, FiMail, FiPhone, FiCalendar, FiEdit2, FiTrash2, FiCheckCircle, FiXCircle } from 'react-icons/fi';
-import './viewuser.css';
 
 function UserView() {
   // Sample user data
@@ -59,74 +58,100 @@ function UserView() {
 
   const getStatusBadge = (status) => {
     return status === 'active' ? (
-      <span className="status-badge active">
-        <FiCheckCircle /> Active
+      <span className="flex items-center text-green-400">
+        <FiCheckCircle className="mr-1" /> Active
       </span>
     ) : (
-      <span className="status-badge inactive">
-        <FiXCircle /> Inactive
+      <span className="flex items-center text-red-400">
+        <FiXCircle className="mr-1" /> Inactive
       </span>
     );
   };
 
   const getRoleBadge = (role) => {
     const roleClasses = {
-      Admin: 'admin',
-      Editor: 'editor',
-      Customer: 'customer'
+      Admin: 'bg-purple-600 bg-opacity-20 text-purple-400',
+      Editor: 'bg-blue-600 bg-opacity-20 text-blue-400',
+      Customer: 'bg-gray-600 bg-opacity-20 text-gray-300'
     };
-    return <span className={`role-badge ${roleClasses[role]}`}>{role}</span>;
+    return (
+      <span className={`px-2 py-1 rounded text-xs font-medium ${roleClasses[role]}`}>
+        {role}
+      </span>
+    );
   };
 
   return (
-    <div className="user-view-container">
-      <div className="user-view-header">
-        <h1>
-          <FiUser /> Registered Users
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 font-rajdhani">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold flex items-center">
+          <FiUser className="mr-2" /> Registered Users
         </h1>
-        <div className="user-count">
+        <div className="bg-gray-800 px-3 py-1 rounded text-sm">
           Total: {users.length} users
         </div>
       </div>
 
-      <div className="user-table-container">
-        <table className="user-table">
-          <thead>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
+          <thead className="bg-gray-700">
             <tr>
-              <th>User</th>
-              <th>
-                <FiMail /> Email
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">User</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                <FiMail className="inline mr-1" /> Email
               </th>
-              <th>
-                <FiPhone /> Phone
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                <FiPhone className="inline mr-1" /> Phone
               </th>
-              <th>
-                <FiCalendar /> Joined
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                <FiCalendar className="inline mr-1" /> Joined
               </th>
-              <th>Status</th>
-              <th>Role</th>
-              <th>Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Role</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-700">
             {users.map((user) => (
-              <tr key={user.id}>
-                <td className="user-info">
-                  <img src={user.avatar} alt={user.name} className="user-avatar" />
-                  <span>{user.name}</span>
+              <tr key={user.id} className="hover:bg-gray-750">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <img 
+                      src={user.avatar} 
+                      alt={user.name} 
+                      className="w-10 h-10 rounded-full mr-3 object-cover" 
+                    />
+                    <span className="font-medium">{user.name}</span>
+                  </div>
                 </td>
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
-                <td>{user.joinDate}</td>
-                <td>{getStatusBadge(user.status)}</td>
-                <td>{getRoleBadge(user.role)}</td>
-                <td className="actions">
-                  <button className="action-btn edit-btn" title="Edit user">
-                    <FiEdit2 />
-                  </button>
-                  <button className="action-btn delete-btn" title="Delete user">
-                    <FiTrash2 />
-                  </button>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <a href={`mailto:${user.email}`} className="text-blue-400 hover:text-blue-300">
+                    {user.email}
+                  </a>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <a href={`tel:${user.phone.replace(/[^0-9+]/g, '')}`} className="hover:text-blue-400">
+                    {user.phone}
+                  </a>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{user.joinDate}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(user.status)}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{getRoleBadge(user.role)}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex space-x-2">
+                    <button 
+                      className="text-blue-400 hover:text-blue-300 p-1 rounded hover:bg-gray-700"
+                      title="Edit user"
+                    >
+                      <FiEdit2 />
+                    </button>
+                    <button 
+                      className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-gray-700"
+                      title="Delete user"
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './settings.css';
 import Tax from '../Tax/Tax';
 import { getBrand, deleteBrand, addBrand, getCategory, addCategory, deleteCategory, getTax } from '../../../Services/Settings';
 
@@ -149,159 +148,249 @@ function Settings() {
     }
   };
 
+  const handleEditBrand = (brandId) => {
+    // Implement edit functionality
+    console.log("Edit brand:", brandId);
+    // You can add edit brand functionality here
+  };
+
+  const handleEditCategory = (categoryId) => {
+    // Implement edit functionality
+    console.log("Edit category:", categoryId);
+    // You can add edit category functionality here
+  };
+
   if (isLoading && (!brands || !brands.length) && (!categories || !categories.length)) {
     return (
-      <div className="settings-container dark-mode">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-        </div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="settings-container dark-mode">
-      <h2>Settings</h2>
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-6 font-rajdhani">
+      <h2 className="text-2xl font-bold mb-6 md:mb-8">Settings</h2>
 
       {toast.show && (
-        <div className="toast-container">
-          <div className={`toast ${toast.type}`}>
+        <div className="fixed top-4 right-4 z-50">
+          <div className={`px-6 py-3 rounded-md shadow-lg ${
+            toast.type === 'error' ? 'bg-red-600' : 'bg-green-600'
+          } text-white font-medium`}>
             {toast.message}
           </div>
         </div>
       )}
 
       {/* Brands Section */}
-      <div className="settings-section">
-        <div className="section-header">
-          <h3>Brands</h3>
-          <button className="btn-add dark" onClick={() => setShowBrandPopup(true)}>
+      <div className="mb-8 md:mb-12 bg-gray-800 rounded-lg p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+          <h3 className="text-xl font-semibold">Brands</h3>
+          <button 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium w-full sm:w-auto flex items-center justify-center"
+            onClick={() => setShowBrandPopup(true)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
             Add Brand
           </button>
         </div>
 
-        <div className="table-responsive">
+        <div className="overflow-x-auto">
           {error ? (
-            <div className="error-message">{error}</div>
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 font-medium">
+              {error}
+            </div>
           ) : (
-            <table className="data-table dark">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Brand Name</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {brands && brands.length > 0 ? (
-                  brands.map((brand) => (
-                    <tr key={brand.id}>
-                      <td>{brand.id}</td>
-                      <td>{brand.name}</td>
-                      <td>
-                        <button className="btn-delete dark" onClick={() => handleDeleteBrand(brand.id)} disabled={isLoading}>
-                          Delete
-                        </button>
+            <div className="max-w-full mx-auto">
+              <table className="w-full bg-gray-700 rounded-lg overflow-hidden">
+                <thead className="bg-gray-600">
+                  <tr>
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-16">ID</th>
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Brand Name</th>
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-24 sm:w-32">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-600">
+                  {brands && brands.length > 0 ? (
+                    brands.map((brand) => (
+                      <tr key={brand.id} className="hover:bg-gray-650">
+                        <td className="px-2 sm:px-4 py-3 whitespace-nowrap font-medium">{brand.id}</td>
+                        <td className="px-2 sm:px-4 py-3 whitespace-nowrap font-medium">{brand.name}</td>
+                        <td className="px-2 sm:px-4 py-3 whitespace-nowrap flex flex-wrap gap-2">
+                          <button 
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white px-2 sm:px-3 py-1 rounded text-sm font-medium"
+                            onClick={() => handleEditBrand(brand.id)} 
+                            disabled={isLoading}
+                          >
+                            <span className="hidden sm:inline">Edit</span>
+                            <span className="sm:hidden">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                            </span>
+                          </button>
+                          <button 
+                            className="bg-red-600 hover:bg-red-700 text-white px-2 sm:px-3 py-1 rounded text-sm font-medium"
+                            onClick={() => handleDeleteBrand(brand.id)} 
+                            disabled={isLoading}
+                          >
+                            <span className="hidden sm:inline">Delete</span>
+                            <span className="sm:hidden">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="px-4 py-4 text-center">
+                        <div className="text-center py-4">
+                          <h4 className="text-lg font-medium mb-2">No Brands Found</h4>
+                          <p className="text-gray-400 font-medium">You haven't added any brands yet. Click "Add Brand" to create your first brand.</p>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="no-data">
-                      <div className="empty-state">
-                        <h4>No Brands Found</h4>
-                        <p>You haven't added any brands yet. Click "Add Brand" to create your first brand.</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
 
       {/* Categories Section */}
-      <div className="settings-section">
-        <div className="section-header">
-          <h3>Categories</h3>
-          <button className="btn-add dark" onClick={() => setShowCategoryPopup(true)}>
+      <div className="mb-8 md:mb-12 bg-gray-800 rounded-lg p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+          <h3 className="text-xl font-semibold">Categories</h3>
+          <button 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium w-full sm:w-auto flex items-center justify-center"
+            onClick={() => setShowCategoryPopup(true)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
             Add Category
           </button>
         </div>
 
-        <div className="table-responsive">
+        <div className="overflow-x-auto">
           {error ? (
-            <div className="error-message">{error}</div>
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 font-medium">
+              {error}
+            </div>
           ) : (
-            <table className="data-table dark">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories && categories.length > 0 ? (
-                  categories.map((category) => (
-                    <tr key={category.id}>
-                      <td>{category.id}</td>
-                      <td>{category.name}</td>
-                      <td>{category.description || 'No description'}</td>
-                      <td>
-                        <button className="btn-delete dark" onClick={() => handleDeleteCategory(category.id)} disabled={isLoading}>
-                          Delete
-                        </button>
+            <div className="max-w-full mx-auto">
+              <table className="w-full bg-gray-700 rounded-lg overflow-hidden">
+                <thead className="bg-gray-600">
+                  <tr>
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-16">ID</th>
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                    <th className="hidden md:table-cell px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Description</th>
+                    <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-24 sm:w-32">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-600">
+                  {categories && categories.length > 0 ? (
+                    categories.map((category) => (
+                      <tr key={category.id} className="hover:bg-gray-650">
+                        <td className="px-2 sm:px-4 py-3 whitespace-nowrap font-medium">{category.id}</td>
+                        <td className="px-2 sm:px-4 py-3 whitespace-nowrap font-medium">{category.name}</td>
+                        <td className="hidden md:table-cell px-2 sm:px-4 py-3 font-medium">
+                          <div className="max-w-xs truncate">{category.description || 'No description'}</div>
+                        </td>
+                        <td className="px-2 sm:px-4 py-3 whitespace-nowrap flex flex-wrap gap-2">
+                          <button 
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white px-2 sm:px-3 py-1 rounded text-sm font-medium"
+                            onClick={() => handleEditCategory(category.id)} 
+                            disabled={isLoading}
+                          >
+                            <span className="hidden sm:inline">Edit</span>
+                            <span className="sm:hidden">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                              </svg>
+                            </span>
+                          </button>
+                          <button 
+                            className="bg-red-600 hover:bg-red-700 text-white px-2 sm:px-3 py-1 rounded text-sm font-medium"
+                            onClick={() => handleDeleteCategory(category.id)} 
+                            disabled={isLoading}
+                          >
+                            <span className="hidden sm:inline">Delete</span>
+                            <span className="sm:hidden">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="px-4 py-4 text-center">
+                        <div className="text-center py-4">
+                          <h4 className="text-lg font-medium mb-2">No Categories Found</h4>
+                          <p className="text-gray-400 font-medium">You haven't added any categories yet. Click "Add Category" to create your first category.</p>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="no-data">
-                      <div className="empty-state">
-                        <h4>No Categories Found</h4>
-                        <p>You haven't added any categories yet. Click "Add Category" to create your first category.</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
 
       {/* Brand Popup */}
       {showBrandPopup && (
-        <div className="popup-overlay dark">
-          <div className="popup-content dark">
-            <div className="popup-header">
-              <h3>Add New Brand</h3>
-              <button className="btn-close dark" onClick={() => setShowBrandPopup(false)} aria-label="Close">&times;</button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
+              <h3 className="text-lg font-semibold">Add New Brand</h3>
+              <button 
+                className="text-gray-400 hover:text-white text-xl font-medium"
+                onClick={() => setShowBrandPopup(false)} 
+                aria-label="Close"
+              >
+                &times;
+              </button>
             </div>
 
-            <form onSubmit={handleBrandSubmit}>
-              <div className="form-group">
-                <label htmlFor="brandName">Brand Name</label>
+            <form onSubmit={handleBrandSubmit} className="p-6">
+              <div className="mb-4">
+                <label htmlFor="brandName" className="block text-sm font-medium mb-2">Brand Name</label>
                 <input
                   type="text"
                   id="brandName"
                   value={brandName}
                   onChange={(e) => setBrandName(e.target.value)}
-                  className="dark-input"
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                   required
                   placeholder="Enter brand name"
                   autoFocus
                 />
               </div>
 
-              <div className="popup-actions">
-                <button type="button" className="btn-cancel dark" onClick={() => setShowBrandPopup(false)}>
+              <div className="flex justify-end space-x-3">
+                <button 
+                  type="button" 
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
+                  onClick={() => setShowBrandPopup(false)}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn-next dark" disabled={!brandName.trim() || isLoading}>
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded disabled:opacity-50 font-medium"
+                  disabled={!brandName.trim() || isLoading}
+                >
                   {isLoading ? 'Adding...' : 'Add Brand'}
                 </button>
               </div>
@@ -312,47 +401,61 @@ function Settings() {
 
       {/* Category Popup */}
       {showCategoryPopup && (
-        <div className="popup-overlay dark">
-          <div className="popup-content dark">
-            <div className="popup-header">
-              <h3>Add New Category</h3>
-              <button className="btn-close dark" onClick={() => setShowCategoryPopup(false)} aria-label="Close">&times;</button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
+              <h3 className="text-lg font-semibold">Add New Category</h3>
+              <button 
+                className="text-gray-400 hover:text-white text-xl font-medium"
+                onClick={() => setShowCategoryPopup(false)} 
+                aria-label="Close"
+              >
+                &times;
+              </button>
             </div>
 
-            <form onSubmit={handleCategorySubmit}>
-              <div className="form-group">
-                <label htmlFor="categoryName">Name</label>
+            <form onSubmit={handleCategorySubmit} className="p-6">
+              <div className="mb-4">
+                <label htmlFor="categoryName" className="block text-sm font-medium mb-2">Name</label>
                 <input
                   type="text"
                   id="categoryName"
                   name="name"
                   value={categoryData.name}
                   onChange={handleCategoryChange}
-                  className="dark-input"
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                   required
                   placeholder="Enter category name"
                   autoFocus
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="categoryDescription">Description</label>
+              <div className="mb-4">
+                <label htmlFor="categoryDescription" className="block text-sm font-medium mb-2">Description</label>
                 <textarea
                   id="categoryDescription"
                   name="description"
                   value={categoryData.description}
                   onChange={handleCategoryChange}
                   rows="3"
-                  className="dark-input"
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                   placeholder="Enter category description (optional)"
                 ></textarea>
               </div>
 
-              <div className="popup-actions">
-                <button type="button" className="btn-cancel dark" onClick={() => setShowCategoryPopup(false)}>
+              <div className="flex justify-end space-x-3">
+                <button 
+                  type="button" 
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
+                  onClick={() => setShowCategoryPopup(false)}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn-next dark" disabled={!categoryData.name.trim() || isLoading}>
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded disabled:opacity-50 font-medium"
+                  disabled={!categoryData.name.trim() || isLoading}
+                >
                   {isLoading ? 'Adding...' : 'Add Category'}
                 </button>
               </div>
