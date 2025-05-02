@@ -1,14 +1,12 @@
-
-
-import { Routes, Route } from "react-router-dom"
-import Home from './Pages/Home';
+import { Routes, Route } from "react-router-dom";
+import Home from "./Pages/Home";
 import Products from "./Pages/user/Products";
 import DetailedView from "./Pages/user/DetailedView";
 import CardPage from "./components/user/CardPage/CartPage";
 import Login from "./Pages/user/Login";
 import Recomends from "./components/user/Recomendation/Recomends";
 import SupportPage from "./Pages/user/SupportPage";
-import Register from '././components//user/Registraion/Register'
+import Register from "././components//user/Registraion/Register";
 // import AboutUs from "./components/user/AboutUs/AboutUs";
 // import Login from "./components/user/Login/Login";
 import AboutUs from "./Pages/user/AboutUs";
@@ -18,6 +16,30 @@ import AdminRoutes from "./Routes/AdminRoutes";
 import Myorders from "./Pages/user/Myorders";
 import GoogleLoginComponent from "./components/user/Google/GoogleLoginComponent";
 import AddProducts from "./components/Admin/Products/AddProducts/AddProducts";
+
+import Tokyo from "./components/user/Tickets/Tickets";
+import TicketsResolved from  "./components/user/Tickets/TicketsResolved"
+
+function App() {
+  return (
+    <>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/details/:id" element={<DetailedView />} />
+          <Route path="/cart" element={<CardPage />} />
+          <Route path="/special" element={<Recomends />} />
+          <Route path="/Support" element={<SupportPage />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/myorder" element={<Myorders />} />
+          <Route path="/GoogleAuth" element={<GoogleLoginComponent />} />
+          <Route path="/ticket" element={<Tokyo/>} />
+          <Route path="/ticketResolved" element={<TicketsResolved/>} />
+
 import OverView from "./components/user/CardPage/OverView"
 import OrderView from "./Pages/user/OrderView";
 function App() {
@@ -39,13 +61,12 @@ function App() {
             <Route path="/GoogleAuth" element={<GoogleLoginComponent/>}/>
             <Route path="/overView" element={<OrderView/>}/>
 
-{/* 
+          {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/Home" element={<AdminHome/>}/> */}
-      </Routes>
-      <AdminRoutes/>
-
-    </AuthProvider>
+        </Routes>
+        <AdminRoutes />
+      </AuthProvider>
     </>
   );
 }

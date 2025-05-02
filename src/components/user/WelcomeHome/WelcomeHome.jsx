@@ -12,6 +12,7 @@ import ProductFooter from "../Footer/ProductFooter"
 import NavBar from "../NavBar/NavBar";
 import WelcomeSection from "./welcomepage";
 import Tokyo from "../Tokyo/Tokyo";
+import Tickets from "../Tickets/Tickets"
 const WelcomeHome = () => {
   // const [scrollY, setScrollY] = useState(0);
   const wrapperRef = useRef(null);
@@ -72,6 +73,7 @@ const WelcomeHome = () => {
         // PriorityOne,
         GamingPage,
         Gaming,
+        Tickets,
         Footer
 
       ].map((Component, index) => (
