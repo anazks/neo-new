@@ -20,6 +20,7 @@ import OrderView from "./components/user/CardPage/OverView"
 import Tokyo from "./components/user/Tickets/Tickets";
 import TicketsResolved from  "./components/user/Tickets/TicketsResolved"
 import Ticket from "./components/user/Tickets/Tickets"
+import Solutions from "./components/user/Solutions/Solutions"
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/overView" element={<OrderView/>}/>
             <Route path="/tickets" element={<Ticket/>}/>
             <Route path="/ticketsresolved" element={<TicketsResolved/>}/>
+            <Route path="/Solutions" element={<Solutions/>}/>
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/Home" element={<AdminHome/>}/> */}
