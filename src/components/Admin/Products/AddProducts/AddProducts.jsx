@@ -182,7 +182,7 @@ function AddProducts() {
   
         const response = await addProduct(productFormData);
         
-        if (response && response.status === 200) {
+        if (response && response.status === 201) {
           setSubmitSuccess(true);
           setDebugData(response.data);
           setAlertData({

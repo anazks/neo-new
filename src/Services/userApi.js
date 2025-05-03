@@ -319,3 +319,27 @@ export const getMyOrder = async()=>{
   }
 }
 
+export const addRatings = async(data)=>{
+  try {
+    console.log(data,"in api-------")
+    let rating = await Axios.post('/interactions/reviews/add/',data)
+    console.log(rating,"rating")
+    return rating
+  } catch (error) {
+    console.log(error)
+    return error 
+  }
+}
+
+export const getRatings = async(product_id)=>{
+  try {
+    console.log("ratings-------")
+
+    let ratings = await Axios.get(`/interactions/product/${product_id}/review-view`)
+    console.log(ratings,"ratings------- data+++++++++++++")
+    return ratings
+  } catch (error) {
+    console.log(error)
+    return error 
+  }
+}

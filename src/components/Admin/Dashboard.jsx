@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaUsers, FaShoppingCart, FaMoneyBillWave, FaChartLine } from 'react-icons/fa';
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  
+ } from 'recharts';
+ import {getAnalytics} from '../../Services/Settings'
 
 function Dashboard() {
+  const [CustomerAnalytics, setCustomerAnalytics] = React.useState([]);
+  const [ProductAnalytics, setProductAnalytics] = React.useState([]);
+
+  useEffect(()=>{
+    const fetchAnalytics = async () => {
+      try {
+        const response = await getAnalytics();
+        setCustomerAnalytics(response);
+        console.log(response, "in controller response");
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+      }
+    };
+    fetchAnalytics();
+  })
+
   // Sample data for charts
   const revenueData = [
     { name: 'Jan', value: 18400 },
@@ -237,59 +256,35 @@ function Dashboard() {
             <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
               <thead className="bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Order ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Frequency Of Purchase </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">days_since_last_order</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Amount</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
+
+              {
+                CustomerAnalytics ?
+                CustomerAnalytics.map((order, index) => (
+                  <tbody key={index} className="divide-y divide-gray-700">
+                    <tr className="hover:bg-gray-750">
+                      <td className="px-6 py-4 whitespace-nowrap font-medium">{order.purchase_frequency_days}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{order.user_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{order.days_since_last_order}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">INR.{order.total_spent}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`bg-${order.is_active} text-white px-2 py-1 rounded text-xs font-medium`}>{order.is_active}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                )) : null
+              }
               <tbody className="divide-y divide-gray-700">
-                <tr className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">#ORD-1234</td>
-                  <td className="px-6 py-4 whitespace-nowrap">John Smith</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Mar 28, 2025</td>
-                  <td className="px-6 py-4 whitespace-nowrap">$120.50</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Completed</span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">#ORD-1235</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Sarah Johnson</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Mar 27, 2025</td>
-                  <td className="px-6 py-4 whitespace-nowrap">$285.00</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">Processing</span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">#ORD-1236</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Michael Davis</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Mar 26, 2025</td>
-                  <td className="px-6 py-4 whitespace-nowrap">$95.20</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="bg-yellow-600 text-white px-2 py-1 rounded text-xs font-medium">Pending</span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">#ORD-1237</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Emily Wilson</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Mar 25, 2025</td>
-                  <td className="px-6 py-4 whitespace-nowrap">$345.75</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">Completed</span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">#ORD-1238</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Robert Brown</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Mar 24, 2025</td>
-                  <td className="px-6 py-4 whitespace-nowrap">$78.60</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium">Cancelled</span>
-                  </td>
-                </tr>
+               
+                
+               
+                
               </tbody>
             </table>
           </div>

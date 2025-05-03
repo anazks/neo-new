@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { getSingleProduct, updateProduct, uploadProductPhotos, addProductVideo, addProductVariant, addProductOverview } from '../../../../Services/Products';
+import {AddVarient, getSingleProduct, updateProduct, uploadProductPhotos, addProductVideo, addProductVariant, addProductOverview,getAllProduct,relationShip,getOverViewCategory,UpdateProductOverview,updateVideo } from '../../../../Services/Products';
 import { useParams, useNavigate } from 'react-router-dom';
 import Loader from '../../../../Loader/Loader';
+import {getCategory, getBrand, getTax} from '../../../../Services/Settings'
+import BaseURL from '../../../../Static/Static';
+import Alert from '../../../user/Alert/Alert';
 
 function UpdateProduct() {
+    const [videoFile, setVideoFile] = useState(null);
+
+    const [products, setProducts] = useState([]);
+    const [relationShips, setRelationShip] = useState([]);
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [taxes, setTaxes] = useState([]);
+    const [overViewContents,setOverviewContents] = useState([])
+    const [ALertStatus,setALertStatus] = useState(false)
+    const [alertMessage, setAlertMessage] = useState('');
+
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -75,7 +89,67 @@ function UpdateProduct() {
                 setLoading(false);
             }
         };
+        const fetchCategory = async () => {
+            try {
+                let categoryData = await getCategory();
+                console.log(categoryData, "category data in update product");
+                setCategories(categoryData.data);
+            } catch (error) {
+                setError(error.message);
+            }
+        }
+        const fetchBrand = async () => {
+            try {
+                let brandData = await getBrand();
+                console.log(brandData, "brand data in update product");
+                setBrands(brandData.data);
+            } catch (error) {
+                setError(error.message);
+            }
+        }
+        const fetchTax = async () => {
+            try {
+                let taxData = await getTax();
+                console.log(taxData, "tax data in update product");
+                setTaxes(taxData.data);
+            } catch (error) {
+                setError(error.message);
+            }
+        }
+        const getAllProductFromDB = async () => {
+            try {
+                const response = await getAllProduct();
+                console.log(response, "all-----------");
+                setProducts(response);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+        const GetrelationShip = async () => {
+            try {
+                const response = await relationShip();
+                console.log(response, "-------- ship data in update product");
+                setRelationShip(response);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+        const getOverViewCategoryFn = async () => {
+            try {
+                const response = await getOverViewCategory();
+                console.log(response, "-------- over data in update product");
+                setOverviewContents(response)
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+        getOverViewCategoryFn()
+        GetrelationShip()
+        getAllProductFromDB()
         fetchProduct();
+        fetchCategory()
+        fetchBrand()
+        fetchTax()
     }, [id]);
 
     const handleChange = (e) => {
@@ -88,6 +162,15 @@ function UpdateProduct() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Log all form data to console before submitting
+        console.log("Submitting form data:", {
+            ...formData,
+            category: Number(formData.category),
+            brand: Number(formData.brand),
+            tax: formData.tax ? Number(formData.tax) : '',
+            tax_value: formData.tax_value ? Number(formData.tax_value) : ''
+        });
+        
         try {
             setLoading(true);
             const updatedProduct = await updateProduct(id, formData);
@@ -121,26 +204,66 @@ function UpdateProduct() {
 
     const handleVideoSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!videoFile) return;
+        
+        setLoading(true);
+        
         try {
-            setLoading(true);
-            await addProductVideo(id, videoUrl);
-            setShowVideoModal(false);
-            // Refresh product data
-            const updatedProduct = await getSingleProduct(id);
-            setProduct(updatedProduct);
+          // Create a FormData object to send the file
+          const formData = new FormData();
+          formData.append('video', videoFile);
+          formData.append('product_Id', id); // Assuming you have productId available
+          
+          // Replace with your actual API endpoint for video upload
+          const response = await updateVideo(formData)
+          console.log(response, "response in video upload")
+        //   const response = await fetch('/api/products/upload-video', {
+        //     method: 'POST',
+        //     body: formData,
+        //     // Note: Don't set Content-Type header when using FormData
+        //     // The browser will set it automatically with the correct boundary
+        //   });
+          
+          if (!response) {
+            throw new Error('Failed to upload video');
+          }
+          
+          // Handle successful upload
+          const result = await response.json();
+          
+          // Close modal and maybe refresh data
+          setShowVideoModal(false);
+          // Refresh product data if needed
+          
+          // Show success message
+          setALertStatus(true)
+            setAlertMessage('Video uploaded successfully');
+         
         } catch (error) {
-            console.error("Error adding video:", error);
-            setError(error.message);
+          console.error('Error uploading video:', error);
+          setALertStatus(true)
+          setAlertMessage('Video uploading failed');
         } finally {
-            setLoading(false);
+          setLoading(false);
+          setVideoFile(null); // Reset the file state
         }
-    };
+      };
 
     const handleVariantSubmit = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
-            await addProductVariant(id, variantData);
+            console.log("Variant data:", variantData);
+            // await addProductVariant(id, variantData);
+            variantData.product_iddd = id;
+            console.log(variantData, "variant data in add variant")
+            let response = await AddVarient(variantData)
+            console.log(response, "response in add variant")
+            if (response) {
+                setAlertMessage(response.message)
+                setALertStatus(true)
+            }
             setShowVariantModal(false);
             setVariantData({ name: '', price: '', stock: 0 });
             // Refresh product data
@@ -158,7 +281,9 @@ function UpdateProduct() {
         e.preventDefault();
         try {
             setLoading(true);
-            await addProductOverview(id, overviewContent);
+            console.log("Overview content:", overviewContent);
+            // overviewContent.product_id = id;
+            await UpdateProductOverview(id, overviewContent);
             setShowOverviewModal(false);
             setOverviewContent('');
             // Refresh product data
@@ -179,7 +304,15 @@ function UpdateProduct() {
     return (
         <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
             <h1 className="text-2xl font-bold mb-6">Update Product</h1>
-            
+            {
+                ALertStatus && (
+                    <Alert
+                        message={alertMessage}
+                        
+                        type="success"
+                    />
+                )
+            }
             <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 shadow-lg">
                 <div className="mb-4">
                     <label htmlFor="name" className="block mb-2">Product Name</label>
@@ -282,31 +415,41 @@ function UpdateProduct() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label htmlFor="category" className="block mb-2">Category ID</label>
-                        <input
-                            type="number"
+                        <label htmlFor="category" className="block mb-2">Category</label>
+                        <select
                             id="category"
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
                             className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
-                            min="1"
-                        />
+                        >
+                            <option value="">Select Category</option>
+                            {categories.map(category => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div>
-                        <label htmlFor="brand" className="block mb-2">Brand ID</label>
-                        <input
-                            type="number"
+                        <label htmlFor="brand" className="block mb-2">Brand</label>
+                        <select
                             id="brand"
                             name="brand"
                             value={formData.brand}
                             onChange={handleChange}
                             className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
-                            min="1"
-                        />
+                        >
+                            <option value="">Select Brand</option>
+                            {brands.map(brand => (
+                                <option key={brand.id} value={brand.id}>
+                                    {brand.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
@@ -337,14 +480,20 @@ function UpdateProduct() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label htmlFor="tax" className="block mb-2">Tax Type</label>
-                        <input
-                            type="text"
+                        <select
                             id="tax"
                             name="tax"
                             value={formData.tax}
                             onChange={handleChange}
                             className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                        />
+                        >
+                            <option value="">Select Tax Type</option>
+                            {taxes.map(tax => (
+                                <option key={tax.id} value={tax.id}>
+                                    {tax.tax_name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div>
@@ -509,24 +658,30 @@ function UpdateProduct() {
                             </button>
                         </div>
                         <div className="mb-4">
-                            <form onSubmit={handleVideoSubmit}>
+                        <form onSubmit={handleVideoSubmit}>
                                 <div className="mb-4">
-                                    <label className="block mb-2">Video URL</label>
-                                    <input 
-                                        type="url" 
-                                        value={videoUrl}
-                                        onChange={(e) => setVideoUrl(e.target.value)}
-                                        placeholder="Enter YouTube or video URL"
-                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                    />
+                                    <label className="block mb-2">Upload Video</label>
+                                    <div className="flex flex-col">
+                                        <input 
+                                            type="file" 
+                                            accept="video/*"
+                                            onChange={(e) => setVideoFile(e.target.files[0])}
+                                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                        />
+                                        {videoFile && (
+                                            <div className="mt-2 text-sm text-gray-300">
+                                                Selected: {videoFile.name} ({(videoFile.size / (1024 * 1024)).toFixed(2)} MB)
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex gap-3">
                                     <button 
                                         type="submit" 
-                                        disabled={loading || !videoUrl}
+                                        disabled={loading || !videoFile}
                                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
                                     >
-                                        {loading ? 'Adding...' : 'Add Video'}
+                                        {loading ? 'Uploading...' : 'Upload Video'}
                                     </button>
                                     <button 
                                         type="button" 
@@ -556,59 +711,95 @@ function UpdateProduct() {
                             </button>
                         </div>
                         <div className="mb-4">
-                            <form onSubmit={handleVariantSubmit}>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Variant Name</label>
-                                    <input 
-                                        type="text" 
-                                        value={variantData.name}
-                                        onChange={(e) => setVariantData({...variantData, name: e.target.value})}
-                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                        required
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <label className="block mb-2">Price</label>
-                                        <input 
-                                            type="number" 
-                                            value={variantData.price}
-                                            onChange={(e) => setVariantData({...variantData, price: e.target.value})}
-                                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                            min="0"
-                                            step="0.01"
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block mb-2">Stock</label>
-                                        <input 
-                                            type="number" 
-                                            value={variantData.stock}
-                                            onChange={(e) => setVariantData({...variantData, stock: e.target.value})}
-                                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                            min="0"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex gap-3">
-                                    <button 
-                                        type="submit" 
-                                        disabled={loading}
-                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
-                                    >
-                                        {loading ? 'Adding...' : 'Add Variant'}
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
-                                        onClick={() => setShowVariantModal(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
+                        <form onSubmit={handleVariantSubmit}>
+
+
+    <div className="grid grid-cols-2 gap-4 mb-4">
+        {/* <div>
+            <label className="block mb-2">Price</label>
+            <input 
+                type="number" 
+                value={variantData.price}
+                onChange={(e) => setVariantData({...variantData, price: e.target.value})}
+                className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                min="0"
+                step="0.01"
+                required
+            />
+        </div> */}
+        {/* <div>
+            <label className="block mb-2">Stock</label>
+            <input 
+                type="number" 
+                value={variantData.stock}
+                onChange={(e) => setVariantData({...variantData, stock: e.target.value})}
+                className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                min="0"
+                required
+            />
+        </div> */}
+    </div>
+
+    <div className="mb-4">
+        <label className="block mb-2">Variant Product</label>
+        <select
+            value={variantData.variant_product_id || ''}
+            onChange={(e) => setVariantData({...variantData, variant_product_id: e.target.value})}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+        >
+            <option value="">Select Variant Product</option>
+            {products.filter(p => p.id !== variantData.product_id).map(product => (
+                <option key={product.id} value={product.id}>
+                    {product.name} (ID: {product.id})
+                </option>
+            ))}
+        </select>
+    </div>
+
+    {/* Relationship Dropdown */}
+    <div className="mb-4">
+        <label className="block mb-2">Relationship</label>
+        <select
+            value={variantData.relationship || ''}
+            onChange={(e) => setVariantData({...variantData, relationship: e.target.value})}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+            required
+        >
+           <option value="">Select Variant Product</option>
+            {relationShips.filter(p => p.id !== variantData.product_id).map(relationShips => (
+                <option key={relationShips.id} value={relationShips.id}>
+                    {relationShips.name} (ID: {relationShips.name})
+                </option>
+            ))}
+        </select>
+    </div>
+    <div className="mb-4">
+        <label className="block mb-2">Relation Ship</label>
+        <input 
+            type="text" 
+            value={variantData.name}
+            onChange={(e) => setVariantData({...variantData, name: e.target.value})}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+            required
+        />
+    </div>
+    <div className="flex gap-3">
+        <button 
+            type="submit" 
+            disabled={loading}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+        >
+            {loading ? 'Adding...' : 'Add Variant'}
+        </button>
+        <button 
+            type="button" 
+            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
+            onClick={() => setShowVariantModal(false)}
+        >
+            Cancel
+        </button>
+    </div>
+</form>
                         </div>
                     </div>
                 </div>
@@ -628,34 +819,42 @@ function UpdateProduct() {
                             </button>
                         </div>
                         <div className="mb-4">
-                            <form onSubmit={handleOverviewSubmit}>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Overview Content</label>
-                                    <textarea 
-                                        value={overviewContent}
-                                        onChange={(e) => setOverviewContent(e.target.value)}
-                                        className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                                        rows="8"
-                                        required
-                                    />
-                                </div>
-                                <div className="flex gap-3">
-                                    <button 
-                                        type="submit" 
-                                        disabled={loading || !overviewContent}
-                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
-                                    >
-                                        {loading ? 'Adding...' : 'Add Overview'}
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
-                                        onClick={() => setShowOverviewModal(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
+                        <form onSubmit={handleOverviewSubmit}>
+  <div className="mb-4">
+    <label className="block mb-2">Overview Content</label>
+    {/* Replaced textarea with select dropdown */}
+    <select
+      value={overviewContent}
+      onChange={(e) => setOverviewContent(e.target.value)}
+      className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+      required
+    >
+      <option value="">Select Overview Content</option>
+      {/* Assuming overViewContent is your array with name and id */}
+      {overViewContents.map(content => (
+        <option key={content.id} value={content.id}>
+          {content.name}
+        </option>
+      ))}
+    </select>
+  </div>
+  <div className="flex gap-3">
+    <button
+      type="submit"
+      disabled={loading || !overviewContent}
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+    >
+      {loading ? 'Adding...' : 'Add Overview'}
+    </button>
+    <button
+      type="button"
+      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
+      onClick={() => setShowOverviewModal(false)}
+    >
+      Cancel
+    </button>
+  </div>
+</form>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import SingeProductOverview from '../CardPage/SingleProductOverView'
 import BaseURL from '../../../Static/Static';
 import NavBar from '../NavBar/NavBar'
 import { addTocart } from '../../../Services/userApi';
+import Rating  from "../ProductDetail/Rating"
 import Alert from '../Alert/Alert';
 function Details({ product }) {
   // State for selected options and UI
@@ -172,7 +173,13 @@ const handleBuyNow = async () => {
         <SingeProductOverview product={product}/>
       )
     }
-     <div className="min-h-screen bg-white">
+   <>
+   <br />
+   <br />
+   <br />
+   <br />
+   
+   <div className="min-h-screen bg-white">
       {/* Main product container */}
       <div className="w-full min-h-screen">
         {/* Video Popup */}
@@ -200,13 +207,13 @@ const handleBuyNow = async () => {
         )}
         
         {/* Product content layout */}
-        <div className="max-w-6xl mx-auto px-4 py-6 md:py-8 lg:px-8 min-h-screen flex flex-col md:flex-row md:items-start gap-6 md:gap-10 opacity-0 translate-y-8 animate-fade-up">
-          {/* Left side - Product image and actions - SMALLER HEIGHT */}
-          <div className="w-full md:w-2/5 md:sticky md:top-20" ref={imageRef}>
-            {/* Image container with reduced height */}
+        <div className="max-w-6xl mx-auto px-4 py-6 md:py-8 lg:px-8 flex flex-col md:flex-row md:items-start gap-6 md:gap-10 opacity-0 translate-y-8 animate-fade-up">
+          {/* Left side - Product image and actions - FIXED HEIGHT */}
+          <div className="w-full md:w-2/5 md:sticky md:top-20 self-start" ref={imageRef}>
+            {/* Image container with fixed height */}
             <div className="w-full rounded-xl overflow-hidden bg-white p-4 border border-gray-100 transition-transform duration-300 hover:-translate-y-1">
               {productImage ? (
-                <div className="relative max-h-72 flex items-center justify-center">
+                <div className="relative h-72 flex items-center justify-center">
                   <img
                     src={BaseURL+productImage}
                     alt={product.name || 'Product image'}
@@ -225,7 +232,7 @@ const handleBuyNow = async () => {
                   )}
                 </div>
               ) : (
-                <div className="h-48 flex items-center justify-center rounded-lg bg-gray-200 text-gray-500">
+                <div className="h-72 flex items-center justify-center rounded-lg bg-gray-200 text-gray-500">
                   No product image available
                 </div>
               )}
@@ -260,13 +267,12 @@ const handleBuyNow = async () => {
             </div>
           </div>
           
-          {/* Right side - Product details */}
+          {/* Right side - Product details - FIXED POSITION */}
           <div 
-          style={{marginTop: "50px"}}
             ref={detailsRef}
-            className="w-full md:w-3/5 flex flex-col rounded-xl p-5 lg:p-6   relative overflow-hidden"
+            className="w-full md:w-3/5 flex flex-col rounded-xl p-5 lg:p-6 relative"
           >
-            <div className="absolute top-0 left-0 w-full h-1 "></div>
+            <div className="absolute top-0 left-0 w-full h-1"></div>
             
             <div className="mb-4">
               <h1 className="text-2xl md:text-3xl font-bold mb-1 uppercase font-rajdhani tracking-tight text-black">
@@ -277,7 +283,7 @@ const handleBuyNow = async () => {
                 {product.subtitle || "GAMING PC"}
               </h3>
               
-              <div className="text-2xl font-bold mb-3 pb-3 border-b border-gray-200"style={{ color: '#63A375' }}>
+              <div className="text-2xl font-bold mb-3 pb-3 border-b border-gray-200" style={{ color: '#63A375' }}>
                   {product.originalPrice && (
                     <del className="text-base mr-3 font-normal opacity-60 align-super">
                       ₹ {formatPrice(product.originalPrice)}
@@ -287,18 +293,19 @@ const handleBuyNow = async () => {
                 </div>
             </div>
             
-            <div className="text-sm leading-relaxed mb-4 pb-4 max-h-24 overflow-y-auto text-gray-600 border-b border-gray-200 font-questrial scrollbar-thin scrollbar-thumb-black scrollbar-track-gray-200">
+            <div className="text-sm leading-relaxed mb-4 pb-4 border-b border-gray-200 font-questrial">
               {product.description || "Experience the ultimate gaming performance with our custom-built gaming PC, featuring the latest technology and components designed to deliver exceptional speed, graphics, and reliability for all your gaming needs."}
             </div>
             
             <div className="flex flex-col sm:flex-row gap-3 mt-4">
-              <button  onClick={()=>handleAddToCart(product.id)}
+              <button 
+                onClick={() => handleAddToCart(product.id)}
                 className="flex-1 h-10 rounded-lg font-semibold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 bg-gray-100 border border-gray-400 text-black hover:bg-gray-200"
               >
                 <FaCartPlus size={14} /> <span>Add To Cart</span>
               </button>
               <button 
-              onClick={handleBuyNow}
+                onClick={handleBuyNow}
                 className="flex-1 h-10 rounded-lg font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all duration-300"
               >
                 <FaBolt size={14} /> <span>Buy Now</span>
@@ -309,6 +316,8 @@ const handleBuyNow = async () => {
         </div>
       </div>
     </div>
+    
+   </>
    </>
   );
 }
@@ -375,20 +384,6 @@ style.textContent = `
   
   .font-questrial {
     font-family: 'Questrial', sans-serif;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 5px;
-  }
-  
-  .scrollbar-thumb-black::-webkit-scrollbar-thumb {
-    background: #000000;
-    border-radius: 3px;
-  }
-  
-  .scrollbar-track-gray-200::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 3px;
   }
   
   /* Add mobile responsiveness for image */

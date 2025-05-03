@@ -189,10 +189,21 @@ export const addProduct = async (productDetails) => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log('Response:', response.data);
+        console.log('Response:', response);
         return response;
     } catch (error) {
         console.error('Error adding product:', error.response?.data || error.message || error);
         throw error;
+    }
+}
+
+export const getAnalytics = async () => {
+    try {
+        const response = await Axios.get('/analytics/customer-analytics/');
+        console.log(response.data, "in controller response");
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching analytics:', error);
+        return null; 
     }
 }
