@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { verifyOtp } from "../../../Services/userApi";
 import { useAuth } from "../../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
-import Varifying from '../Loader/Verifying'
-import './otp.css'
+import Varifying from '../Loader/Verifying';
+// No need for otp.css as we're using Tailwind now
 
 const OtpInput = ({ email: propEmail }) => {
   const { setToken, setIsAdmin, isAdmin } = useAuth();
@@ -83,12 +83,20 @@ const OtpInput = ({ email: propEmail }) => {
   };
   
   return (
-    <div className="otp-container">
+    <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg">
       {loading && (
-        <div className="verifying-overlay">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <Varifying verificstion={verificstion} />
         </div>
       )}
+      
+      <div className="w-full text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Verification Code</h2>
+        <p className="text-gray-600">
+          We've sent a verification code to
+          <span className="font-medium text-blue-600 block mt-1">{email}</span>
+        </p>
+      </div>
       
       <input
         type="text"
@@ -97,18 +105,27 @@ const OtpInput = ({ email: propEmail }) => {
         onChange={handleChangeOTP}
         onKeyPress={handleKeyPress}
         placeholder="Enter OTP"
-        className="input-box"
+        className="w-full px-4 py-3 text-center text-lg font-medium border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 mb-4"
         maxLength={6}
         disabled={loading}
         required
       />
+      
       <button 
         onClick={handleSubmitOTP}
         disabled={loading || !otp}
-        className={`submit-button ${loading ? 'loading' : ''}`}
+        className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 ${
+          loading || !otp ? 'opacity-60 cursor-not-allowed' : ''
+        }`}
       >
-        Submit OTP
+        {loading ? 'Verifying...' : 'Submit OTP'}
       </button>
+      
+      <div className="mt-6 text-center">
+        <p className="text-gray-600 text-sm">
+          Didn't receive a code? <button className="text-blue-600 font-medium hover:text-blue-800">Resend OTP</button>
+        </p>
+      </div>
     </div>
   );
 };

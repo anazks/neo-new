@@ -19,7 +19,7 @@ import Loader from '../Loader/Loader';
 
 function ProductsList() {
   const [filter, setFilter] = useState(false);
-  const [sort, setSort] = useState(false);
+  const [sort, setSort] = useState(true);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');

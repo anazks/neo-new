@@ -91,50 +91,6 @@ export const verifyOtp = async (email, otp, setToken, setIsAdmin) => {
     return false;
   }
 };
-// export const verifyOtp = async (email, otp, setToken, SetIsAdmin) => {
-//   try {
-//     console.log(email, otp, "in js");
-    
-//     const response = await Axios.post(
-//       "/authentication/verify_otp_and_login/",
-//       { identifier: email, otp: otp },
-//       { headers: { "Content-Type": "application/json" } }
-//     );
-    
-//     console.log(response.data, "response from verifyOtp");
-//       if(response?.data?.is_admin == true){
-//         SetIsAdmin(true)
-//       }else{
-//         SetIsAdmin(false)
-//       }
-//     if (response?.data?.access) {
-//       let token = response.data.access;
-     
-      
-//       // Set the token using setToken from context
-//       setToken(token);
-      
-//       // Encrypt the token before storing it
-//       const encryptedToken = CryptoJS.AES.encrypt(token, SECRET_KEY).toString();
-      
-//       // Store the encrypted token in localStorage
-//       localStorage.setItem("token", encryptedToken);
-      
-//       return true;
-//     } else {
-//       console.error("No access token in response data");
-//       return false;
-//     }
-//   } catch (error) {
-//     console.error(
-//       "Error verifying OTP:",
-//       error.response ? error.response.data : error.message
-//     );
-//     return false;
-//   }
-// };
-
-// Remove the hook usage and make this a helper function
 export const decryptToken = () => {
   try {
     const encryptedToken = localStorage.getItem("token");
@@ -147,28 +103,6 @@ export const decryptToken = () => {
     return null;
   }
 };
-
-// Make this a regular function that uses the decryptToken helper
-// export const getUserInfo = async () => {
-//   try {
-//     const token = decryptToken();
-//     if (!token) return null;
-    
-//     let tokenDecoded = jwtDecode(token);
-//     console.log(tokenDecoded, "token decoded..");
-//     let user = await Axios.get(`authentication/get_user_data/${tokenDecoded.user_id}`)
-//     console.log(user,"user in api ")
-//     if(user){
-//         return user;
-//     }else{
-//         return {message : "unknown user"}
-//     }
-//   } catch (error) {
-//     console.error("Error decoding token:", error);
-//     return null;
-//   }
-// };
-// In userApi.js
 export const getUserInfo = async () => {
     try {
       // Get the encrypted token from localStorage
@@ -323,7 +257,7 @@ export const addRatings = async(data)=>{
   try {
     console.log(data,"in api-------")
     let rating = await Axios.post('/interactions/reviews/add/',data)
-    console.log(rating,"rating")
+    console.log(rating,"rating============================")
     return rating
   } catch (error) {
     console.log(error)
@@ -333,13 +267,17 @@ export const addRatings = async(data)=>{
 
 export const getRatings = async(product_id)=>{
   try {
-    console.log("ratings-------")
-
     let ratings = await Axios.get(`/interactions/product/${product_id}/review-view`)
-    console.log(ratings,"ratings------- data+++++++++++++")
     return ratings
   } catch (error) {
     console.log(error)
     return error 
   }
+}
+export const AddTicket = async ()=>{
+    try {
+      
+    } catch (error) {
+      
+    }
 }

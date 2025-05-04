@@ -593,7 +593,7 @@ const Login = () => {
                   <IoArrowBackCircleSharp className="text-xl" />
                 </button>
               )}
-              <div className="bg-gray-100 p-4 rounded-lg mb-4">
+              <div className="bg-gray-100 p-4 rounded-lg mb-4" style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
                 <h3 className="font-medium mb-2">Review Your Information:</h3>
                 <div className="space-y-1 text-sm">
                   <p><strong>Email:</strong> {formData.email}</p>

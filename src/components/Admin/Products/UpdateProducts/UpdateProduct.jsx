@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {AddVarient, getSingleProduct, updateProduct, uploadProductPhotos, addProductVideo, addProductVariant, addProductOverview,getAllProduct,relationShip,getOverViewCategory,UpdateProductOverview,updateVideo } from '../../../../Services/Products';
+import {productUpdate,uploadImage,AddVarient, getSingleProduct, updateProduct, addProductVideo, addProductVariant, addProductOverview,getAllProduct,relationShip,getOverViewCategory,UpdateProductOverview,updateVideo,getAttribute } from '../../../../Services/Products';
 import { useParams, useNavigate } from 'react-router-dom';
 import Loader from '../../../../Loader/Loader';
 import {getCategory, getBrand, getTax} from '../../../../Services/Settings'
@@ -22,6 +22,8 @@ function UpdateProduct() {
     const [overViewContents,setOverviewContents] = useState([])
     const [ALertStatus,setALertStatus] = useState(false)
     const [alertMessage, setAlertMessage] = useState('');
+    const [overviewValue, setOverviewValue] = useState('');
+const [selectedOverview, setSelectedOverview] = useState(null);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -50,6 +52,8 @@ function UpdateProduct() {
     
     // Form states for modals
     const [photos, setPhotos] = useState([]);
+    const [primaryPhotoIndex, setPrimaryPhotoIndex] = useState(0);
+
     const [videoUrl, setVideoUrl] = useState('');
     const [variantData, setVariantData] = useState({
         name: '',
@@ -143,6 +147,17 @@ function UpdateProduct() {
                 console.error('Error fetching products:', error);
             }
         }
+
+        const getAttributeData = async ()=>{
+            try {
+               let attribute = await getAttribute()
+               console.log(attribute,"><><><><><><>") 
+               setOverviewContents(attribute.data)
+            } catch (error) {
+               console.log(error) 
+            }
+        }
+        getAttributeData()
         getOverViewCategoryFn()
         GetrelationShip()
         getAllProductFromDB()
@@ -173,7 +188,10 @@ function UpdateProduct() {
         
         try {
             setLoading(true);
+            
             const updatedProduct = await updateProduct(id, formData);
+            const response = await productUpdate(id,formData)
+            console.log(response)
             console.log("Product updated:", updatedProduct);
             navigate('/admin/products');
         } catch (error) {
@@ -185,46 +203,66 @@ function UpdateProduct() {
     };
 
     // Modal handlers
-    const handlePhotosSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            setLoading(true);
-            await uploadProductPhotos(id, photos);
-            setShowPhotosModal(false);
-            // Refresh product data
-            const updatedProduct = await getSingleProduct(id);
-            setProduct(updatedProduct);
-        } catch (error) {
-            console.error("Error uploading photos:", error);
-            setError(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleVideoSubmit = async (e) => {
-        e.preventDefault();
-        
-        if (!videoFile) return;
-        
+   // Inside handlePhotosSubmit
+   const handlePhotosSubmit = async (e) => {
+    e.preventDefault();
+    try {
         setLoading(true);
+        console.log(photos,"---------------")
+        // Create FormData object
+        const formData = new FormData();
         
+        // Append each photo with proper field name
+        photos.forEach((photo, index) => {
+            formData.append('image', photo); // Use 'images' as the field name
+            
+            // Add is_primary flag for the selected primary photo
+            if (index === primaryPhotoIndex) {
+                formData.append('is_primary', 'true'); // Add is_primary flag
+                formData.append('primary_index', index); // Keep existing primary_index for backward compatibility
+            }
+        });
+
+        // Make sure to include the product ID
+        formData.append('product_id', id);
+
+        // Call the uploadImage function with FormData
+        const response = await uploadImage(formData);
+        
+        if (response) {
+            setALertStatus(true);
+            setAlertMessage('Photos uploaded successfully');
+        }
+
+        setShowPhotosModal(false);
+        setPhotos([]);
+        setPrimaryPhotoIndex(0);
+        
+        // Refresh product data
+        const updatedProduct = await getSingleProduct(id);
+        setProduct(updatedProduct);
+    } catch (error) {
+        console.error("Error uploading photos:", error);
+        setError(error.message);
+        setALertStatus(true);
+        setAlertMessage('Failed to upload photos');
+    } finally {
+        setLoading(false);
+    }
+};
+
+const handleVideoSubmit = async (e) => {
+        e.preventDefault();    
+        if (!videoFile) return;    
+        setLoading(true);    
         try {
           // Create a FormData object to send the file
+          console.log(videoFile,"videoFilevideoFilevideoFile")
           const formData = new FormData();
-          formData.append('video', videoFile);
-          formData.append('product_Id', id); // Assuming you have productId available
-          
-          // Replace with your actual API endpoint for video upload
+            formData.append('video',videoFile);
+          formData.append('product_id', product.id); // Assuming you have productId available
           const response = await updateVideo(formData)
-          console.log(response, "response in video upload")
-        //   const response = await fetch('/api/products/upload-video', {
-        //     method: 'POST',
-        //     body: formData,
-        //     // Note: Don't set Content-Type header when using FormData
-        //     // The browser will set it automatically with the correct boundary
-        //   });
-          
+          console.log(response, "response in video upload")          
           if (!response) {
             throw new Error('Failed to upload video');
           }
@@ -281,17 +319,36 @@ function UpdateProduct() {
         e.preventDefault();
         try {
             setLoading(true);
-            console.log("Overview content:", overviewContent);
-            // overviewContent.product_id = id;
-            await UpdateProductOverview(id, overviewContent);
+            console.log("Overview content:", overviewContent, "Value:", overviewValue);
+            
+            // Prepare data to send
+            const overviewData = {
+                overview_id: overviewContent,
+                value: overviewValue,
+                product_id: id
+            };
+                console.log(overviewData)
+            let overViewResponse = await UpdateProductOverview(overviewData);
+            console.log(overViewResponse, "overViewResponse");
+            
+            if (overViewResponse) {
+                setALertStatus(true);
+                setAlertMessage('Overview added successfully');
+            }
+    
             setShowOverviewModal(false);
             setOverviewContent('');
+            setOverviewValue('');
+            setSelectedOverview(null);
+            
             // Refresh product data
             const updatedProduct = await getSingleProduct(id);
             setProduct(updatedProduct);
         } catch (error) {
             console.error("Error adding overview:", error);
             setError(error.message);
+            setALertStatus(true);
+            setAlertMessage('Failed to add overview');
         } finally {
             setLoading(false);
         }
@@ -543,13 +600,13 @@ function UpdateProduct() {
                     >
                         Add Photos
                     </button>
-                    <button 
+                    {/* <button 
                         type="button" 
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
                         onClick={() => setShowVideoModal(true)}
                     >
                         Add Video
-                    </button>
+                    </button> */}
                     <button 
                         type="button" 
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
@@ -594,56 +651,99 @@ function UpdateProduct() {
 
             {/* Photos Modal */}
             {showPhotosModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold">Add Photos</h3>
-                            <button 
-                                className="text-gray-400 hover:text-white"
-                                onClick={() => setShowPhotosModal(false)}
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <div className="mb-4">
-                            <form onSubmit={handlePhotosSubmit}>
-                                <div className="mb-4">
-                                    <label className="block mb-2">Select Photos</label>
-                                    <input 
-                                        type="file" 
-                                        multiple 
-                                        onChange={(e) => setPhotos([...e.target.files])}
-                                        accept="image/*"
-                                        className="block w-full text-sm text-gray-400
-                                        file:mr-4 file:py-2 file:px-4
-                                        file:rounded file:border-0
-                                        file:text-sm file:font-semibold
-                                        file:bg-blue-500 file:text-white
-                                        hover:file:bg-blue-600"
-                                    />
-                                </div>
-                                <div className="flex gap-3">
-                                    <button 
-                                        type="submit" 
-                                        disabled={loading || photos.length === 0}
-                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
-                                    >
-                                        {loading ? 'Uploading...' : 'Upload Photos'}
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
-                                        onClick={() => setShowPhotosModal(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold">Add Photos</h3>
+                <button 
+                    className="text-gray-400 hover:text-white"
+                    onClick={() => {
+                        setShowPhotosModal(false);
+                        setPhotos([]);
+                        setPrimaryPhotoIndex(0);
+                    }}
+                >
+                    ×
+                </button>
+            </div>
+            <div className="mb-4">
+                <form onSubmit={handlePhotosSubmit} encType='multipart/form-data'>
+                    <div className="mb-4">
+                        <label className="block mb-2">Select Photos</label>
+                        <input 
+                            type="file" 
+                            multiple 
+                            onChange={(e) =>{ setPhotos([...e.target.files])
+                                console.log(e.target.files)
+                            }
+                            }
+                            accept="image/*"
+                            className="block w-full text-sm text-gray-400
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-blue-500 file:text-white
+                            hover:file:bg-blue-600"
+                        />
                     </div>
-                </div>
-            )}
 
+                    {/* Preview selected photos with primary checkbox */}
+                    {photos.length > 0 && (
+                        <div className="mb-4 max-h-60 overflow-y-auto">
+                            <h4 className="text-sm font-semibold mb-2">Selected Photos:</h4>
+                            <div className="space-y-2">
+                                {photos.map((photo, index) => (
+                                    <div key={index} className="flex items-center gap-3 p-2 bg-gray-700 rounded">
+                                        <img 
+                                            src={URL.createObjectURL(photo)} 
+                                            alt={`Preview ${index}`} 
+                                            className="w-12 h-12 object-cover rounded"
+                                        />
+                                        <span className="text-sm flex-1 truncate">{photo.name}</span>
+                                        <div className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                name={`primary-${index}`}
+                                                id={`primary-${index}`}
+                                                checked={primaryPhotoIndex === index}
+                                                onChange={() => setPrimaryPhotoIndex(index)}
+                                                className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 focus:ring-blue-500"
+                                            />
+                                            <label htmlFor={`primary-${index}`} className="ml-2 text-xs">
+                                                Set as primary
+                                            </label>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="flex gap-3">
+                        <button 
+                            type="submit" 
+                            disabled={loading || photos.length === 0}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+                        >
+                            {loading ? 'Uploading...' : 'Upload Photos'}
+                        </button>
+                        <button 
+                            type="button" 
+                            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
+                            onClick={() => {
+                                setShowPhotosModal(false);
+                                setPhotos([]);
+                                setPrimaryPhotoIndex(0);
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+)}
             {/* Video Modal */}
             {showVideoModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -658,14 +758,17 @@ function UpdateProduct() {
                             </button>
                         </div>
                         <div className="mb-4">
-                        <form onSubmit={handleVideoSubmit}>
+                        <form onSubmit={handleVideoSubmit} encType='multipart/form-data'>
                                 <div className="mb-4">
                                     <label className="block mb-2">Upload Video</label>
                                     <div className="flex flex-col">
                                         <input 
                                             type="file" 
                                             accept="video/*"
-                                            onChange={(e) => setVideoFile(e.target.files[0])}
+                                            onChange={(e) => {setVideoFile(e.target.files[0])
+                                                    console.log(e.target.files[0])
+                                            }
+                                            }
                                             className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                                         />
                                         {videoFile && (
@@ -806,59 +909,87 @@ function UpdateProduct() {
             )}
 
             {/* Overview Modal */}
-            {showOverviewModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold">Add Overview</h3>
-                            <button 
-                                className="text-gray-400 hover:text-white"
-                                onClick={() => setShowOverviewModal(false)}
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <div className="mb-4">
-                        <form onSubmit={handleOverviewSubmit}>
-  <div className="mb-4">
-    <label className="block mb-2">Overview Content</label>
-    {/* Replaced textarea with select dropdown */}
-    <select
-      value={overviewContent}
-      onChange={(e) => setOverviewContent(e.target.value)}
-      className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-      required
-    >
-      <option value="">Select Overview Content</option>
-      {/* Assuming overViewContent is your array with name and id */}
-      {overViewContents.map(content => (
-        <option key={content.id} value={content.id}>
-          {content.name}
-        </option>
-      ))}
-    </select>
-  </div>
-  <div className="flex gap-3">
-    <button
-      type="submit"
-      disabled={loading || !overviewContent}
-      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
-    >
-      {loading ? 'Adding...' : 'Add Overview'}
-    </button>
-    <button
-      type="button"
-      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
-      onClick={() => setShowOverviewModal(false)}
-    >
-      Cancel
-    </button>
-  </div>
-</form>
-                        </div>
+         {/* Overview Modal */}
+{showOverviewModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold">Add Overview</h3>
+                <button 
+                    className="text-gray-400 hover:text-white"
+                    onClick={() => {
+                        setShowOverviewModal(false);
+                        setOverviewContent('');
+                        setOverviewValue('');
+                        setSelectedOverview(null);
+                    }}
+                >
+                    ×
+                </button>
+            </div>
+            <div className="mb-4">
+                <form onSubmit={handleOverviewSubmit}>
+                    <div className="mb-4">
+                        <label className="block mb-2">Overview Content</label>
+                        <select
+                            value={selectedOverview?.id || ''}
+                            onChange={(e) => {
+                                const selectedId = e.target.value;
+                                const selected = overViewContents.find(c => c.id == selectedId);
+                                setSelectedOverview(selected);
+                                setOverviewContent(selectedId);
+                            }}
+                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                            required
+                        >
+                            <option value="">Select Overview Content</option>
+                            {overViewContents.map(content => (
+                                <option key={content.id} value={content.id}>
+                                    {content.category.name} - {content.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                </div>
-            )}
+
+                    {selectedOverview && (
+                        <div className="mb-4">
+                            <label className="block mb-2">Enter Value for {selectedOverview.name}</label>
+                            <input
+                                type="text"
+                                value={overviewValue}
+                                onChange={(e) => setOverviewValue(e.target.value)}
+                                className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                                required
+                            />
+                        </div>
+                    )}
+
+                    <div className="flex gap-3">
+                        <button
+                            type="submit"
+                            disabled={loading || !overviewContent || !overviewValue}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded disabled:opacity-50"
+                        >
+                            {loading ? 'Adding...' : 'Add Overview'}
+                        </button>
+                        <button
+                            type="button"
+                            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
+                            onClick={() => {
+                                setShowOverviewModal(false);
+                                setOverviewContent('');
+                                setOverviewValue('');
+                                setSelectedOverview(null);
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 }

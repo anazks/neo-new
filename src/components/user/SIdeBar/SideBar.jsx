@@ -11,7 +11,8 @@ import { BsFillTicketFill } from 'react-icons/bs';
 function SideBar({ isOpen, onClose }) {
   const { token, setToken, user } = useAuth();
   const navigate = useNavigate();
-    console.log(user, "user from SideBar");
+  console.log(user, "user from SideBar");
+  
   const handleLogout = () => {
     setToken(null);
     localStorage.removeItem("token");
@@ -43,9 +44,6 @@ function SideBar({ isOpen, onClose }) {
         }}
       >
         <div className="flex flex-col h-full p-6 gap-1">
-          {/* Added extra space above the header */}
-          
-          
           {/* Header row with logo, auth buttons, and close button */}
           <div className="flex items-center justify-between mb-8 pt-4">
             {/* Logo */}
@@ -69,7 +67,7 @@ function SideBar({ isOpen, onClose }) {
                   </button>
                   <button 
                     className="flex items-center gap-1 py-2 px-4 bg-black text-white font-medium rounded-full border border-black hover:bg-black/80 transition-all duration-300 text-sm"
-                    onClick={() => { onClose(); navigate("/register"); }}
+                    onClick={() => { onClose(); navigate("/login"); }}
                   >
                     <FiUserPlus size={14} /> Register
                   </button>
@@ -111,34 +109,38 @@ function SideBar({ isOpen, onClose }) {
                   <span>Store</span>
                 </Link>
               </li>
-              {
-                  token ? (
-                    <>
-                       <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
-                          <Link to="/tickets" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
-                            <BsFillTicketFill className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
-                            <span>Tickets</span>
-                          </Link>
-                        </li>
-                    </>
-                  ):""
-              }
-             
-              
               {token && (
+                <>
+                  <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                  <Link to="/tickets" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                    <BsFillTicketFill className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                    <span>Tickets</span>
+                  </Link>
+                </li>
+                <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                  <Link  onClick={handleLogout} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                    <FiLogOut className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                    <span>Logout</span>
+                  </Link>
+                </li>
+                </>
+                
+              )}
+              
+              {/* {token && (
                 <>
                   <li className="border-t border-white/20 my-1 opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.25s' : 'none' }}></li>
                   <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.3s' : 'none' }}>
                     <button 
-                      className="w-full flex items-center py-3 px-4 rounded-lg text-red-300 font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1 text-left"
+                      className="inline-flex items-center py-2 px-4 rounded-lg text-red-300 font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1 text-left"
                       onClick={handleLogout}
                     >
-                      <FiLogOut className="mr-3 text-lg min-w-5 transition-transform duration-300" /> 
+                      <FiLogOut className="mr-2 text-base" /> 
                       <span>Logout</span>
                     </button>
                   </li>
                 </>
-              )}
+              )} */}
             </ul>
 
             {/* Locations */}

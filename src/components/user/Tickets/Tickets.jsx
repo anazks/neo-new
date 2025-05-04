@@ -4,14 +4,20 @@ import ProductFooter from "../Footer/ProductFooter";
 import { useNavigate } from "react-router-dom";
 
 const Tickets = () => {
-  const [text, setText] = useState("");
+  const [formData, setFormData] = useState({
+    product: null,
+    product_serial_number: "",
+    grievance: "",
+    is_concluded: false
+  });
+  const [errors, setErrors] = useState({});
   const [rows, setRows] = useState([]);
   const textareaRef = useRef(null);
   const lineHeight = 24; // Line height in pixels
   const containerRef = useRef(null);
-  const navigate = useNavigate(); // Fixed: Changed Navigate() to useNavigate()
+  const navigate = useNavigate();
   
-  // Update the dashed lines when text changes
+  // Update the dashed lines when grievance text changes
   useEffect(() => {
     if (textareaRef.current) {
       const textarea = textareaRef.current;
@@ -19,14 +25,54 @@ const Tickets = () => {
         textarea.scrollHeight / lineHeight,
         7 // Minimum number of rows
       );
-
       setRows(Array(Math.ceil(numberOfLines)).fill(0));
     }
-  }, [text]);
+  }, [formData.grievance]);
   
   const handleTicketResolution = () => {
     navigate("/ticketsresolved");
-  }
+  };
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    // Convert product to integer if it's the product field
+    const processedValue = name === "product" ? 
+      (value === "" ? null : parseInt(value)) : 
+      value;
+    
+    setFormData({
+      ...formData,
+      [name]: processedValue
+    });
+  };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Validate form
+    const newErrors = {};
+    if (!formData.grievance || formData.grievance.trim() === "") {
+      newErrors.grievance = "Grievance is required";
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    
+    // Prepare final data
+    const submissionData = {
+      ...formData,
+      is_concluded: false // Default value
+    };
+    
+    console.log("Submitting ticket:", submissionData);
+    
+    // Here you would typically send the data to an API
+    // For now, we'll just navigate to the resolved page
+    navigate("/ticketsresolved");
+  };
   
   return (
     <>
@@ -62,7 +108,7 @@ const Tickets = () => {
 
                 <div className="text-center my-5 transition-transform duration-300 hover:scale-105 cursor-pointer" onClick={handleTicketResolution}>
                   <img
-                    src="https://t3.ftcdn.net/jpg/02/55/97/94/360_F_255979498_vewTRAL5en9T0VBNQlaDBoXHlCvJzpDl.jpg" /* Fixed: Replaced external image with placeholder */
+                    src="https://t3.ftcdn.net/jpg/02/55/97/94/360_F_255979498_vewTRAL5en9T0VBNQlaDBoXHlCvJzpDl.jpg"
                     alt="Ticket Barcode"
                     className="w-full h-5"
                   />
@@ -79,7 +125,7 @@ const Tickets = () => {
                   <h4 className="font-mono tracking-widest font-bold">LIVE TICKET</h4>
                 </div>
 
-                <div className="p-3 md:p-5">
+                <form onSubmit={handleSubmit} className="p-3 md:p-5">
                   <span className="text-xs font-semibold text-black pl-2">2025/04/01 - 11:24 AM</span>
                   
                   <div className="p-3 md:p-5 border-b border-dashed border-gray-400">
@@ -88,9 +134,11 @@ const Tickets = () => {
                     
                     <div className="relative mt-5 group">
                       <input 
-                        type="text" 
+                        type="number" 
                         name="product" 
-                        id="product" /* Fixed: Added missing id attribute */
+                        id="product"
+                        value={formData.product || ""}
+                        onChange={handleChange}
                         placeholder=" " 
                         className="w-full p-2 text-base border border-gray-800 rounded-lg outline-none bg-white focus:border-gray-100 transition-all duration-200"
                       />
@@ -98,23 +146,26 @@ const Tickets = () => {
                         htmlFor="product" 
                         className="absolute top-2 left-2 text-gray-700 text-xs transition-all duration-200 pointer-events-none group-focus-within:top-[-8px] group-focus-within:left-2 group-focus-within:text-xs group-focus-within:bg-white group-focus-within:px-1 group-focus-within:text-black"
                       >
-                        Product
+                        Product (number)
                       </label>
                     </div>
                     
                     <div className="relative mt-5 group">
                       <input 
                         type="text" 
-                        name="serialcode" 
-                        id="serialcode" 
+                        name="product_serial_number" 
+                        id="product_serial_number" 
+                        value={formData.product_serial_number}
+                        onChange={handleChange}
+                        maxLength="100"
                         placeholder=" " 
                         className="w-full p-2 text-base border-none rounded-lg outline-none bg-gray-300 transition-all duration-200"
                       />
                       <label 
-                        htmlFor="serialcode" 
+                        htmlFor="product_serial_number" 
                         className="absolute top-2 left-2 text-gray-700 text-xs transition-all duration-200 pointer-events-none group-focus-within:top-[-8px] group-focus-within:left-2 group-focus-within:text-xs group-focus-within:bg-gray-300 group-focus-within:px-1 group-focus-within:text-black"
                       >
-                        Serial Code
+                        Product Serial Number (max 100 chars)
                       </label>
                     </div>
 
@@ -123,6 +174,9 @@ const Tickets = () => {
 
                   <div className="p-3 md:p-5">
                     <p className="font-mono mb-5 text-black">Grievance:</p>
+                    {errors.grievance && (
+                      <p className="text-red-500 text-sm mb-2">{errors.grievance}</p>
+                    )}
 
                     <div className="relative">
                       {/* Dashed lines container */}
@@ -142,8 +196,9 @@ const Tickets = () => {
                       {/* Actual textarea */}
                       <textarea
                         ref={textareaRef}
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
+                        name="grievance"
+                        value={formData.grievance}
+                        onChange={handleChange}
                         className="w-full p-2 bg-transparent text-base resize-none outline-none"
                         style={{
                           lineHeight: `${lineHeight}px`,
@@ -151,22 +206,26 @@ const Tickets = () => {
                         }}
                         rows={7}
                         placeholder="Start typing here..."
+                        required
                       />
                     </div>
 
                     <div className="text-center my-5 transition-transform duration-300 hover:scale-105 cursor-pointer" onClick={handleTicketResolution}>
                       <img
-                        src="https://tse2.mm.bing.net/th?id=OIP.y1ztqwIPRHhG3FAbArBZvAHaDT&pid=Api&P=0&h=180" /* Fixed: Replaced external image with placeholder */
+                        src="https://tse2.mm.bing.net/th?id=OIP.y1ztqwIPRHhG3FAbArBZvAHaDT&pid=Api&P=0&h=180"
                         alt="Ticket Barcode"
                         className="w-full h-5"
                       />
                     </div>
 
-                    <button className="w-full p-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-mono transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    <button 
+                      type="submit"
+                      className="w-full p-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-mono transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                    >
                       Submit
                     </button>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>

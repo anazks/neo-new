@@ -184,22 +184,112 @@ const AddVarient = async (data) => {
         return null;
     }
 }
- const UpdateProductOverview = async (id,data) => {
+ const UpdateProductOverview = async (data) => {
     try {
-        console.log(id,data, "in controller");
+        console.log(data, "...in controller");
+        let Newdata = {
+            product_id : parseInt(data.product_id),
+            attribute_id:parseInt(data.overview_id)
+        }
+        console.log(Newdata,"Newdata")
+        let response = await Axios.post('/inventory/productattribute_value/',Newdata)
+        console.log(response,"response..")
+        if(response.status==201){
+                let ValueData = {
+                    attribute_value_id: response.data?.data.id,
+                    value:data.value
+                }
+                console.log(ValueData,"ValueData")
+                let newResponse = await Axios.post('/inventory/productattribute_details/',ValueData)
+                console.log(newResponse,"newResponse----")
+                return newResponse
+        }
        
     } catch (error) {
         console.error('Error uploading product video:', error);
         return null;
     }
 }
-const updateVideo = async(data)=>{
+const updateVideo = async(formData)=>{
     try {
-        
+        const product_id = formData.get("product_id"); // Use `get` to access FormData entries
+        const vedio = formData.get("video")
+        console.log(formData)
+        let data = formData.get("video")
+        console.log(product_id,"product_idproduct_id",vedio)
+        console.log()
+        const response = await Axios.post(
+            `/inventory/products/${product_id}/add-video/`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+        console.log("Image upload response:", response);
+        return response;
     } catch (error) {
         console.error('Error uploading product video:', error);
         return null; 
     }
 }
+const getAttribute = async(id,data)=>{
+    try {
+        let attributes = await Axios.get('/inventory/productattribute/')
+        console.log(attributes)
+        return  attributes
+    } catch (error) {
+        console.log(error)
+    }
+}
+const uploadImage = async (formData) => {
+    try {
+        const product_id = formData.get("product_id"); // Use `get` to access FormData entries
+        console.log(formData)
+        const response = await Axios.post(
+            `/inventory/products/${product_id}/add-image/`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        console.log("Image upload response:", response);
+        return response.data;
+    } catch (error) {
+        console.error("Upload error:", error.response?.data || error.message);
+        throw error;
+    }
+};
+
+const productUpdate = async(id,data)=>{
+    try {
+            console.log(id)
+            let response = await Axios.put(`/inventory/product_admin/${id}/`,data,{
+                
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                
+            })
+            console.log(response,"4444444444444444444")
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+const productDelete = async(id)=>{
+    try {
+        let response = await Axios.delete(`/inventory/product_admin/${id}/`)
+        console.log(response)
+        return response
+    } catch (error) {
+       console.log(error)
+       return error 
+    }
+}
 // Correct way to export multiple functions
-export {updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };

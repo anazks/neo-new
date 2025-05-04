@@ -1,3 +1,4 @@
+import { convertArray } from 'three/src/animation/AnimationUtils.js'
 import Axios from '../Axios/Axios'
 
 export const addBrand =  async (name)=>{
@@ -205,5 +206,29 @@ export const getAnalytics = async () => {
     } catch (error) {
         console.error('Error fetching analytics:', error);
         return null; 
+    }
+}
+export const updateBrand = async(data)=>{
+        try {
+            console.log(data)
+            let id = data.id
+            const response = await Axios.put(`/inventory/brands/${id}/`,data)
+            console.log(response)
+        } catch (error) {
+                console.log(error)
+                return error
+        }
+}
+
+export const updateCategory = async(data)=>{
+    try {
+        let id = data.id
+        console.log(data,"data in category")
+        const response = await Axios.put(`/inventory/categories/${id}/`,data)
+        console.log(response,",.,.,.")
+        return response
+    } catch (error) {
+        console.log(error)
+        return error
     }
 }

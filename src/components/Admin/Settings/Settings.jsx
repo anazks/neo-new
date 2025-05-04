@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Tax from '../Tax/Tax';
-import { getBrand, deleteBrand, addBrand, getCategory, addCategory, deleteCategory, getTax } from '../../../Services/Settings';
+import {updateCategory, getBrand, deleteBrand, addBrand, getCategory, addCategory, deleteCategory, getTax ,updateBrand} from '../../../Services/Settings';
 
 function Settings() {
   const [showBrandPopup, setShowBrandPopup] = useState(false);
@@ -13,6 +13,8 @@ function Settings() {
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
   const [brandName, setBrandName] = useState('');
   const [categoryData, setCategoryData] = useState({ name: '', description: '', parent: '' });
+  const [editingBrand, setEditingBrand] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const fetchBrands = async () => {
     try {
@@ -77,14 +79,28 @@ function Settings() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      await addBrand(brandName);
+      if (editingBrand) {
+        console.log("Editing brand with ID:", editingBrand.id,brandName);
+        let data = {
+            id:editingBrand.id,
+            name:brandName
+        }
+        let response = await updateBrand(data)
+        console.log(response,"..")
+        // Here you would typically call an updateBrand API
+        // await updateBrand(editingBrand.id, brandName);
+        showToast('Brand updated successfully!');
+      } else {
+        await addBrand(brandName);
+        showToast('Brand added successfully!');
+      }
       await fetchBrands();
       setShowBrandPopup(false);
       setBrandName('');
-      showToast('Brand added successfully!');
+      setEditingBrand(null);
     } catch (error) {
       console.error(error);
-      showToast('Failed to add brand. Please try again.', 'error');
+      showToast(`Failed to ${editingBrand ? 'update' : 'add'} brand. Please try again.`, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -94,20 +110,43 @@ function Settings() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const newCategory = { name: categoryData.name, description: categoryData.description };
-      await addCategory(newCategory);
+  
+      // Prepare the category object with all necessary fields
+      const categoryPayload = {
+        name: categoryData.name.trim(),
+        description: categoryData.description.trim() || null, // Send null if empty
+      };
+  
+      if (editingCategory) {
+        console.log("Editing category with ID:", editingCategory.id, "with data:", categoryPayload);
+        // Add the ID to the payload for updates
+        categoryPayload.id = editingCategory.id;
+        let data = {
+            id :categoryPayload.id,
+            name:categoryPayload.name,
+            description:categoryPayload.description
+        }
+        let response = await updateCategory(data)
+        console.log(response,"response")
+        // Example: await updateCategory(categoryPayload);
+        showToast('Category updated successfully!');
+      } else {
+        await addCategory(categoryPayload);
+        showToast('Category added successfully!');
+      }
+  
       await fetchCategory();
       setShowCategoryPopup(false);
       setCategoryData({ name: '', description: '', parent: '' });
-      showToast('Category added successfully!');
+      setEditingCategory(null);
     } catch (error) {
       console.error(error);
-      showToast('Failed to add category. Please try again.', 'error');
+      showToast(`Failed to ${editingCategory ? 'update' : 'add'} category. Please try again.`, 'error');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const handleCategoryChange = (e) => {
     const { name, value } = e.target;
     setCategoryData(prevData => ({
@@ -148,16 +187,20 @@ function Settings() {
     }
   };
 
-  const handleEditBrand = (brandId) => {
-    // Implement edit functionality
-    console.log("Edit brand:", brandId);
-    // You can add edit brand functionality here
+  const handleEditBrand = (brand) => {
+    setEditingBrand(brand);
+    setBrandName(brand.name);
+    setShowBrandPopup(true);
   };
 
-  const handleEditCategory = (categoryId) => {
-    // Implement edit functionality
-    console.log("Edit category:", categoryId);
-    // You can add edit category functionality here
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setCategoryData({
+      name: category.name,
+      description: category.description,
+      parent: category.parent || ''
+    });
+    setShowCategoryPopup(true);
   };
 
   if (isLoading && (!brands || !brands.length) && (!categories || !categories.length)) {
@@ -188,7 +231,11 @@ function Settings() {
           <h3 className="text-xl font-semibold">Brands</h3>
           <button 
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium w-full sm:w-auto flex items-center justify-center"
-            onClick={() => setShowBrandPopup(true)}
+            onClick={() => {
+              setEditingBrand(null);
+              setBrandName('');
+              setShowBrandPopup(true);
+            }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
@@ -221,7 +268,7 @@ function Settings() {
                         <td className="px-2 sm:px-4 py-3 whitespace-nowrap flex flex-wrap gap-2">
                           <button 
                             className="bg-yellow-600 hover:bg-yellow-700 text-white px-2 sm:px-3 py-1 rounded text-sm font-medium"
-                            onClick={() => handleEditBrand(brand.id)} 
+                            onClick={() => handleEditBrand(brand)} 
                             disabled={isLoading}
                           >
                             <span className="hidden sm:inline">Edit</span>
@@ -269,7 +316,11 @@ function Settings() {
           <h3 className="text-xl font-semibold">Categories</h3>
           <button 
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium w-full sm:w-auto flex items-center justify-center"
-            onClick={() => setShowCategoryPopup(true)}
+            onClick={() => {
+              setEditingCategory(null);
+              setCategoryData({ name: '', description: '', parent: '' });
+              setShowCategoryPopup(true);
+            }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
@@ -306,7 +357,7 @@ function Settings() {
                         <td className="px-2 sm:px-4 py-3 whitespace-nowrap flex flex-wrap gap-2">
                           <button 
                             className="bg-yellow-600 hover:bg-yellow-700 text-white px-2 sm:px-3 py-1 rounded text-sm font-medium"
-                            onClick={() => handleEditCategory(category.id)} 
+                            onClick={() => handleEditCategory(category)} 
                             disabled={isLoading}
                           >
                             <span className="hidden sm:inline">Edit</span>
@@ -353,10 +404,16 @@ function Settings() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
             <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
-              <h3 className="text-lg font-semibold">Add New Brand</h3>
+              <h3 className="text-lg font-semibold">
+                {editingBrand ? 'Edit Brand' : 'Add New Brand'}
+              </h3>
               <button 
                 className="text-gray-400 hover:text-white text-xl font-medium"
-                onClick={() => setShowBrandPopup(false)} 
+                onClick={() => {
+                  setShowBrandPopup(false);
+                  setEditingBrand(null);
+                  setBrandName('');
+                }} 
                 aria-label="Close"
               >
                 &times;
@@ -382,7 +439,11 @@ function Settings() {
                 <button 
                   type="button" 
                   className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
-                  onClick={() => setShowBrandPopup(false)}
+                  onClick={() => {
+                    setShowBrandPopup(false);
+                    setEditingBrand(null);
+                    setBrandName('');
+                  }}
                 >
                   Cancel
                 </button>
@@ -391,7 +452,13 @@ function Settings() {
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded disabled:opacity-50 font-medium"
                   disabled={!brandName.trim() || isLoading}
                 >
-                  {isLoading ? 'Adding...' : 'Add Brand'}
+                  {isLoading 
+                    ? editingBrand 
+                      ? 'Updating...' 
+                      : 'Adding...' 
+                    : editingBrand 
+                      ? 'Update Brand' 
+                      : 'Add Brand'}
                 </button>
               </div>
             </form>
@@ -404,10 +471,16 @@ function Settings() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
             <div className="flex justify-between items-center border-b border-gray-700 px-6 py-4">
-              <h3 className="text-lg font-semibold">Add New Category</h3>
+              <h3 className="text-lg font-semibold">
+                {editingCategory ? 'Edit Category' : 'Add New Category'}
+              </h3>
               <button 
                 className="text-gray-400 hover:text-white text-xl font-medium"
-                onClick={() => setShowCategoryPopup(false)} 
+                onClick={() => {
+                  setShowCategoryPopup(false);
+                  setEditingCategory(null);
+                  setCategoryData({ name: '', description: '', parent: '' });
+                }} 
                 aria-label="Close"
               >
                 &times;
@@ -447,7 +520,11 @@ function Settings() {
                 <button 
                   type="button" 
                   className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded font-medium"
-                  onClick={() => setShowCategoryPopup(false)}
+                  onClick={() => {
+                    setShowCategoryPopup(false);
+                    setEditingCategory(null);
+                    setCategoryData({ name: '', description: '', parent: '' });
+                  }}
                 >
                   Cancel
                 </button>
@@ -456,7 +533,13 @@ function Settings() {
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded disabled:opacity-50 font-medium"
                   disabled={!categoryData.name.trim() || isLoading}
                 >
-                  {isLoading ? 'Adding...' : 'Add Category'}
+                  {isLoading 
+                    ? editingCategory 
+                      ? 'Updating...' 
+                      : 'Adding...' 
+                    : editingCategory 
+                      ? 'Update Category' 
+                      : 'Add Category'}
                 </button>
               </div>
             </form>

@@ -4,7 +4,7 @@ import { getAllProduct } from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../Loader/Loader';
-
+import {productDelete} from '../../../../Services/Products'
 function ProductInventory() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,18 @@ function ProductInventory() {
 
     fetchProducts();
   }, []);
-
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const productData = await getAllProduct();
+      setProducts(productData);
+    } catch (error) {
+      console.log(error, "error while fetching data");
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleView = (productId) => {
     navigate(`/admin/products/${productId}`);
   };
@@ -38,8 +49,10 @@ function ProductInventory() {
     navigate(`/admin/Updateproducts/${productId}`);
   };
 
-  const handleDelete = (productId) => {
-    console.log(`Delete product ${productId}`);
+  const handleDelete = async(productId) => {
+    let response = await productDelete(productId)
+    fetchProducts();
+      console.log(response)
     // Add your delete logic here
   };
 

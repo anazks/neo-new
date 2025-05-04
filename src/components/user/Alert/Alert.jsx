@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 now available!", type  ,setAlertData}) {
+function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 now available!", type = "info", setAlertData }) {
   const [visible, setVisible] = useState(true); 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,35 +20,35 @@ function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 n
           top: 20px;
           right: 20px;
           width: 320px;
-          border-radius: 6px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 15px rgba(31, 255, 200, 0.3);
+          border-radius: 8px;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), 0 0 20px rgba(31, 255, 200, 0.4);
           font-family: 'Consolas', monospace;
           overflow: hidden;
-          animation: slideIn 0.5s ease-out;
+          animation: slideIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
           z-index: 9999;
-          background-color: #0f1923;
-          border-left: 4px solid;
-          color: #e0e0e0;
+          background-color: #0a0e17;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #f0f0f0;
         }
 
         .gaming-alert.success {
-          border-color: #00ff9d;
-          background: linear-gradient(90deg, rgba(0, 50, 20, 0.9), #0f1923);
+          background: linear-gradient(135deg, #002218, #0a0e17);
+          border-left: 4px solid #00ff9d;
         }
 
         .gaming-alert.error {
-          border-color: #ff2a6d;
-          background: linear-gradient(90deg, rgba(50, 0, 20, 0.9), #0f1923);
+          background: linear-gradient(135deg, #240010, #0a0e17);
+          border-left: 4px solid #ff2a6d;
         }
 
         .gaming-alert.warning {
-          border-color: #ffb400;
-          background: linear-gradient(90deg, rgba(50, 30, 0, 0.9), #0f1923);
+          background: linear-gradient(135deg, #2a1600, #0a0e17);
+          border-left: 4px solid #ffb400;
         }
 
         .gaming-alert.info {
-          border-color: #05d9e8;
-          background: linear-gradient(90deg, rgba(0, 20, 50, 0.9), #0f1923);
+          background: linear-gradient(135deg, #001a2c, #0a0e17);
+          border-left: 4px solid #05d9e8;
         }
 
         .alert-content {
@@ -58,10 +58,11 @@ function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 n
         }
 
         .alert-icon {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           margin-right: 16px;
           flex-shrink: 0;
+          filter: drop-shadow(0 0 6px currentColor);
         }
 
         .alert-icon svg {
@@ -78,14 +79,16 @@ function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 n
           font-weight: bold;
           margin-bottom: 4px;
           letter-spacing: 0.5px;
-          text-shadow: 0 0 5px currentColor;
+          text-shadow: 0 0 8px currentColor;
+          line-height: 1.4;
         }
 
         .alert-subtitle {
-          font-size: 12px;
-          opacity: 0.7;
+          font-size: 11px;
+          opacity: 0.8;
           text-transform: uppercase;
           letter-spacing: 1px;
+          font-weight: bold;
         }
 
         .close-button {
@@ -93,22 +96,23 @@ function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 n
           border: none;
           color: inherit;
           cursor: pointer;
-          padding: 4px;
+          padding: 6px;
           margin-left: 8px;
           opacity: 0.7;
-          transition: opacity 0.2s;
+          transition: all 0.2s;
+          border-radius: 50%;
         }
 
         .close-button:hover {
           opacity: 1;
-          background-color: rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
+          background-color: rgba(255, 255, 255, 0.15);
+          transform: scale(1.1);
         }
 
         .progress-bar {
           position: relative;
           height: 4px;
-          background-color: rgba(0, 0, 0, 0.3);
+          background-color: rgba(0, 0, 0, 0.4);
           overflow: hidden;
         }
 
@@ -116,14 +120,44 @@ function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 n
           position: absolute;
           height: 100%;
           width: 100%;
-          background-image: linear-gradient(90deg, #05d9e8, #00ff9d);
           animation: progress 5s linear forwards;
         }
+        
+        .success .progress-bar-inner {
+          background-image: linear-gradient(90deg, #004d29, #00ff9d);
+        }
+        
+        .error .progress-bar-inner {
+          background-image: linear-gradient(90deg, #6e0020, #ff2a6d);
+        }
+        
+        .warning .progress-bar-inner {
+          background-image: linear-gradient(90deg, #5a3000, #ffb400);
+        }
+        
+        .info .progress-bar-inner {
+          background-image: linear-gradient(90deg, #003a5c, #05d9e8);
+        }
 
-        .rainbow-line {
-          height: 2px;
-          background: linear-gradient(90deg, #ff2a6d, #ffb400, #05d9e8, #00ff9d);
-          animation: pulse 1.5s infinite alternate;
+        .top-border {
+          height: 3px;
+          box-shadow: 0 0 10px currentColor;
+        }
+        
+        .success .top-border {
+          background: linear-gradient(90deg, #00ff9d, #002218);
+        }
+        
+        .error .top-border {
+          background: linear-gradient(90deg, #ff2a6d, #240010);
+        }
+        
+        .warning .top-border {
+          background: linear-gradient(90deg, #ffb400, #2a1600);
+        }
+        
+        .info .top-border {
+          background: linear-gradient(90deg, #05d9e8, #001a2c);
         }
 
         @keyframes progress {
@@ -154,7 +188,7 @@ function Alert({ message = "Limited time offer! Gaming PC bundle with RTX 4080 n
           color: #05d9e8;
         }
       `}</style>
-      <div className="rainbow-line"></div>
+      <div className={`top-border`}></div>
       <div className="alert-content">
         <div className="alert-icon">
           {type === "success" && (

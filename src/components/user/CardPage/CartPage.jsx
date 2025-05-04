@@ -338,24 +338,36 @@ const checkoutHnadle = async () => {
                                 </span>
                               </div>
                               
-                              <div className="mt-4 space-x-2">
-                                <motion.button 
-                                  onClick={() => handleRemoveItem(item.id)}
-                                  className="text-sm text-gray-500 hover:text-black flex items-center"
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  disabled={isLoading}
-                                >
-                                  <span className="mr-1">○</span> REMOVE
-                                </motion.button>
-                                <motion.button 
-                                  className="text-sm text-gray-500 hover:text-black flex items-center"
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  <span className="mr-1">○</span> SAVE FOR LATER
-                                </motion.button>
-                              </div>
+                              <div className="mt-4 space-x-3">
+                                  <motion.button 
+                                    onClick={() => handleRemoveItem(item.id)}
+                                    className="text-sm text-white bg-red-500 hover:bg-red-600 flex items-center justify-center p-2 rounded"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    disabled={isLoading}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                      <path d="M3 6h18"></path>
+                                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                    REMOVE
+                                  </motion.button>
+                                  <motion.button 
+                                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 flex items-center justify-center p-2 rounded"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                      <line x1="12" y1="7" x2="12" y2="13"></line>
+                                      <line x1="15" y1="10" x2="9" y2="10"></line>
+                                    </svg>
+                                    SAVE FOR LATER
+                                  </motion.button>
+                                </div>
                             </div>
                             
                             <div className="mt-4 sm:mt-0 flex sm:flex-col sm:items-end justify-between">
