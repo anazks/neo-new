@@ -274,10 +274,59 @@ export const getRatings = async(product_id)=>{
     return error 
   }
 }
-export const AddTicket = async ()=>{
-    try {
-      
-    } catch (error) {
-      
+export const AddTicket = async (data) => {
+  try {
+    console.log("FormData contents:");
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}:`, value,"----");
     }
+
+    let response = await Axios.post('/interactions/my-tickets/', data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Error in AddTicket:", error);
+    throw error;
+  }
+};
+
+
+export const getmyTickets = async (data)=>{
+  try {
+    let response = await Axios.get(`/interactions/my-tickets/`,data,{
+    })
+    console.log(response,"yhyhyh")
+    return response
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+export const AdminGetTickets = async()=>{
+  try {
+    let response = await Axios.get('/interactions/admin/tickets/')
+    console.log(response,"in user api")
+    return response
+  } catch (error) {
+      return error
+  }
+}
+export const AdminUpdateTicketStatus = async(data)=>{
+  try {
+      console.log(data,"..........")
+      let {selectedTicket} = data;
+      let newData = {
+        conclusion:data.conclusion,
+        is_concluded:true
+      }
+      let response = await Axios.put(`/interactions/admin/tickets/${selectedTicket.id}/`,newData)
+      console.log(response,"response from ticketupdate")
+      return response
+  } catch (error) {
+    
+  }
 }

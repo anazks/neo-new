@@ -1,3 +1,4 @@
+import { Ticket } from 'lucide-react';
 import { 
   FaBars, 
   FaTachometerAlt, 
@@ -64,11 +65,11 @@ function Sidebar({ isExpanded, toggleSidebar }) {
         </li>
         <li>
           <a 
-            href="/analytics" 
+            href="/admin/tickets" 
             className="flex items-center p-4 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
           >
-            <FaChartPie className="text-xl" />
-            {isExpanded && <span className="ml-3 font-medium">Analytics</span>}
+            <Ticket className="text-xl" />
+            {isExpanded && <span className="ml-3 font-medium">Tickets</span>}
           </a>
         </li>
         <li>

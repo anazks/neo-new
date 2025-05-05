@@ -12,6 +12,7 @@ import AddProducts from '../components/Admin/Products/AddProducts/AddProducts';
 import Settings from '../components/Admin/Settings/Settings';
 import OverView from '../components/Admin/OverView/OverView';
 import UpdateProduct from '../components/Admin/Products/UpdateProducts/UpdateProduct';
+import Tickets from '../components/Admin/Tickets/Tickets'
 function AdminRoutes() {
   return (
     <Routes>
@@ -26,8 +27,7 @@ function AdminRoutes() {
         <Route path="/admin/overview" element={<Home><OverView/></Home>} />
         <Route path="/admin/Updateproducts/:id" element={<Home><UpdateProduct/></Home>} />
         <Route path="/admin/products/:id" element={<Home><DetailedViewAdmin/></Home>} />
-
-
+        <Route path='/admin/tickets'  element={<Home><Tickets/></Home>}/>
     </Routes>
   );
 }
