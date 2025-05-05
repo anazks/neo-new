@@ -739,13 +739,13 @@ const Login = () => {
                 
                 <OtpInput />
                 
-                <div className="flex justify-between items-center">
+                {/* <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2">
                     <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
                     <span className="text-gray-700">Remember me</span>
                   </label>
                   <a href="#" className="text-blue-600 text-sm hover:text-blue-700 transition-colors">Forgot Password?</a>
-                </div>
+                </div> */}
                 
                 <div className="my-6">
                   <p className="text-center text-gray-500 text-sm uppercase tracking-wider mb-4">

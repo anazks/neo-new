@@ -21,6 +21,8 @@ import Tokyo from "./components/user/Tickets/Tickets";
 import TicketsResolved from  "./components/user/Tickets/TicketsResolved"
 import Ticket from "./components/user/Tickets/Tickets"
 import Solutions from "./components/user/Solutions/Solutions"
+import Profile from "./components/user/Profile/Profile";
+import ProfilePage from "./Pages/user/ProfilePage";
 
 function App() {
   return (
@@ -43,6 +45,7 @@ function App() {
             <Route path="/tickets" element={<Ticket/>}/>
             <Route path="/ticketsresolved" element={<TicketsResolved/>}/>
             <Route path="/Solutions" element={<Solutions/>}/>
+            <Route path="/profile"  element={<ProfilePage/>}/>
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/Home" element={<AdminHome/>}/> */}

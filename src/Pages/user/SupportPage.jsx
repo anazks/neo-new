@@ -1,132 +1,170 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import cityImage from "../../Images/city.png"; // Update this path to your background image
-
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Logo from '../../Images/LoginWith/neo_tokyo-logo.png'
 import NavBar from '../../components/user/NavBar/NavBar';
 import Footer from '../../components/user/Footer/Footer';
+import {useAuth} from '../../Context/UserContext'
 
-// This is your original Support component content
-const SupportContent = () => {
+// Card components for stacking
+const HeaderCard = () => (
+  <motion.div 
+    className="w-full max-w-6xl mx-auto mb-8 p-4"
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: false, margin: "-100px" }}
+    transition={{ duration: 0.6 }}
+  >
+    <h1 className="text-4xl font-bold">Embark on your Troubleshooting Journey</h1>
+    <div className="h-1 bg-black w-full mt-2"></div>
+  </motion.div>
+);
+
+const SupportContentCard = () => {
+  const { token, setToken, user } = useAuth();
+
   return (
-    <div  className="min-h-screen bg-gradient-to-r from-white to-emerald-500 flex justify-center items-center p-5 w-[90vw] mx-auto rounded-3xl box-border">
-      <div className="w-full max-w-[80vw] flex flex-col gap-5">
-        <div className="w-full rounded-lg overflow-hidden">
-          {/* Heading Section */}
-          <div className="flex flex-wrap p-5 gap-px items-center">
-            <div className="flex-1">
-              <h2 className="text-4xl m-0 font-sans">Support</h2>
-            </div>
-            <div className="flex justify-center items-center">
-              <div className="h-[50px] w-[150px] bg-black rounded-3xl flex items-center justify-start">
-                <div className="h-10 w-10 rounded-full ml-[3px] bg-white"></div>
-                <span className="text-white ml-4">Live Chat</span>
+    <motion.div 
+      className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
+      initial={{ opacity: 0, y: 100, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: false, margin: "-50px" }}
+      transition={{ duration: 0.7 }}
+    >
+      <div className="flex flex-col md:flex-row">
+        {/* Left Section */}
+        <div className="w-full md:w-7/12 p-8">
+          <h2 className="text-2xl font-semibold mb-6">Hi Julian, How can we Help you?</h2>
+          
+          {/* Raise a Ticket Section */}
+          <div className="border-b border-gray-300 pb-6 mb-6">
+            <div className="flex flex-col mb-4">
+              {
+                user ? (<>
+                <div className="border border-blue-300 inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-medium">Raise a Ticket</span>
+                <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span>
+              </div>
+                </>):''
+              }
+              
+              
+              <div className="bg-blue-500 text-white inline-block px-6 py-1 w-fit text-xs">
+                140 × 32
+              </div>
+              
+              <div className="mt-2">
+                <span className="text-sm">Manage tickets</span>
               </div>
             </div>
           </div>
           
-          {/* Divider */}
-          <div className="h-[9px] rounded bg-black mx-0 my-2.5"></div>
+          {/* FAQ Section */}
+          <div className="border-b border-gray-300 pb-6 mb-6">
+            <h3 className="font-bold mb-4">FAQ's (Quick View)</h3>
+            
+            <div className="mb-4">
+              <h4 className="font-semibold">How do I place an order for a custom-built PC?</h4>
+              <p className="text-sm text-gray-700">
+                Placing an order is easy! Simply browse our selection of customizable PC configurations, 
+                choose the components that best suit your needs, and add them to your cart. Follow the 
+                checkout process to provide your shipping and payment information, and we'll take care 
+                of the rest.
+              </p>
+            </div>
+            
+            <div className="mb-4">
+              <h4 className="font-semibold">Can I customize the specifications of my PC before ordering?</h4>
+              <p className="text-sm text-gray-700">
+                Yes, absolutely! We offer a wide range of component options for you to customize your 
+                PC according to your preferences and budget.
+              </p>
+            </div>
+            
+            <button className="text-blue-600 flex items-center text-sm">
+              View More <span className="ml-1">+</span>
+            </button>
+          </div>
           
-          {/* Content Body */}
-          <div className="flex flex-col gap-5 p-5">
-            <div className="flex flex-wrap gap-5 justify-between">
-              {/* Content Box 1 */}
-              <div className="flex-1 min-w-[300px] p-5 rounded-lg bg-white shadow-md border-3 border-black">
-                <h2 className="text-2xl mt-2.5 mb-2.5">Customer Support</h2>
-                <h3 className="text-xl mt-2.5 mb-2.5">How can we help you?</h3>
-                <ul className="list-none my-1.5 p-0">
-                  <li className="my-2">✓ 24/7 Technical Support</li>
-                  <li className="my-2">✓ Product Information</li>
-                  <li className="my-2">✓ Order Status & Tracking</li>
-                  <li className="my-2">✓ Returns & Exchanges</li>
-                  <li className="my-2">✓ Warranty & Repairs</li>
-                </ul>
+          {/* Queries Section */}
+          <div className="border-b border-gray-300 pb-6 mb-6">
+            <h3 className="font-bold mb-2">Queries</h3>
+            <p className="text-sm">For Queries contact us at <a href="mailto:info@neotokyo.in" className="text-blue-600">info@neotokyo.in</a></p>
+          </div>
+          
+          {/* Browse Help Topics */}
+          <div>
+            <h3 className="font-bold">Browse Help Topics</h3>
+          </div>
+        </div>
+        
+        {/* Right Section */}
+        <div className="w-full md:w-5/12 p-8 bg-gray-50">
+          {/* Navigation Card */}
+          <div className="bg-white rounded-lg p-6 shadow-md mb-6">
+            <h3 className="font-bold mb-4 text-xl">Navigation</h3>
+            
+            <div className="mb-6">
+              <h4 className="font-medium mb-2">Reach Us</h4>
+              <div className="flex items-start mb-4">
+                <div className=" rounded-full p-3 mr-4">
+                  <img src={Logo} alt="Logo.jpg" className="w-6 h-6" />
+                </div>
+                <div className="text-sm">
+                  <p>Floor no. 2, Koroth Arcade,</p>
+                  <p>Vennala High School Rd.,</p>
+                  <p>opposite to V-Guard, Vennala,</p>
+                  <p>Kochi, Kerala 682028</p>
+                </div>
               </div>
               
-              {/* Content Box 2 */}
-              <div className="flex-1 min-w-[300px] p-5 rounded-lg bg-white shadow-md border-3 border-blue-600">
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-2.5">
-                    <h3 className="text-xl mt-0 mb-2.5">Contact Information</h3>
-                    
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex-none w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <ul className="m-0 text-sm">
-                          <li><strong>Phone:</strong> (555) 123-4567</li>
-                          <li><strong>Hours:</strong> 24/7 Support Line</li>
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex-none w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <ul className="m-0 text-sm">
-                          <li><strong>Email:</strong> support@example.com</li>
-                          <li><strong>Response:</strong> Within 24 hours</li>
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex-none w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <ul className="m-0 text-sm">
-                          <li><strong>Address:</strong> 123 Tech Plaza</li>
-                          <li><strong>Location:</strong> Silicon Valley, CA 94025</li>
-                        </ul>
-                      </div>
-                    </div>
+              <div className="flex items-start">
+                <div className=" rounded-full p-3 mr-4">
+                  <div className=" rounded-full w-6 h-6">
+                  <img src={Logo} alt="Logo.jpg" className="w-6 h-6" />
                   </div>
-                  
-                  {/* Business Card */}
-                  <div className="h-[35vh] w-full rounded-xl bg-black text-white flex justify-center items-center shadow-lg p-2">
-                    <div className="h-[30vh] w-full p-4">
-                      <div className="flex h-[20vh] w-full">
-                        <div className="w-1/3 flex items-center justify-center">
-                          <h1 className="text-5xl font-bold">TECH</h1>
-                        </div>
-                        <div className="w-2/3 flex flex-col justify-center">
-                          <h2 className="text-3xl font-sans">SUPPORT CENTER</h2>
-                          <p className="text-base">Always here to help you.</p>
-                        </div>
-                      </div>
-                      <div className="h-[10vh] w-full flex items-end p-2">
-                        <div className="w-full">
-                          <p className="font-sans">www.techsupport.example.com</p>
-                          <p className="text-yellow-300">support@example.com • (555) 123-4567</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                </div>
+                <div className="text-sm">
+                  <p>New Age Buildings: Mofussil Bus</p>
+                  <p>Stand Building, New, 671803,</p>
+                  <p>Mavoor Rd, Arayidathupalam,</p>
+                  <p>Kozhikode, Kerala 673004</p>
                 </div>
               </div>
             </div>
           </div>
+          
+          {/* Member Card */}
+          <div className="bg-black text-white rounded-lg p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="text-3xl font-bold">
+                NT<br />KO
+              </div>
+              <div>
+                <div className="font-bold">Priority One</div>
+                <div className="text-xs uppercase tracking-widest">PREMIUM MEMBERSHIP</div>
+              </div>
+            </div>
+            
+            <div className="mt-8">
+              <div className="text-xl font-medium">Julian Thomas Prasad</div>
+              <div className="text-yellow-400 text-xs">02/21/2024</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-// Additional support content if you want to split the page
-const SupportFAQs = () => (
-  <div className="min-h-screen bg-gradient-to-r from-white to-emerald-500 flex justify-center items-center p-5 w-[90vw] mx-auto rounded-3xl box-border">
-    <div className="w-full max-w-[80vw] bg-white rounded-lg p-8 shadow-md">
+const FAQsCard = () => {
+  return (
+    <motion.div 
+      className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8 my-8"
+      initial={{ opacity: 0, y: 100, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: false, margin: "-50px" }}
+      transition={{ duration: 0.7, delay: 0.1 }}
+    >
       <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
       
       <div className="space-y-6">
@@ -150,96 +188,114 @@ const SupportFAQs = () => (
           <p>Yes, we ship to most countries worldwide. International shipping rates and delivery times vary by location. You can see specific shipping information during checkout.</p>
         </div>
       </div>
-    </div>
+    </motion.div>
+  );
+};
+
+const ContactCard = () => {
+  return (
+    <motion.div 
+      className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8 my-8"
+      initial={{ opacity: 0, y: 100, scale: 0.95 }}  
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: false, margin: "-50px" }}
+      transition={{ duration: 0.7, delay: 0.2 }}
+    >
+      <h2 className="text-3xl font-bold mb-6">Contact Information</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 className="text-xl font-semibold mb-4">Support Hours</h3>
+          <p className="mb-2">Monday - Friday: 9AM - 8PM</p>
+          <p className="mb-2">Saturday: 10AM - 6PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold mb-4">Contact Methods</h3>
+          <p className="mb-2">Email: info@neotokyo.in</p>
+          <p className="mb-2">Phone: +91 (800) 555-1234</p>
+          <p>Live Chat: Available during business hours</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Live Chat Button Component
+const LiveChatButton = () => (
+  <div className="fixed top-20 right-8 z-50">
+    <motion.button 
+      className="bg-black text-white rounded-full py-3 px-8 flex items-center shadow-lg"
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, delay: 1 }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <span className="mr-2">Live Chat</span>
+      <span className="inline-block w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
+        ↗
+      </span>
+    </motion.button>
   </div>
 );
 
+// Main component
 function SupportPage() {
-  const wrapperRef = useRef(null);
+  const containerRef = useRef(null);
+  const [scrollY, setScrollY] = useState(0);
+  
 
   useEffect(() => {
     const handleScroll = () => {
-      if (wrapperRef.current) {
-        // setScrollY(wrapperRef.current.scrollTop);
+      if (containerRef.current) {
+        setScrollY(window.scrollY);
       }
     };
 
-    const wrapper = wrapperRef.current;
-    if (wrapper) wrapper.addEventListener("scroll", handleScroll);
-
-    return () => {
-      if (wrapper) wrapper.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Components to be stacked
-  const components = [
-    SupportContent,
-    SupportFAQs,
-    Footer
-  ];
-
   return (
-    <motion.div ref={wrapperRef}>
+    <div 
+      ref={containerRef} 
+      className="min-h-screen bg-gradient-to-r from-white to-green-200"
+      style={{width:"90%", margin:"auto", borderRadius:"30px", overflow: "hidden", position: "relative"}}
+    >
       <NavBar />
+      <LiveChatButton />
+      
+      {/* Background parallax effect */}
       <motion.div
+        className="fixed top-0 left-0 w-full h-full z-0 opacity-20"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vh",
-          height: "100%",
-          backgroundImage: `url(${cityImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          zIndex: -1,
-          filter: "blur(3px)",
+          backgroundImage: "linear-gradient(45deg, #e6fffa 0%, #ebf4ff 100%)",
+          backgroundSize: "200% 200%",
+          y: scrollY * 0.2,
         }}
-        animate={{ scale: 5 }}
-        transition={{ ease: "easeOut" }}
-      />
-      <motion.div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.3)",
-          zIndex: -1,
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
       />
       
-      {/* Ensure there's enough top padding to account for the navbar */}
-      <div className="pt-16">
-        {components.map((Component, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 100 }} // Slide-up effect
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }} // Decreased to trigger animation earlier
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            style={{
-              position: "sticky",
-              top: 0,
-              minHeight: "100vh",
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: index + 1,
-              transform: `translateY(${index * 10}px)`,
-              paddingBottom: index === components.length - 1 ? "10vh" : 0, // Add padding for last component
-            }}
-          >
-            <Component />
-          </motion.div>
-        ))}
+      <div className="pt-24 pb-16 relative z-10">
+        <div className="px-4 space-y-24">
+          <HeaderCard />
+          
+          <div className="space-y-32">
+            <SupportContentCard />
+            <FAQsCard />
+            <ContactCard />
+          </div>
+        </div>
+        
+        <motion.div 
+          className="mt-32"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 1 }}
+        >
+          <Footer />
+        </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

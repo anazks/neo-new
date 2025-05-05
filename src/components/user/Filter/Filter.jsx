@@ -7,6 +7,7 @@ function Filter({ products, setProducts }) {
   const [activeCategory, setActiveCategory] = useState(null);
   const [selectedOption, setSelectedOption] = useState('');
   const [originalProducts, setOriginalProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const uiCategories = [
     "BY BRAND",
@@ -18,13 +19,18 @@ function Filter({ products, setProducts }) {
 
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       try {
         const categoryRes = await getCategory();
         const brandRes = await getBrand();
-        setFetchedCategories(categoryRes.data);
-        setFetchedBrands(brandRes.data);
+        setFetchedCategories(Array.isArray(categoryRes.data) ? categoryRes.data : []);
+        setFetchedBrands(Array.isArray(brandRes.data) ? brandRes.data : []);
       } catch (error) {
         console.error(error);
+        setFetchedCategories([]);
+        setFetchedBrands([]);
+      } finally {
+        setLoading(false);
       }
     };
     getData();
@@ -123,54 +129,60 @@ function Filter({ products, setProducts }) {
           <div className="w-full">
             {activeCategory !== null && (
               <div className="animate-fade-in">
-                <div className="space-y-3">
-                  <select
-                    className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded text-gray-700 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                    value={selectedOption}
-                    onChange={(e) => setSelectedOption(e.target.value)}
-                  >
-                    <option value="">Select option</option>
-                    {isCategorySelected &&
-                      fetchedCategories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    {isBrandSelected &&
-                      fetchedBrands.map((brand) => (
-                        <option key={brand.id} value={brand.id}>
-                          {brand.name}
-                        </option>
-                      ))}
-                    {isPriceSelected && (
-                      <>
-                        <option value="lowToHigh">Low to High</option>
-                        <option value="highToLow">High to Low</option>
-                      </>
-                    )}
-                    {isAvailabilitySelected && (
-                      <>
-                        <option value="true">Available</option>
-                        <option value="false">Unavailable</option>
-                      </>
-                    )}
-                  </select>
+                {loading ? (
+                  <div className="text-center py-6 text-gray-500">Loading options...</div>
+                ) : (
+                  <div className="space-y-3">
+                    <select
+                      className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded text-gray-700 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                      value={selectedOption}
+                      onChange={(e) => setSelectedOption(e.target.value)}
+                    >
+                      <option value="">Select option</option>
+                      {isCategorySelected &&
+                        Array.isArray(fetchedCategories) &&
+                        fetchedCategories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      {isBrandSelected &&
+                        Array.isArray(fetchedBrands) &&
+                        fetchedBrands.map((brand) => (
+                          <option key={brand.id} value={brand.id}>
+                            {brand.name}
+                          </option>
+                        ))}
+                      {isPriceSelected && (
+                        <>
+                          <option value="lowToHigh">Low to High</option>
+                          <option value="highToLow">High to Low</option>
+                        </>
+                      )}
+                      {isAvailabilitySelected && (
+                        <>
+                          <option value="true">Available</option>
+                          <option value="false">Unavailable</option>
+                        </>
+                      )}
+                    </select>
 
-                  <div className="flex flex-wrap gap-3 mt-4">
-                    <button
-                      className="px-5 py-2 bg-blue-500 text-white font-medium rounded-full text-xs uppercase tracking-wide hover:bg-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                      onClick={handleFilter}
-                    >
-                      Apply Filter
-                    </button>
-                    <button
-                      className="px-5 py-2 bg-white text-gray-700 border border-gray-300 font-medium rounded-full text-xs uppercase tracking-wide hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-                      onClick={handleReset}
-                    >
-                      Reset
-                    </button>
+                    <div className="flex flex-wrap gap-3 mt-4">
+                      <button
+                        className="px-5 py-2 bg-blue-500 text-white font-medium rounded-full text-xs uppercase tracking-wide hover:bg-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        onClick={handleFilter}
+                      >
+                        Apply Filter
+                      </button>
+                      <button
+                        className="px-5 py-2 bg-white text-gray-700 border border-gray-300 font-medium rounded-full text-xs uppercase tracking-wide hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                        onClick={handleReset}
+                      >
+                        Reset
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>

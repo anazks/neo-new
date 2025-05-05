@@ -7,6 +7,10 @@ import {
 } from 'react-icons/fi';
 import Logo from '../../../Images/LoginWith/neo_tokyo-logo.png';
 import { BsFillTicketFill } from 'react-icons/bs';
+import { GamepadIcon, ListOrdered, Settings } from 'lucide-react';
+import { FaProductHunt } from 'react-icons/fa';
+import { SlCallOut } from 'react-icons/sl';
+import { IoBulb } from 'react-icons/io5';
 
 function SideBar({ isOpen, onClose }) {
   const { token, setToken, user } = useAuth();
@@ -27,7 +31,13 @@ function SideBar({ isOpen, onClose }) {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
-
+const handleProfile=()=>{
+  try {
+      navigate('/profile')
+  } catch (error) {
+    
+  }
+}
   return (
     <>
       {/* Overlay with blur */}
@@ -73,7 +83,7 @@ function SideBar({ isOpen, onClose }) {
                   </button>
                 </>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold" onClick={handleProfile}>
                   {user?.first_name?.charAt(0) || 'U'}
                 </div>
               )}
@@ -90,6 +100,12 @@ function SideBar({ isOpen, onClose }) {
           {/* Rest of the content */}
           <div className="flex-1 overflow-y-auto">
             {/* Menu */}
+            <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                  <FiHome className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                  <span>Store</span>
+                </Link>
+              </li>
             <ul className="flex flex-col gap-1 p-0 m-0">
               <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.1s' : 'none' }}>
                 <Link to="/products" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
@@ -97,16 +113,29 @@ function SideBar({ isOpen, onClose }) {
                   <span>Products</span>
                 </Link>
               </li>
-              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.15s' : 'none' }}>
-                <Link to="/myorder" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
-                  <FiHelpCircle className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
-                  <span>My Order</span>
+              {
+                token && (
+                  <>
+                     <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.15s' : 'none' }}>
+                      <Link to="/myorder" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                        <ListOrdered className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                        <span>My Order</span>
+                      </Link>
+                    </li>
+                  </>
+                )}
+             
+             
+              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                  <IoBulb className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                  <span>Solutions</span>
                 </Link>
               </li>
               <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
                 <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
-                  <FiHome className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
-                  <span>Store</span>
+                  <GamepadIcon className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                  <span>RTX Powered PC</span>
                 </Link>
               </li>
               {token && (
@@ -144,6 +173,10 @@ function SideBar({ isOpen, onClose }) {
             </ul>
 
             {/* Locations */}
+            <br />
+            <h3 className="flex items-center gap-2 text-base mb-4 text-white">
+                <Settings className="text-blue-300" /><h1>NeoTokyo.Config</h1> <span style={{fontSize:'10px'}}>Coming soon</span>
+              </h3>
             <div className="mt-auto pt-6 border-t border-white/20 animate-[fadeInUp_0.5s_ease_forwards] opacity-0" style={{ animationDelay: '0.5s' }}>
               <h3 className="flex items-center gap-2 text-base mb-4 text-white">
                 <FiMapPin className="text-blue-300" /> Our Locations
