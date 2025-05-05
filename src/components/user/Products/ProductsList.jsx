@@ -209,14 +209,14 @@ function ProductsList() {
         {/* Filter Section */}
         {filter && (
           <div className={`mb-6 p-6 rounded-xl shadow-md ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} transition-all duration-300 animate-slideDown`}>
-            <Filter />
+            <Filter products={products} setProducts={setProducts} />
           </div>
         )}
         
         {/* Sort Section */}
         {sort && (
           <div className={`mb-6 p-6 rounded-xl shadow-md ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} transition-all duration-300 animate-slideDown`}>
-            <Sorting />
+            <Sorting  products={products} setProducts={setProducts} />
           </div>
         )}
 
