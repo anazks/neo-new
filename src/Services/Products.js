@@ -218,14 +218,15 @@ const updateVideo = async(formData)=>{
         let data = formData.get("video")
         console.log(product_id,"product_idproduct_id",vedio)
         console.log()
+        
         const response = await Axios.post(
             `/inventory/products/${product_id}/add-video/`,
             formData,
             {
                 headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
+                  "Content-Type": "multipart/form-data",
+                },
+              }
         );
         console.log("Image upload response:", response);
         return response;
