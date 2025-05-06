@@ -212,13 +212,9 @@ function UpdateProduct() {
                     }
                 }
             });
-            
-            // Ensure is_available is boolean
+    
             formDataToSend.set('is_available', formData.is_available ? true : false);
-            // let taxNew = parseInt(formDataToSend.get("tax"));
-            // formDataToSend.set("tax", taxNew);
-            // console.log(formDataToSend.get("tax"),"new")
-
+       
             const response = await productUpdate(id, formDataToSend);
             console.log(response,"resposne from product update..")
             if (response) {

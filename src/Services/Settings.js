@@ -208,6 +208,23 @@ export const getAnalytics = async () => {
         return null; 
     }
 }
+
+export const getinsights = async()=>{
+    try {
+        const response = await Axios.get('/analytics/insights/')
+        return response
+    } catch (error) {
+            return error
+    }
+}
+export const getDashBoard = async()=>{
+    try {
+        const response = await Axios.get('/analytics/dashboard-summary/')
+        return response
+    } catch (error) {
+            return error
+    }
+}
 export const updateBrand = async(data)=>{
         try {
             console.log(data)
