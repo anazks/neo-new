@@ -266,22 +266,41 @@ const uploadImage = async (formData) => {
     }
 };
 
-const productUpdate = async(id,data)=>{
+const productUpdate = async (id, data) => {
     try {
-            console.log(id)
-            let response = await Axios.put(`/inventory/product_admin/${id}/`,data,{
-                
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                
-            })
-            console.log(response,"4444444444444444444")
+      console.log("Product ID:", id);
+  
+      // Convert 'tax' field to integer if it exists
+    //   if (data.has('tax')) {
+    //     const taxValue = data.get('tax');
+    //     console.log(taxValue,typeof(taxValue),"--")
+    //     if (taxValue !== null && taxValue !== '') {
+    //       data.set('tax', parseInt(taxValue, 10));
+    //     } else {
+    //       data.delete('tax'); // remove empty tax
+    //     }
+    //   }
+  
+      console.log('FormData contents:');
+      for (let pair of data.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
+      }
+  
+      let response = await Axios.patch(`/inventory/product_admin/${id}/`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+  
+      console.log("Response:", response);
+      return response
     } catch (error) {
-        console.log(error)
-        return error
+      console.error("Update error:", error.response || error.message || error);
+      return error;
     }
-}
+  };
+  
+  
 const productDelete = async(id)=>{
     try {
         let response = await Axios.delete(`/inventory/product_admin/${id}/`)

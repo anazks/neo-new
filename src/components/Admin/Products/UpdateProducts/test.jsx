@@ -37,8 +37,8 @@ function UpdateProduct() {
         is_available: false,
         broacher: null,
         youtube_url: '',
-        tax: '',
-        tax_value: 0,
+        tax: '', // Initialize with empty string, not null
+        tax_value: '', // Initialize with empty string, not null
         discount_price: '',
         more_info: ''
     });
@@ -56,9 +56,7 @@ function UpdateProduct() {
     const [variantData, setVariantData] = useState({
         name: '',
         price: '',
-        stock: 0,
-        variant_product_id: '',
-        relationship: ''
+        stock: 0
     });
     const [overviewContent, setOverviewContent] = useState('');
 
@@ -67,25 +65,28 @@ function UpdateProduct() {
             try {
                 setLoading(true);
                 const productData = await getSingleProduct(id);
+                console.log(productData, "product data in update product");
                 setProduct(productData);
-                setFormData({
+                setFormData(prevData => ({
+                    ...prevData,
                     name: productData.name || '',
                     description: productData.description || '',
-                    price: productData.price ? String(productData.price) : '',
-                    mrp: productData.mrp ? String(productData.mrp) : '',
+                    price: productData.price || '',
+                    mrp: productData.mrp || '',
                     product_code: productData.product_code || '',
-                    stock: productData.stock ? Number(productData.stock) : 0,
+                    stock: productData.stock || 0,
                     whats_inside: productData.whats_inside || '',
-                    category: productData.category ? String(productData.category) : '',
-                    brand: productData.brand ? String(productData.brand) : '',
+                    category: productData.category || '',
+                    brand: productData.brand || '',
                     is_available: productData.is_available || false,
                     broacher: null,
                     youtube_url: productData.youtube_url || '',
-                    tax: productData.tax ? String(productData.tax) : '',
-                    tax_value: productData.tax_value ? Number(productData.tax_value) : '',
-                    discount_price: productData.discount_price ? String(productData.discount_price) : '',
+                    tax: productData.tax !== null && productData.tax !== undefined ? String(productData.tax) : '', // Convert to string
+                    tax_value: productData.tax_value !== null && productData.tax_value !== undefined ? String(productData.tax_value) : '', // Convert to string
+                    discount_price: productData.discount_price || '',
                     more_info: productData.more_info || ''
-                });
+                }));
+                
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -96,6 +97,7 @@ function UpdateProduct() {
         const fetchCategory = async () => {
             try {
                 let categoryData = await getCategory();
+                console.log(categoryData, "category data in update product");
                 setCategories(categoryData.data);
             } catch (error) {
                 setError(error.message);
@@ -105,6 +107,7 @@ function UpdateProduct() {
         const fetchBrand = async () => {
             try {
                 let brandData = await getBrand();
+                console.log(brandData, "brand data in update product");
                 setBrands(brandData.data);
             } catch (error) {
                 setError(error.message);
@@ -114,6 +117,7 @@ function UpdateProduct() {
         const fetchTax = async () => {
             try {
                 let taxData = await getTax();
+                console.log(taxData, "tax data in update product");
                 setTaxes(taxData.data);
             } catch (error) {
                 setError(error.message);
@@ -123,6 +127,7 @@ function UpdateProduct() {
         const getAllProductFromDB = async () => {
             try {
                 const response = await getAllProduct();
+                console.log(response, "all-----------");
                 setProducts(response);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -132,6 +137,7 @@ function UpdateProduct() {
         const GetrelationShip = async () => {
             try {
                 const response = await relationShip();
+                console.log(response, "-------- ship data in update product");
                 setRelationShip(response);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -141,6 +147,7 @@ function UpdateProduct() {
         const getOverViewCategoryFn = async () => {
             try {
                 const response = await getOverViewCategory();
+                console.log(response, "-------- over data in update product");
                 setOverviewContents(response)
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -150,6 +157,7 @@ function UpdateProduct() {
         const getAttributeData = async () => {
             try {
                 let attribute = await getAttribute()
+                console.log(attribute, "><><><><><><>")
                 setOverviewContents(attribute.data)
             } catch (error) {
                 console.log(error)
@@ -168,26 +176,10 @@ function UpdateProduct() {
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
-        
-        // Convert numeric fields to numbers when changed
-        const processedValue = type === 'checkbox' ? checked :
-            type === 'file' ? files[0] :
-            ['price', 'mrp', 'stock', 'tax_value', 'discount_price'].includes(name) ? 
-                (value === '' ? '' : Number(value)) :
-            value;
-
         setFormData(prev => ({
             ...prev,
-            [name]: processedValue
-        }));
-    };
-
-    const handleSelectChange = (e) => {
-        const { name, value } = e.target;
-        // For select fields that should be numbers (category, brand, tax)
-        setFormData(prev => ({
-            ...prev,
-            [name]: value === '' ? '' : Number(value)
+            [name]: type === 'checkbox' ? checked :
+                type === 'file' ? files[0] : value
         }));
     };
 
@@ -196,31 +188,34 @@ function UpdateProduct() {
     
         try {
             setLoading(true);
+    
+            // Create FormData for file upload
             const formDataToSend = new FormData();
-            console.log({formData});
-            
-            // Append all form data with proper type conversion
+    
+            // Append all form data
             Object.keys(formData).forEach(key => {
                 if (key === 'broacher' && formData[key] instanceof File) {
                     formDataToSend.append(key, formData[key]);
                 } else if (formData[key] !== null && formData[key] !== undefined) {
-                    // Convert specific fields to numbers when needed
-                    if (['price', 'mrp', 'stock', 'tax_value', 'discount_price'].includes(key)) {
-                        formDataToSend.append(key, formData[key] === '' ? '' : Number(formData[key]));
+                    // Convert specific fields to numbers
+                    if (['category', 'brand', 'tax'].includes(key) && formData[key] !== '') {
+                        formDataToSend.append(key, Number(formData[key]));
+                    } else if (key === 'tax_value' && formData[key] !== '') {
+                        formDataToSend.append(key, parseInt(formData[key], 10)); // Ensure integer
                     } else {
                         formDataToSend.append(key, formData[key]);
                     }
                 }
             });
-            
-            // Ensure is_available is boolean
+    
+            // Ensure is_available is set as '1' or '0'
             formDataToSend.set('is_available', formData.is_available ? true : false);
-            // let taxNew = parseInt(formDataToSend.get("tax"));
-            // formDataToSend.set("tax", taxNew);
-            // console.log(formDataToSend.get("tax"),"new")
-
+                console.log(formDataToSend.get('tax'))
+            console.log('Form data being sent:', Object.fromEntries(formDataToSend.entries()));
+            
             const response = await productUpdate(id, formDataToSend);
-            console.log(response,"resposne from product update..")
+            console.log(response);
+    
             if (response) {
                 setALertStatus(true);
                 setAlertMessage('Product updated successfully');
@@ -235,24 +230,32 @@ function UpdateProduct() {
             setLoading(false);
         }
     };
+    
 
-    // Modal handlers (keep the same as before)
+    // Modal handlers
     const handlePhotosSubmit = async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
+            console.log(photos, "---------------")
+            // Create FormData object
             const formData = new FormData();
 
+            // Append each photo with proper field name
             photos.forEach((photo, index) => {
-                formData.append('image', photo);
+                formData.append('image', photo); // Use 'images' as the field name
+
+                // Add is_primary flag for the selected primary photo
                 if (index === primaryPhotoIndex) {
-                    formData.append('is_primary', 'true');
-                    formData.append('primary_index', index);
+                    formData.append('is_primary', 'true'); // Add is_primary flag
+                    formData.append('primary_index', index); // Keep existing primary_index for backward compatibility
                 }
             });
 
+            // Make sure to include the product ID
             formData.append('product_id', id);
 
+            // Call the uploadImage function with FormData
             const response = await uploadImage(formData);
 
             if (response) {
@@ -264,6 +267,7 @@ function UpdateProduct() {
             setPhotos([]);
             setPrimaryPhotoIndex(0);
 
+            // Refresh product data
             const updatedProduct = await getSingleProduct(id);
             setProduct(updatedProduct);
         } catch (error) {
@@ -281,26 +285,35 @@ function UpdateProduct() {
         if (!videoFile) return;
         setLoading(true);
         try {
+            // Create a FormData object to send the file
+            console.log(videoFile, "videoFilevideoFilevideoFile")
             const formData = new FormData();
             formData.append('video', videoFile);
-            formData.append('product_id', product.id);
+            formData.append('product_id', product.id); // Assuming you have productId available
             const response = await updateVideo(formData)
-            
+            console.log(response, "response in video upload")
             if (!response) {
                 throw new Error('Failed to upload video');
             }
 
+            // Handle successful upload
+            const result = await response.json();
+
+            // Close modal and maybe refresh data
             setShowVideoModal(false);
-            setALertStatus(true);
+            // Refresh product data if needed
+
+            // Show success message
+            setALertStatus(true)
             setAlertMessage('Video uploaded successfully');
 
         } catch (error) {
             console.error('Error uploading video:', error);
-            setALertStatus(true);
+            setALertStatus(true)
             setAlertMessage('Video uploading failed');
         } finally {
             setLoading(false);
-            setVideoFile(null);
+            setVideoFile(null); // Reset the file state
         }
     };
 
@@ -308,17 +321,19 @@ function UpdateProduct() {
         e.preventDefault();
         try {
             setLoading(true);
+            console.log("Variant data:", variantData);
+            // await addProductVariant(id, variantData);
             variantData.product_iddd = id;
-            let response = await AddVarient(variantData);
-            
+            console.log(variantData, "variant data in add variant")
+            let response = await AddVarient(variantData)
+            console.log(response, "response in add variant")
             if (response) {
-                setAlertMessage(response.message);
-                setALertStatus(true);
+                setAlertMessage(response.message)
+                setALertStatus(true)
             }
-            
             setShowVariantModal(false);
-            setVariantData({ name: '', price: '', stock: 0, variant_product_id: '', relationship: '' });
-            
+            setVariantData({ name: '', price: '', stock: 0 });
+            // Refresh product data
             const updatedProduct = await getSingleProduct(id);
             setProduct(updatedProduct);
         } catch (error) {
@@ -333,13 +348,17 @@ function UpdateProduct() {
         e.preventDefault();
         try {
             setLoading(true);
+            console.log("Overview content:", overviewContent, "Value:", overviewValue);
+
+            // Prepare data to send
             const overviewData = {
                 overview_id: overviewContent,
                 value: overviewValue,
                 product_id: id
             };
-            
+            console.log(overviewData)
             let overViewResponse = await UpdateProductOverview(overviewData);
+            console.log(overViewResponse, "overViewResponse");
 
             if (overViewResponse) {
                 setALertStatus(true);
@@ -351,6 +370,7 @@ function UpdateProduct() {
             setOverviewValue('');
             setSelectedOverview(null);
 
+            // Refresh product data
             const updatedProduct = await getSingleProduct(id);
             setProduct(updatedProduct);
         } catch (error) {
@@ -370,10 +390,15 @@ function UpdateProduct() {
     return (
         <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
             <h1 className="text-2xl font-bold mb-6">Update Product</h1>
-            {ALertStatus && <Alert message={alertMessage} type="success" />}
-            
+            {
+                ALertStatus && (
+                    <Alert
+                        message={alertMessage}
+                        type="success"
+                    />
+                )
+            }
             <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 shadow-lg" encType="multipart/form-data">
-                {/* Basic Information Section */}
                 <div className="mb-4">
                     <label htmlFor="name" className="block mb-2">Product Name</label>
                     <input
@@ -400,7 +425,6 @@ function UpdateProduct() {
                     />
                 </div>
 
-                {/* Pricing Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label htmlFor="price" className="block mb-2">Price</label>
@@ -433,7 +457,6 @@ function UpdateProduct() {
                     </div>
                 </div>
 
-                {/* Inventory Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label htmlFor="product_code" className="block mb-2">Product Code</label>
@@ -463,7 +486,6 @@ function UpdateProduct() {
                     </div>
                 </div>
 
-                {/* Additional Information */}
                 <div className="mb-4">
                     <label htmlFor="whats_inside" className="block mb-2">What's Inside</label>
                     <textarea
@@ -476,7 +498,6 @@ function UpdateProduct() {
                     />
                 </div>
 
-                {/* Category and Brand Selection */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label htmlFor="category" className="block mb-2">Category</label>
@@ -484,7 +505,7 @@ function UpdateProduct() {
                             id="category"
                             name="category"
                             value={formData.category}
-                            onChange={handleSelectChange}
+                            onChange={handleChange}
                             className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                         >
@@ -503,7 +524,7 @@ function UpdateProduct() {
                             id="brand"
                             name="brand"
                             value={formData.brand}
-                            onChange={handleSelectChange}
+                            onChange={handleChange}
                             className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
                             required
                         >
@@ -517,7 +538,6 @@ function UpdateProduct() {
                     </div>
                 </div>
 
-                {/* Media Section */}
                 <div className="mb-4">
                     <label htmlFor="youtube_url" className="block mb-2">YouTube URL</label>
                     <input
@@ -547,47 +567,46 @@ function UpdateProduct() {
                     )}
                 </div>
 
-                {/* Tax Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label htmlFor="tax" className="block mb-2">Tax Type</label>
-                        <select
-                            id="tax"
-                            name="tax_value"
-                            value={formData.tax_value}
-                            onChange={handleSelectChange}
-                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                        >
-                            <option value="">Select Tax Type</option>
-                            {taxes.map(tax => (
-                                <option key={tax.id} value={tax.id}>
-                                    {tax.tax_name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+    <div>
+        <label htmlFor="tax" className="block mb-2">Tax Type</label>
+        <select
+            id="tax"
+            name="tax"
+            value={formData.tax}
+            onChange={handleChange}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+        >
+            <option value="">Select Tax Type</option>
+            {taxes.map(tax => (
+                <option key={tax.id} value={tax.id}>
+                    {tax.tax_name}
+                </option>
+            ))}
+        </select>
+    </div>
 
-                    <div>
-                        <label htmlFor="tax_value" className="block mb-2">Tax Value</label>
-                        <input
-                            type="number"
-                            id="tax"
-                            name="tax"
-                            value={formData.tax}
-                            onChange={handleChange}
-                            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                            min="0"
-                            step="0.01"
-                            onBlur={(e) => {
-                                if (e.target.value === '' || isNaN(Number(e.target.value))) {
-                                    setFormData(prev => ({...prev, tax: ''}));
-                                }
-                            }}
-                        />
-                    </div>
-                </div>
+    <div>
+        <label htmlFor="tax_value" className="block mb-2">Tax Value</label>
+        <input
+            type="number"
+            id="tax_value"
+            name="tax_value"
+            value={formData.tax_value}
+            onChange={handleChange}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none"
+            min="0"
+            step="0.01"
+            onBlur={(e) => {
+                // Ensure tax_value is a valid number or empty string
+                if (e.target.value === '' || isNaN(Number(e.target.value))) {
+                    setFormData(prev => ({...prev, tax_value: ''}));
+                }
+            }}
+        />
+    </div>
+</div>
 
-                {/* Discount Information */}
                 <div className="mb-4">
                     <label htmlFor="discount_price" className="block mb-2">Discount Price</label>
                     <input
@@ -602,7 +621,6 @@ function UpdateProduct() {
                     />
                 </div>
 
-                {/* More Info */}
                 <div className="mb-4">
                     <label htmlFor="more_info" className="block mb-2">More Info</label>
                     <textarea
@@ -615,7 +633,6 @@ function UpdateProduct() {
                     />
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3 mb-6">
                     <button
                         type="button"
@@ -647,7 +664,6 @@ function UpdateProduct() {
                     </button>
                 </div>
 
-                {/* Availability Toggle */}
                 <div className="flex items-center mb-6">
                     <input
                         type="checkbox"
@@ -660,7 +676,6 @@ function UpdateProduct() {
                     <label htmlFor="is_available" className="ml-2">Available for sale</label>
                 </div>
 
-                {/* Form Submission Buttons */}
                 <div className="flex gap-3">
                     <button type="submit" className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded">
                         Update Product
@@ -675,7 +690,7 @@ function UpdateProduct() {
                 </div>
             </form>
 
-            {/* Modals (keep the same as before) */}
+            {/* Photos Modal */}
             {showPhotosModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
@@ -771,7 +786,8 @@ function UpdateProduct() {
                 </div>
             )}
 
-    {showVideoModal && (
+            {/* Video Modal */}
+            {showVideoModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
                         <div className="flex justify-between items-center mb-4">
@@ -826,7 +842,8 @@ function UpdateProduct() {
                 </div>
             )}
 
-{showVariantModal && (
+            {/* Variant Modal */}
+            {showVariantModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
                         <div className="flex justify-between items-center mb-4">
@@ -933,7 +950,8 @@ function UpdateProduct() {
                 </div>
             )}
 
-{showOverviewModal && (
+            {/* Overview Modal */}
+            {showOverviewModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
                         <div className="flex justify-between items-center mb-4">
