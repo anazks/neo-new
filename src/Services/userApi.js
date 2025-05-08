@@ -7,35 +7,36 @@ const SECRET_KEY = "your_secret_key_123";
 
 export const RegisterUser = async (data) => {
   try {
-      console.log(data, "in js")
-      const response = await Axios.post('/authentication/user_registration/', data, {
-        headers: { "Content-Type": "application/json" }
-      });
-      console.log(response.data, "userAPI from register user")
-      return response;
+    console.log(data, "in js");
+    const response = await Axios.post(
+      "/authentication/user_registration/",
+      data,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response.data, "userAPI from register user");
+    return response;
   } catch (error) {
     console.error("Error registering user:", error);
     return error;
   }
-}
+};
 
 export const submitOTP = async (email) => {
   try {
     console.log(email, "in js");
-    
+
     const response = await Axios.post(
       "/authentication/generate_otp/",
       { identifier: email },
       { headers: { "Content-Type": "application/json" } }
     );
-    
+
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error(
-      "Error sending OTP:",
-      error
-    );
+    console.error("Error sending OTP:", error);
     return null;
   }
 };
@@ -43,16 +44,16 @@ export const submitOTP = async (email) => {
 export const verifyOtp = async (email, otp, setToken, setIsAdmin) => {
   try {
     console.log(email, otp, "in js");
-    
+
     const response = await Axios.post(
       "/authentication/verify_otp_and_login/",
       { identifier: email, otp: otp },
       { headers: { "Content-Type": "application/json" } }
     );
-    
+
     console.log(response.data, "response from verifyOtp");
 
-    console.log(response.data.is_admin,"admin");
+    console.log(response.data.is_admin, "admin");
     // Check if setIsAdmin is a function before calling it
     // if (response?.data?.is_admin === true) {
     //   setIsAdmin(true);
@@ -60,25 +61,25 @@ export const verifyOtp = async (email, otp, setToken, setIsAdmin) => {
     //   setIsAdmin(false)
     //   console.warn("setIsAdmin is not a function");
     // }
-    
+
     if (response?.data?.access) {
       let token = response.data.access;
-      let admin = response.data.is_admin
+      let admin = response.data.is_admin;
       setIsAdmin(response.data.is_admin);
       // Set the token using setToken from context
-      if (typeof setToken === 'function') {
+      if (typeof setToken === "function") {
         setToken(token);
       } else {
         console.warn("setToken is not a function");
       }
-      
+
       // Encrypt the token before storing it
       const encryptedToken = CryptoJS.AES.encrypt(token, SECRET_KEY).toString();
-      
+
       // Store the encrypted token in localStorage
       localStorage.setItem("token", encryptedToken);
-      
-      return ({data:true,admin});
+
+      return { data: true, admin };
     } else {
       console.error("No access token in response data");
       return false;
@@ -95,8 +96,11 @@ export const decryptToken = () => {
   try {
     const encryptedToken = localStorage.getItem("token");
     if (!encryptedToken) return null;
-    
-    const decryptedToken = CryptoJS.AES.decrypt(encryptedToken, SECRET_KEY).toString(CryptoJS.enc.Utf8);
+
+    const decryptedToken = CryptoJS.AES.decrypt(
+      encryptedToken,
+      SECRET_KEY
+    ).toString(CryptoJS.enc.Utf8);
     return decryptedToken;
   } catch (error) {
     console.error("Error decrypting token:", error);
@@ -104,184 +108,200 @@ export const decryptToken = () => {
   }
 };
 export const getUserInfo = async () => {
-    try {
-      // Get the encrypted token from localStorage
-      const encryptedToken = localStorage.getItem("token");
-      if (!encryptedToken) return null;
-      
-      // Decrypt the token
-      const decryptedToken = CryptoJS.AES.decrypt(
-        encryptedToken, 
-        SECRET_KEY
-      ).toString(CryptoJS.enc.Utf8);
-      
-      if (!decryptedToken) return null;
-      
-      // Decode the JWT token
-      const tokenData = jwtDecode(decryptedToken);
-      console.log("Token decoded:", tokenData);
-      let user = await Axios.get(`authentication/get_user_data/${tokenData.user_id}`)
-        console.log(user,"user in api ")
-      return user;
-    } catch (error) {
-      console.error("Error getting user info:", error);
-      return null;
-    }
-  };
+  try {
+    // Get the encrypted token from localStorage
+    const encryptedToken = localStorage.getItem("token");
+    if (!encryptedToken) return null;
 
-export const  addTocart = async (product_id)=>{
-  try {
-      let quantity= 1;
-      let cartAdded = await Axios.post(`orders/add_to_cart/`,{product_id,quantity})
-      console.log(cartAdded)
-      return true
-  } catch (error) {
-    return false
-  }
-}
+    // Decrypt the token
+    const decryptedToken = CryptoJS.AES.decrypt(
+      encryptedToken,
+      SECRET_KEY
+    ).toString(CryptoJS.enc.Utf8);
 
-export const getMyCart = async()=>{
-  try {
-    let myCart = await Axios.get(`orders/cart_detail/`)
-    console.log(myCart,"cart-")
-    return myCart
-  } catch (error) {
-    return false
-  }
-}
+    if (!decryptedToken) return null;
 
-export const RemoveFromCart =  async(item_id)=>{
-  try {
-        const removecart = await Axios.post('orders/remove_from_cart/',{item_id})
-        return removecart
+    // Decode the JWT token
+    const tokenData = jwtDecode(decryptedToken);
+    console.log("Token decoded:", tokenData);
+    let user = await Axios.get(
+      `authentication/get_user_data/${tokenData.user_id}`
+    );
+    console.log(user, "user in api ");
+    return user;
   } catch (error) {
-    console.log(error)
-    return error 
+    console.error("Error getting user info:", error);
+    return null;
   }
-}
-export const cartIncrement = async(product_id, cart_id) => {
-  try {
-    console.log( cart_id, product_id, "in user api")
+};
 
-    let increment = await Axios.post(`/orders/cart/${cart_id}/product/${product_id}/increase/`)
-    console.log(increment, "inc")
-    return increment
+export const addTocart = async (product_id) => {
+  try {
+    let quantity = 1;
+    let cartAdded = await Axios.post(`orders/add_to_cart/`, {
+      product_id,
+      quantity,
+    });
+    console.log(cartAdded);
+    return true;
   } catch (error) {
-    console.log(error)
-    return error
+    return false;
   }
-}
+};
 
-export const cartDecrement = async(product_id, cart_id) => {
+export const getMyCart = async () => {
   try {
-    console.log( cart_id, product_id, "in user api")
+    let myCart = await Axios.get(`orders/cart_detail/`);
+    console.log(myCart, "cart-");
+    return myCart;
+  } catch (error) {
+    return false;
+  }
+};
 
-    let increment = await Axios.post(`/orders/cart/${cart_id}/product/${product_id}/decrease/`)
-    console.log(increment, "inc")
-    return increment
+export const RemoveFromCart = async (item_id) => {
+  try {
+    const removecart = await Axios.post("orders/remove_from_cart/", {
+      item_id,
+    });
+    return removecart;
   } catch (error) {
-    console.log(error)
-    return error
+    console.log(error);
+    return error;
   }
-}
+};
+export const cartIncrement = async (product_id, cart_id) => {
+  try {
+    console.log(cart_id, product_id, "in user api");
 
-export const CreateOrder = async(id)=>{
-  try {
-    let delivery_address_id = id
-    let payments = await Axios.post(`/orders/order/cart/`,{delivery_address_id})
-    console.log(payments,"paymnets...callback")
-    return payments 
+    let increment = await Axios.post(
+      `/orders/cart/${cart_id}/product/${product_id}/increase/`
+    );
+    console.log(increment, "inc");
+    return increment;
   } catch (error) {
-    console.log(error)
-    return error
+    console.log(error);
+    return error;
   }
-}
-export const CreateSIngeleOrder = async(data)=>{
-  try {
-    let delivery_address_id = data.address_id
-    let product_id = data.product_id
-    let newData = {delivery_address_id,product_id}
-    console.log(data,"data in single order")
-    let payments = await Axios.post(`/orders/order/single-product/`,newData)
-    console.log(payments,"paymnets...callback")
-    return payments 
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-export const AddDelievryAddress = async(data)=>{
-  try {
-    console.log(data,"in api--------")
-    let address = await Axios.post('/authentication/delivery-addresses/',data)
-    console.log(address)
-    return address
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
+};
 
-export const getMyDeliveryAddress = async()=>{
+export const cartDecrement = async (product_id, cart_id) => {
   try {
-    let address = await Axios.get('/authentication/delivery-addresses')
-    console.log(address,"get my dev address")
-    return address
-    
-  } catch (error) {
-    console.log(error)
-    return error
-  }
-}
-export const getMyPrimaryAddress = async()=>{
-  try {
-    let primaryAddress = await Axios.get('/authentication/delivery-addresses/primary/')
-    return primaryAddress
-  } catch (error) {
-    return error 
-  }
-}
+    console.log(cart_id, product_id, "in user api");
 
-export const getMyOrder = async()=>{
-  try {
-    let orders = await Axios.get('orders/user/orders/')
-    console.log(orders,"my orders")
-    return orders
+    let increment = await Axios.post(
+      `/orders/cart/${cart_id}/product/${product_id}/decrease/`
+    );
+    console.log(increment, "inc");
+    return increment;
   } catch (error) {
-    console.log(error)
-    return error 
+    console.log(error);
+    return error;
   }
-}
+};
 
-export const addRatings = async(data)=>{
+export const CreateOrder = async (id) => {
   try {
-    console.log(data,"in api-------")
-    let rating = await Axios.post('/interactions/reviews/add/',data)
-    console.log(rating,"rating============================")
-    return rating
+    let delivery_address_id = id;
+    let payments = await Axios.post(`/orders/order/cart/`, {
+      delivery_address_id,
+    });
+    console.log(payments, "paymnets...callback");
+    return payments;
   } catch (error) {
-    console.log(error)
-    return error 
+    console.log(error);
+    return error;
   }
-}
+};
+export const CreateSIngeleOrder = async (data) => {
+  try {
+    let delivery_address_id = data.address_id;
+    let product_id = data.product_id;
+    let newData = { delivery_address_id, product_id };
+    console.log(data, "data in single order");
+    let payments = await Axios.post(`/orders/order/single-product/`, newData);
+    console.log(payments, "paymnets...callback");
+    return payments;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+export const AddDelievryAddress = async (data) => {
+  try {
+    console.log(data, "in api--------");
+    let address = await Axios.post("/authentication/delivery-addresses/", data);
+    console.log(address);
+    return address;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
-export const getRatings = async(product_id)=>{
+export const getMyDeliveryAddress = async () => {
   try {
-    let ratings = await Axios.get(`/interactions/product/${product_id}/review-view`)
-    return ratings
+    let address = await Axios.get("/authentication/delivery-addresses");
+    console.log(address, "get my dev address");
+    return address;
   } catch (error) {
-    console.log(error)
-    return error 
+    console.log(error);
+    return error;
   }
-}
+};
+export const getMyPrimaryAddress = async () => {
+  try {
+    let primaryAddress = await Axios.get(
+      "/authentication/delivery-addresses/primary/"
+    );
+    return primaryAddress;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getMyOrder = async () => {
+  try {
+    let orders = await Axios.get("orders/user/orders/");
+    console.log(orders, "my orders");
+    return orders;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const addRatings = async (data) => {
+  try {
+    console.log(data, "in api-------");
+    let rating = await Axios.post("/interactions/reviews/add/", data);
+    console.log(rating, "rating============================");
+    return rating;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getRatings = async (product_id) => {
+  try {
+    let ratings = await Axios.get(
+      `/interactions/product/${product_id}/review-view`
+    );
+    return ratings;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 export const AddTicket = async (data) => {
   try {
     console.log("FormData contents:");
     for (let [key, value] of data.entries()) {
-      console.log(`${key}:`, value,"----");
+      console.log(`${key}:`, value, "----");
     }
 
-    let response = await Axios.post('/interactions/my-tickets/', data, {
+    let response = await Axios.post("/interactions/my-tickets/", data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -294,39 +314,49 @@ export const AddTicket = async (data) => {
   }
 };
 
+export const getmyTickets = async (data) => {
+  try {
+    let response = await Axios.get(`/interactions/my-tickets/`, data, {});
+    console.log(response, "yhyhyh");
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const getmyTickets = async (data)=>{
+export const AdminGetTickets = async () => {
   try {
-    let response = await Axios.get(`/interactions/my-tickets/`,data,{
-    })
-    console.log(response,"yhyhyh")
-    return response
+    let response = await Axios.get("/interactions/admin/tickets/");
+    console.log(response, "in user api");
+    return response;
   } catch (error) {
-      console.log(error)
+    return error;
   }
-}
+};
+export const AdminUpdateTicketStatus = async (data) => {
+  try {
+    console.log(data, "..........");
+    let { selectedTicket } = data;
+    let newData = {
+      conclusion: data.conclusion,
+      is_concluded: true,
+    };
+    let response = await Axios.put(
+      `/interactions/admin/tickets/${selectedTicket.id}/`,
+      newData
+    );
+    console.log(response, "response from ticketupdate");
+    return response;
+  } catch (error) {}
+};
 
-export const AdminGetTickets = async()=>{
+export const googleAuth = async (token) => {
   try {
-    let response = await Axios.get('/interactions/admin/tickets/')
-    console.log(response,"in user api")
-    return response
+    const response = await Axios.post("/authentication/auth/google/", {token:token});
+    console.log(response, "::");
+    return response;
   } catch (error) {
-      return error
+
+    console.log(error)
   }
-}
-export const AdminUpdateTicketStatus = async(data)=>{
-  try {
-      console.log(data,"..........")
-      let {selectedTicket} = data;
-      let newData = {
-        conclusion:data.conclusion,
-        is_concluded:true
-      }
-      let response = await Axios.put(`/interactions/admin/tickets/${selectedTicket.id}/`,newData)
-      console.log(response,"response from ticketupdate")
-      return response
-  } catch (error) {
-    
-  }
-}
+};

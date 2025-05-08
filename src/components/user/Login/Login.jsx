@@ -11,6 +11,7 @@ import OtpInput from '../OtpSubmit/otp';
 import { submitOTP } from '../../../Services/userApi';
 import Alert from '../Alert/Alert';
 import Pro from '../../../Images/pro.jpg';
+import GoogleLoginComponent from '../../user/Google/GoogleLoginComponent'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -738,6 +739,25 @@ const Login = () => {
                 </div>
                 
                 <OtpInput />
+
+                <div className="my-6">
+                  <p className="text-center text-gray-500 text-sm uppercase tracking-wider mb-4">
+                    OR LOGIN WITH
+                  </p>
+                  <div className="flex justify-center space-x-6">
+                    {/* {[Google,].map((icon, index) => (
+                      <div 
+                        key={index}
+                        className="cursor-pointer transform hover:scale-110 transition-transform"
+                        onClick={() => LoginWith(index)}
+                      >
+                        <img src={icon} alt={`Social ${index + 1}`} className="h-10 w-10" />
+                      </div>
+                    ))} */}
+
+                    < GoogleLoginComponent />
+                  </div>
+                </div>
                 
                 {/* <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2">
@@ -747,29 +767,9 @@ const Login = () => {
                   <a href="#" className="text-blue-600 text-sm hover:text-blue-700 transition-colors">Forgot Password?</a>
                 </div> */}
                 
-                <div className="my-6">
-                  <p className="text-center text-gray-500 text-sm uppercase tracking-wider mb-4">
-                    OR LOGIN WITH
-                  </p>
-                  <div className="flex justify-center space-x-6">
-                    {[Google, Apple, Linkedin].map((icon, index) => (
-                      <div 
-                        key={index}
-                        className="cursor-pointer transform hover:scale-110 transition-transform"
-                        onClick={() => LoginWith(index)}
-                      >
-                        <img src={icon} alt={`Social ${index + 1}`} className="h-10 w-10" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
                 
-                <button 
-                  className="w-full bg-black text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors"
-                >
-                  <span>Login</span>
-                  <IoArrowForwardCircleSharp className="text-xl" />
-                </button>
+                
+                
               </div>
             </div>
           ) : (
