@@ -54,14 +54,6 @@ export const verifyOtp = async (email, otp, setToken, setIsAdmin) => {
     console.log(response.data, "response from verifyOtp");
 
     console.log(response.data.is_admin, "admin");
-    // Check if setIsAdmin is a function before calling it
-    // if (response?.data?.is_admin === true) {
-    //   setIsAdmin(true);
-    // } else {
-    //   setIsAdmin(false)
-    //   console.warn("setIsAdmin is not a function");
-    // }
-
     if (response?.data?.access) {
       let token = response.data.access;
       let admin = response.data.is_admin;
@@ -360,3 +352,11 @@ export const googleAuth = async (token) => {
     console.log(error)
   }
 };
+export const logout = async ()=>{
+  try {
+    let response = await Axios('')
+    return response
+  } catch (error) {
+    return error
+  }
+}

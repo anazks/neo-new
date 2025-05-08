@@ -1,17 +1,17 @@
 // OtpInput.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { verifyOtp } from "../../../Services/userApi";
 import { useAuth } from "../../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Varifying from '../Loader/Verifying';
 import { IoArrowForwardCircleSharp, IoArrowBackCircleSharp } from 'react-icons/io5';
-// No need for otp.css as we're using Tailwind now
 
 const OtpInput = ({ email: propEmail }) => {
   const { setToken, setIsAdmin, isAdmin } = useAuth();
-  const [otp, setOtp] = useState("");
+  const [otpValues, setOtpValues] = useState(Array(6).fill(''));
+  const inputRefs = useRef([]);
   const [loading, setLoading] = useState(false);
-  const [verificstion, setVerifiction] = useState(undefined); // Use undefined as initial state
+  const [verificstion, setVerifiction] = useState(undefined);
   const navigate = useNavigate();
   
   // Use email from props if available, otherwise from localStorage
@@ -22,24 +22,94 @@ const OtpInput = ({ email: propEmail }) => {
       // Redirect if no email is available
       navigate('/login');
     }
+    
+    // Initialize the refs array
+    inputRefs.current = inputRefs.current.slice(0, 6);
+    
+    // Focus on the first input initially
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
   }, [email, navigate]);
   
-  const handleChangeOTP = (e) => {
-    // Limit to numbers only and max length
+  const handleChange = (index, e) => {
     const value = e.target.value;
-    if (/^\d*$/.test(value) && value.length <= 6) {
-      setOtp(value);
+    
+    // Allow only one digit per input
+    if (/^\d*$/.test(value)) {
+      const newOtpValues = [...otpValues];
+      newOtpValues[index] = value.slice(-1); // Only take the last character entered
+      setOtpValues(newOtpValues);
+      
+      // Move to next input if a digit was entered
+      if (value && index < 5) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+  
+  const handleKeyDown = (index, e) => {
+    // Handle backspace
+    if (e.key === 'Backspace') {
+      if (!otpValues[index] && index > 0) {
+        // If current field is empty and backspace is pressed, go to previous field
+        inputRefs.current[index - 1].focus();
+      }
+    }
+    // Handle left arrow key
+    else if (e.key === 'ArrowLeft' && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+    // Handle right arrow key
+    else if (e.key === 'ArrowRight' && index < 5) {
+      inputRefs.current[index + 1].focus();
+    }
+    // Handle Enter key
+    else if (e.key === 'Enter') {
+      handleSubmitOTP();
+    }
+  };
+  
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text');
+    
+    // Check if pasted content is digits only
+    if (/^\d+$/.test(pastedData)) {
+      const digits = pastedData.slice(0, 6).split('');
+      const newOtpValues = [...otpValues];
+      
+      // Fill in the values
+      digits.forEach((digit, index) => {
+        if (index < 6) {
+          newOtpValues[index] = digit;
+        }
+      });
+      
+      setOtpValues(newOtpValues);
+      
+      // Focus on the next empty field or the last field
+      const nextEmptyIndex = newOtpValues.findIndex(val => !val);
+      if (nextEmptyIndex !== -1 && nextEmptyIndex < 6) {
+        inputRefs.current[nextEmptyIndex].focus();
+      } else if (digits.length < 6) {
+        inputRefs.current[digits.length].focus();
+      } else {
+        inputRefs.current[5].focus();
+      }
     }
   };
   
   const handleSubmitOTP = async () => {
-    if (!otp || otp.length < 4) {
-      alert("Please enter a valid OTP");
+    const otp = otpValues.join('');
+    
+    if (!otp || otp.length < 6) {
+      alert("Please enter a valid 6-digit OTP");
       return;
     }
     
     setLoading(true);
-    setVerifiction(undefined); // Reset to initial verification state
+    setVerifiction(undefined);
     
     try {
       // Make API request to verify OTP
@@ -76,13 +146,6 @@ const OtpInput = ({ email: propEmail }) => {
     }
   };
   
-  // Handle Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmitOTP();
-    }
-  };
-  
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg">
       {loading && (
@@ -99,29 +162,36 @@ const OtpInput = ({ email: propEmail }) => {
         </p>
       </div>
       
-      <input
-        type="text"
-        inputMode="numeric"
-        value={otp}
-        onChange={handleChangeOTP}
-        onKeyPress={handleKeyPress}
-        placeholder="Enter OTP"
-        className="w-full px-4 py-3 text-center text-lg font-medium border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 mb-4"
-        maxLength={6}
-        disabled={loading}
-        required
-      />
+      <div className="flex justify-center gap-2 w-full mb-6">
+        {otpValues.map((digit, index) => (
+          <input
+            key={index}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            value={digit}
+            onChange={(e) => handleChange(index, e)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
+            onPaste={index === 0 ? handlePaste : undefined}
+            ref={(el) => (inputRefs.current[index] = el)}
+            className="w-12 h-12 text-center text-xl font-bold border rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200"
+            style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}
+            disabled={loading}
+            required
+          />
+        ))}
+      </div>
+      
       <button 
-                  className={`"w-full bg-black text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colorsloading || !otp ? 'opacity-60 cursor-not-allowed' : ''
+        className={`w-full bg-black text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colors ${
+          loading || otpValues.join('').length < 6 ? 'opacity-60 cursor-not-allowed' : ''
         }`}
-                  onClick={handleSubmitOTP}
-                  disabled={loading || !otp}
-                >
-                  
-                  <IoArrowForwardCircleSharp className="text-xl" />
-                  {loading ? 'Verifying...' : 'Submit OTP'}
-                </button>
-    
+        onClick={handleSubmitOTP}
+        disabled={loading || otpValues.join('').length < 6}
+      >
+        <span className="mr-2">{loading ? 'Verifying...' : 'Submit OTP'}</span>
+        <IoArrowForwardCircleSharp className="text-xl" />
+      </button>
       
       <div className="mt-6 text-center">
         <p className="text-gray-600 text-sm">

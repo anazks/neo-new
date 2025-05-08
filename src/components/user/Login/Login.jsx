@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoArrowForwardCircleSharp, IoArrowBackCircleSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import {RegisterUser} from '../../../Services/userApi'
-// Import your images
+import {RegisterUser} from '../../../Services/userApi';
 import Apple from '../../../Images/LoginWith/apple.png';
 import Linkedin from '../../../Images/LoginWith/Linkedin.png';
 import Google from '../../../Images/LoginWith/Google.png';
@@ -11,7 +10,8 @@ import OtpInput from '../OtpSubmit/otp';
 import { submitOTP } from '../../../Services/userApi';
 import Alert from '../Alert/Alert';
 import Pro from '../../../Images/pro.jpg';
-import GoogleLoginComponent from '../../user/Google/GoogleLoginComponent'
+import GoogleLoginComponent from '../../user/Google/GoogleLoginComponent';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,6 +21,8 @@ const Login = () => {
   const [sentingotp, setsentingtOtp] = useState(false);
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showEmailInput, setShowEmailInput] = useState(true);
+
   const LoginWith = async (data) => {
     try {
       setGoogleAuth(true);
@@ -58,7 +60,10 @@ const Login = () => {
     if (email === "") {
       setsentingtOtp(false);
     } else {
-      setsentingtOtp(true);
+      setShowEmailInput(false);
+      setTimeout(() => {
+        setsentingtOtp(true);
+      }, 300);
     }
     localStorage.setItem("email", email);
     let OTPResponse = await submitOTP(email);
@@ -125,7 +130,6 @@ const Login = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    // Collect all registration data
     const registrationData = {
       email: formData.email,
       password: formData.password,
@@ -142,7 +146,6 @@ const Login = () => {
     };
     
     console.log("Registration Data:", registrationData);
-    // Call the API to register the user
     let response = await RegisterUser(registrationData);
     console.log(response, "response from register user");
       if(response.status === 400) {
@@ -202,7 +205,7 @@ const Login = () => {
     const currentStep = getCurrentStep();
     
     return (
-      <div className="w-full max-w-md mx-auto">
+      <div className="w-full max-w-md mx-auto" style={{minHeight: '600px'}}>
         {/* Step indicator */}
         <div className="flex flex-col mb-8">
           <div className="flex justify-between mb-2">
@@ -633,15 +636,13 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
       <div className="w-[95%] h-[98%] mx-auto shadow-xl rounded-xl overflow-hidden bg-white flex flex-col md:flex-row">
-        {/* Left Section - Now with Pro background image */}
+        {/* Left Section */}
         <div className="md:w-1/2 relative text-white p-8 flex flex-col justify-between">
-          {/* Background image with overlay */}
           <div className="absolute inset-0 z-0">
             <div className="w-full h-full bg-black opacity-60 absolute z-10"></div>
             <img src={Pro} alt="Background" className="w-full h-full object-cover" />
           </div>
           
-          {/* Content positioned over the background */}
           <div className="mb-8 relative z-20">
             <img src={logo} alt="Logo" className="h-12" />
           </div>
@@ -653,7 +654,7 @@ const Login = () => {
         </div>
 
         {/* Right Section */}
-        <div className="md:w-1/2 p-8 flex flex-col justify-center">
+        <div className="md:w-1/2 p-8 flex flex-col justify-center" style={{minHeight: '600px'}}>
           <div className="flex justify-center space-x-4 mb-8">
             <button
               className={`px-6 py-2 rounded-full transition-colors ${isLogin ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
@@ -717,59 +718,87 @@ const Login = () => {
             )
           }
           {isLogin ? (
-            <div className="max-w-md mx-auto w-full">
+            <div className="max-w-md w-full" style={{minHeight: '500px'}}>
               <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
               
               <div className="space-y-4">
-                <div className="relative">
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChangeOTP}
-                    placeholder="Email" 
-                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button 
-                    onClick={handleSendOTP} 
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
-                  >
-                    Send OTP
-                  </button>
-                </div>
-                
-                <OtpInput />
+                <AnimatePresence mode="wait">
+                  {showEmailInput && (
+                    <motion.div
+                      key="email-input"
+                      initial={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative"
+                    >
+                      <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChangeOTP}
+                        placeholder="Email" 
+                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                <div className="my-6">
-                  <p className="text-center text-gray-500 text-sm uppercase tracking-wider mb-4">
-                    OR LOGIN WITH
-                  </p>
-                  <div className="flex justify-center space-x-6">
-                    {/* {[Google,].map((icon, index) => (
-                      <div 
-                        key={index}
-                        className="cursor-pointer transform hover:scale-110 transition-transform"
-                        onClick={() => LoginWith(index)}
+                <AnimatePresence mode="wait">
+                  {showEmailInput && (
+                    <motion.div
+                      key="otp-button"
+                      initial={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 bg-white rounded-xl"
+                    >
+                      <button 
+                        onClick={handleSendOTP} 
+                        style={{
+                          backgroundColor:"black",
+                          height:"40px",
+                          width:"200px"
+                        }}
+                        className="top-1/2 transform -translate-y-1/2 bg- text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
                       >
-                        <img src={icon} alt={`Social ${index + 1}`} className="h-10 w-10" />
-                      </div>
-                    ))} */}
+                        Generate OTP
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                    < GoogleLoginComponent />
-                  </div>
-                </div>
-                
-                {/* <div className="flex justify-between items-center">
-                  <label className="flex items-center space-x-2">
-                    <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
-                    <span className="text-gray-700">Remember me</span>
-                  </label>
-                  <a href="#" className="text-blue-600 text-sm hover:text-blue-700 transition-colors">Forgot Password?</a>
-                </div> */}
-                
-                
-                
-                
+                <AnimatePresence mode="wait">
+                  {sentingotp && (
+                    <motion.div
+                      key="otp-input"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <OtpInput />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence mode="wait">
+                  {!sentingotp && (
+                    <motion.div
+                      key="social-login"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="my-6"
+                    >
+                      <p className="text-center text-gray-500 text-sm uppercase tracking-wider mb-4">
+                        OR
+                      </p>
+                      <div className="flex justify-center space-x-6">
+                        <GoogleLoginComponent />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           ) : (

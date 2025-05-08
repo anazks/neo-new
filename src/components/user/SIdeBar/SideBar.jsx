@@ -11,17 +11,22 @@ import { GamepadIcon, ListOrdered, Settings } from 'lucide-react';
 import { FaProductHunt } from 'react-icons/fa';
 import { SlCallOut } from 'react-icons/sl';
 import { IoBulb } from 'react-icons/io5';
+import { logout } from '../../../Services/userApi';
 
 function SideBar({ isOpen, onClose }) {
   const { token, setToken, user } = useAuth();
   const navigate = useNavigate();
-  console.log(user, "user from SideBar");
   
-  const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem("token");
-    navigate("/");
-    onClose();
+  const handleLogout = async () => {
+    try {
+      setToken(null);
+      localStorage.removeItem("token");
+      const response = await logout();
+      navigate("/");
+      onClose();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   useEffect(() => {
@@ -31,13 +36,16 @@ function SideBar({ isOpen, onClose }) {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
-const handleProfile=()=>{
-  try {
-      navigate('/profile')
-  } catch (error) {
-    
-  }
-}
+
+  const handleProfile = () => {
+    try {
+      navigate('/profile');
+      onClose();
+    } catch (error) {
+      console.error("Profile navigation error:", error);
+    }
+  };
+
   return (
     <>
       {/* Overlay with blur */}
@@ -77,15 +85,21 @@ const handleProfile=()=>{
                   </button>
                   <button 
                     className="flex items-center gap-1 py-2 px-4 bg-black text-white font-medium rounded-full border border-black hover:bg-black/80 transition-all duration-300 text-sm"
-                    onClick={() => { onClose(); navigate("/login"); }}
+                    onClick={() => { onClose(); navigate("/register"); }}
                   >
                     <FiUserPlus size={14} /> Register
                   </button>
                 </>
               ) : (
-                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold" onClick={handleProfile}>
-                  {user?.first_name?.charAt(0) || 'U'}
-                </div>
+                user && user.profile_picture_url ? (
+                  <div style={{cursor:"pointer"}} className="w-8 h-8 rounded-full bg-blue-500 overflow-hidden flex items-center justify-center cursor-pointer" onClick={handleProfile}>
+                    <img src={user.profile_picture_url} alt="Profile" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold cursor-pointer" onClick={handleProfile}>
+                    {user?.first_name?.charAt(0) || 'U'}
+                  </div>
+                )
               )}
               
               <button 
@@ -100,83 +114,70 @@ const handleProfile=()=>{
           {/* Rest of the content */}
           <div className="flex-1 overflow-y-auto">
             {/* Menu */}
-            <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+            <ul className="flex flex-col gap-1 p-0 m-0">
+              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.1s' : 'none' }}>
                 <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                   <FiHome className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                   <span>Store</span>
                 </Link>
               </li>
-            <ul className="flex flex-col gap-1 p-0 m-0">
-              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.1s' : 'none' }}>
+              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.15s' : 'none' }}>
                 <Link to="/products" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                   <FiShoppingBag className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                   <span>Products</span>
                 </Link>
               </li>
-              {
-                token && (
-                  <>
-                     <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.15s' : 'none' }}>
-                      <Link to="/myorder" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
-                        <ListOrdered className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
-                        <span>My Order</span>
-                      </Link>
-                    </li>
-                  </>
-                )}
-             
-             
-              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
-                <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+              {token && (
+                <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                  <Link to="/myorder" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                    <ListOrdered className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                    <span>My Order</span>
+                  </Link>
+                </li>
+              )}
+              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.25s' : 'none' }}>
+                <Link to="/solutions" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                   <IoBulb className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                   <span>Solutions</span>
                 </Link>
               </li>
-              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
-                <Link to="/store" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+              <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.3s' : 'none' }}>
+                <Link to="/rtx-powered-pc" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                   <GamepadIcon className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                   <span>RTX Powered PC</span>
                 </Link>
               </li>
               {token && (
                 <>
-                  <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
-                  <Link to="/tickets" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
-                    <BsFillTicketFill className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
-                    <span>Tickets</span>
-                  </Link>
-                </li>
-                <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
-                  <Link  onClick={handleLogout} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
-                    <FiLogOut className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
-                    <span>Logout</span>
-                  </Link>
-                </li>
-                </>
-                
-              )}
-              
-              {/* {token && (
-                <>
-                  <li className="border-t border-white/20 my-1 opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.25s' : 'none' }}></li>
-                  <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.3s' : 'none' }}>
+                  <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.35s' : 'none' }}>
+                    <Link to="/tickets" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
+                      <BsFillTicketFill className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
+                      <span>Tickets</span>
+                    </Link>
+                  </li>
+                  <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.4s' : 'none' }}>
                     <button 
-                      className="inline-flex items-center py-2 px-4 rounded-lg text-red-300 font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1 text-left"
-                      onClick={handleLogout}
+                      onClick={handleLogout} 
+                      className="flex w-full items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1"
                     >
-                      <FiLogOut className="mr-2 text-base" /> 
+                      <FiLogOut className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                       <span>Logout</span>
                     </button>
                   </li>
                 </>
-              )} */}
+              )}
             </ul>
 
-            {/* Locations */}
-            <br />
-            <h3 className="flex items-center gap-2 text-base mb-4 text-white">
-                <Settings className="text-blue-300" /><h1>NeoTokyo.Config</h1> <span style={{fontSize:'10px'}}>Coming soon</span>
+            {/* Configuration section */}
+            <div className="mt-6 pt-4 border-t border-white/20">
+              <h3 className="flex items-center gap-2 text-base mb-4 text-white">
+                <Settings className="text-blue-300" />
+                <span>NeoTokyo.Config</span>
+                <span className="text-xs">Coming soon</span>
               </h3>
+            </div>
+
+            {/* Locations */}
             <div className="mt-auto pt-6 border-t border-white/20 animate-[fadeInUp_0.5s_ease_forwards] opacity-0" style={{ animationDelay: '0.5s' }}>
               <h3 className="flex items-center gap-2 text-base mb-4 text-white">
                 <FiMapPin className="text-blue-300" /> Our Locations

@@ -4,9 +4,10 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { googleAuth } from "../../../Services/userApi";
 import { useAuth } from "../../../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 const GoogleLoginComponent = ({ onLoginSuccess }) => {
   const { token, setToken, user } = useAuth();
-
+  const navigate = useNavigate();
   // When Google returns a successful login
   const handleGoogleLogin = async (credentialResponse) => {
     try {
@@ -15,8 +16,9 @@ const GoogleLoginComponent = ({ onLoginSuccess }) => {
       const response = await googleAuth(token);
       // Handle the response from your backend
       const data = response.data;
-      console.log(data);
       setToken(data.access);
+      navigate('/')
+      // if(data)
     } catch (error) {
       console.log(error);
     }
@@ -44,10 +46,11 @@ const GoogleLoginComponent = ({ onLoginSuccess }) => {
           onSuccess={handleGoogleLogin}
           onError={() => console.log("Google Login Failed")}
           useOneTap
-          theme="filled_blue"
-          shape="circle"
-          type="icon"
-          size="large"
+          shape="rectangular"
+            text="continue_with"
+            theme="filled_blue"
+            size="large"
+            width="100%"
         />
       </div>
     </GoogleOAuthProvider>
