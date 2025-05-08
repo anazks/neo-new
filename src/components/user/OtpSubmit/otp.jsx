@@ -4,6 +4,7 @@ import { verifyOtp } from "../../../Services/userApi";
 import { useAuth } from "../../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Varifying from '../Loader/Verifying';
+import { IoArrowForwardCircleSharp, IoArrowBackCircleSharp } from 'react-icons/io5';
 // No need for otp.css as we're using Tailwind now
 
 const OtpInput = ({ email: propEmail }) => {
@@ -110,16 +111,17 @@ const OtpInput = ({ email: propEmail }) => {
         disabled={loading}
         required
       />
-      
       <button 
-        onClick={handleSubmitOTP}
-        disabled={loading || !otp}
-        className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 ${
-          loading || !otp ? 'opacity-60 cursor-not-allowed' : ''
+                  className={`"w-full bg-black text-white py-3 px-6 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-800 transition-colorsloading || !otp ? 'opacity-60 cursor-not-allowed' : ''
         }`}
-      >
-        {loading ? 'Verifying...' : 'Submit OTP'}
-      </button>
+                  onClick={handleSubmitOTP}
+                  disabled={loading || !otp}
+                >
+                  
+                  <IoArrowForwardCircleSharp className="text-xl" />
+                  {loading ? 'Verifying...' : 'Submit OTP'}
+                </button>
+    
       
       <div className="mt-6 text-center">
         <p className="text-gray-600 text-sm">
