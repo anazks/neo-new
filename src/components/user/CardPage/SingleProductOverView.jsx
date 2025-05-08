@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ShoppingBag, MapPin, CreditCard, Check, ChevronRight, PlusCircle, X } from 'lucide-react';
-import { AddDelievryAddress,CreateSIngeleOrder, getMyDeliveryAddress, getMyPrimaryAddress } from '../../../Services/userApi';
+import { AddDelievryAddress, CreateSIngeleOrder, getMyDeliveryAddress, getMyPrimaryAddress } from '../../../Services/userApi';
 import BaseURL from '../../../Static/Static';
 import RenderRazorpay from '../RazorPay/RenderRazorpay';
 
@@ -12,6 +12,14 @@ function Overview({ product }) {
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [displayRazorpay, setDisplayRazorpay] = useState(false);
     const [quantity, setQuantity] = useState(1);
+    
+    // Form validation errors
+    const [formErrors, setFormErrors] = useState({
+        phone_number: '',
+        district: '',
+        state: '',
+        country: ''
+    });
     
     const [newAddress, setNewAddress] = useState({
         delivery_person_name: "",
@@ -57,16 +65,76 @@ function Overview({ product }) {
         setSelectedAddressId(id);
     };
 
+    // Validation functions
+    const validatePhoneNumber = (value) => {
+        const pattern = /^\d{10}$/;
+        if (!pattern.test(value)) {
+            return "Phone number must be exactly 10 digits";
+        }
+        return "";
+    };
+
+    const validateTextOnly = (value, fieldName) => {
+        const pattern = /^[a-zA-Z\s]+$/;
+        if (!pattern.test(value)) {
+            return `${fieldName} must contain only letters (no numbers or special characters)`;
+        }
+        return "";
+    };
+
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
+        const newValue = type === 'checkbox' ? checked : value;
+        
+        // Field-specific validations
+        let errors = { ...formErrors };
+        
+        if (name === 'phone_number' && value) {
+            errors.phone_number = validatePhoneNumber(value);
+        }
+        
+        if (name === 'district' && value) {
+            errors.district = validateTextOnly(value, 'District');
+        }
+        
+        if (name === 'state' && value) {
+            errors.state = validateTextOnly(value, 'State');
+        }
+        
+        if (name === 'country' && value) {
+            errors.country = validateTextOnly(value, 'Country');
+        }
+        
+        setFormErrors(errors);
+        
         setNewAddress({
             ...newAddress,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: newValue
         });
+    };
+
+    const isFormValid = () => {
+        // Check if there are any validation errors
+        return !Object.values(formErrors).some(error => error !== "");
     };
 
     const handleAddNewAddress = async (e) => {
         e.preventDefault();
+        
+        // Validate all fields before submission
+        const errors = {
+            phone_number: validatePhoneNumber(newAddress.phone_number),
+            district: validateTextOnly(newAddress.district, 'District'),
+            state: validateTextOnly(newAddress.state, 'State'),
+            country: validateTextOnly(newAddress.country, 'Country')
+        };
+        
+        setFormErrors(errors);
+        
+        // If there are validation errors, don't submit
+        if (Object.values(errors).some(error => error !== "")) {
+            return;
+        }
         
         try {
             setLoading(true);
@@ -95,6 +163,13 @@ function Overview({ product }) {
                 zip_code: "",
                 address: "",
                 is_primary: false
+            });
+            
+            setFormErrors({
+                phone_number: '',
+                district: '',
+                state: '',
+                country: ''
             });
             
             setShowAddressModal(false);
@@ -407,20 +482,23 @@ function Overview({ product }) {
                                 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Phone Number*
+                                        Phone Number* (10 digits)
                                     </label>
                                     <input
                                         type="tel"
                                         name="phone_number"
                                         value={newAddress.phone_number}
                                         onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Phone number"
+                                        className={`w-full border ${formErrors.phone_number ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                                        placeholder="10 digit phone number"
                                         required
-                                        minLength={1}
-                                        maxLength={20}
+                                        maxLength={10}
                                         disabled={loading}
+                                        pattern="[0-9]{10}"
                                     />
+                                    {formErrors.phone_number && (
+                                        <p className="text-red-500 text-xs mt-1">{formErrors.phone_number}</p>
+                                    )}
                                 </div>
                                 
                                 <div>
@@ -443,38 +521,44 @@ function Overview({ product }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            District*
+                                            District* (letters only)
                                         </label>
                                         <input
                                             type="text"
                                             name="district"
                                             value={newAddress.district}
                                             onChange={handleInputChange}
-                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className={`w-full border ${formErrors.district ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                                             placeholder="District"
                                             required
                                             minLength={1}
                                             maxLength={20}
                                             disabled={loading}
                                         />
+                                        {formErrors.district && (
+                                            <p className="text-red-500 text-xs mt-1">{formErrors.district}</p>
+                                        )}
                                     </div>
                                     
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            State*
+                                            State* (letters only)
                                         </label>
                                         <input
                                             type="text"
                                             name="state"
                                             value={newAddress.state}
                                             onChange={handleInputChange}
-                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className={`w-full border ${formErrors.state ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                                             placeholder="State"
                                             required
                                             minLength={1}
                                             maxLength={20}
                                             disabled={loading}
                                         />
+                                        {formErrors.state && (
+                                            <p className="text-red-500 text-xs mt-1">{formErrors.state}</p>
+                                        )}
                                     </div>
                                 </div>
                                 
@@ -499,20 +583,23 @@ function Overview({ product }) {
                                     
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Country*
+                                            Country* (letters only)
                                         </label>
                                         <input
                                             type="text"
                                             name="country"
                                             value={newAddress.country}
                                             onChange={handleInputChange}
-                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            className={`w-full border ${formErrors.country ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                                             placeholder="Country"
                                             required
                                             minLength={1}
                                             maxLength={20}
                                             disabled={loading}
                                         />
+                                        {formErrors.country && (
+                                            <p className="text-red-500 text-xs mt-1">{formErrors.country}</p>
+                                        )}
                                     </div>
                                 </div>
                                 
@@ -542,8 +629,8 @@ function Overview({ product }) {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                        disabled={loading}
+                                        className={`px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${!isFormValid() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        disabled={loading || !isFormValid()}
                                     >
                                         {loading ? 'Saving...' : 'Save Address'}
                                     </button>

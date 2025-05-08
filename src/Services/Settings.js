@@ -21,6 +21,16 @@ export const getBrand = async ()=>{
         return error
     }   
 }
+export const getBrandForuser = async ()=>{
+    try {
+        let brands = await Axios.get('/inventory/view_brand_allow_any/')
+        console.log(brands,"brand")
+        return brands
+    } catch (error) {
+        console.log(error)
+        return error
+    }   
+}
 export const deleteBrand =  async(id)=>{
     try {
         console.log(id,"in api")
@@ -45,6 +55,15 @@ export const addCategory = async (data)=>{
 export const getCategory =  async()=>{
     try {
         let category = await Axios.get('/inventory/categories/')
+        return(category)
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+export const getCategoryForUser =  async()=>{
+    try {
+        let category = await Axios.get('/inventory/view_category_allow_any/')
         return(category)
     } catch (error) {
         console.log(error)

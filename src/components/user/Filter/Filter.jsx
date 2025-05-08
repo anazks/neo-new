@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getCategory, getBrand } from '../../../Services/Settings';
+import { getCategoryForUser, getBrandForuser } from '../../../Services/Settings';
 
 function Filter({ products, setProducts }) {
   const [fetchedCategories, setFetchedCategories] = useState([]);
@@ -21,8 +21,8 @@ function Filter({ products, setProducts }) {
     const getData = async () => {
       setLoading(true);
       try {
-        const categoryRes = await getCategory();
-        const brandRes = await getBrand();
+        const categoryRes = await getCategoryForUser();
+        const brandRes = await getBrandForuser();
         setFetchedCategories(Array.isArray(categoryRes.data) ? categoryRes.data : []);
         setFetchedBrands(Array.isArray(brandRes.data) ? brandRes.data : []);
       } catch (error) {

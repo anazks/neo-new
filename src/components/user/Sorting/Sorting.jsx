@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './sorting.css';
-import { getCategory } from '../../../Services/Settings';
+import { getCategoryForUser } from '../../../Services/Settings';
 import { getAllProduct } from '../../../Services/Products';
 
 function Sorting({ setProducts }) {
@@ -11,7 +11,7 @@ function Sorting({ setProducts }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await getCategory();
+        const response = await getCategoryForUser();
         setCategories(response.data || []);
       } catch (error) {
         console.error('Error fetching categories:', error);
