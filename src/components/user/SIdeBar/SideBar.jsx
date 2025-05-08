@@ -21,7 +21,9 @@ function SideBar({ isOpen, onClose }) {
     try {
       setToken(null);
       localStorage.removeItem("token");
-      const response = await logout();
+      let refresh = localStorage.getItem("refresh")
+      const response = await logout(refresh,token);
+      console.log(response,"logot response")
       navigate("/");
       onClose();
     } catch (error) {
@@ -85,7 +87,7 @@ function SideBar({ isOpen, onClose }) {
                   </button>
                   <button 
                     className="flex items-center gap-1 py-2 px-4 bg-black text-white font-medium rounded-full border border-black hover:bg-black/80 transition-all duration-300 text-sm"
-                    onClick={() => { onClose(); navigate("/register"); }}
+                    onClick={() => { onClose(); navigate("/login"); }}
                   >
                     <FiUserPlus size={14} /> Register
                   </button>

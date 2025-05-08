@@ -16,6 +16,7 @@ const GoogleLoginComponent = ({ onLoginSuccess }) => {
       const response = await googleAuth(token);
       // Handle the response from your backend
       const data = response.data;
+      localStorage.setItem("refresh",data.refresh)
       setToken(data.access);
       navigate('/')
       // if(data)
