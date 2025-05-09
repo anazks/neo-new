@@ -17,6 +17,27 @@ export const RegisterUser = async (data) => {
     );
     console.log(response.data, "userAPI from register user");
     return response;
+
+  } catch (error) {
+    console.error("Error registering user:", error);
+    return error;
+  }
+};
+
+
+export const OtpForUserRegistration = async (data,setToken, setIsAdmin) => {
+  try {
+    console.log(data, "in js");
+    const response = await Axios.post(
+      "/authentication/register/verify-otp/",
+      data,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response.data, "userAPI from register Otp user");
+    return response;
+    
   } catch (error) {
     console.error("Error registering user:", error);
     return error;
@@ -352,6 +373,8 @@ export const googleAuth = async (token) => {
     console.log(error)
   }
 };
+
+
 export const logout = async (refresh, token) => {
   console.log('Logging out with:', { refresh, token });
   
