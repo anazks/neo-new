@@ -353,26 +353,32 @@ export const googleAuth = async (token) => {
   }
 };
 export const logout = async (refresh, token) => {
+  console.log('Logging out with:', { refresh, token });
+  
   try {
     const response = await fetch('https://neotokyo.pythonanywhere.com/authentication/logout/', {
       method: 'POST',
       headers: { 
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        refresh,
+        refresh: refresh,
         access: token
       })
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console.error('Server error response:', data);
+      throw new Error(data.error || `HTTP error! status: ${response.status}`);
     }
 
-    return response;
+    console.log('Logout successful:', data);
+    return data;
   } catch (error) {
     console.error('Logout failed:', error);
-    throw error; // Re-throw the error so it can be handled by the caller
+    throw error;
   }
 };
