@@ -15,7 +15,7 @@ function PairedProducts({ product }) {
       try {
         const products = await getPairedProduct(product.id);
         console.log(products, "paired");
-        setPairedProducts(products?.data || []);
+        setPairedProducts(products?.data.paired_products|| []);
       } catch (error) {
         console.error('Failed to fetch paired products:', error);
         setError('Failed to load paired products');
@@ -90,7 +90,7 @@ function PairedProducts({ product }) {
           {pairedProducts.map((item) => (
             <tr key={item.id} className="hover:bg-gray-700">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-200">{item.paired_product_name || 'Unknown Product'}</div>
+                <div className="text-sm font-medium text-gray-200">{item.paired_product_details.paired_product_name || 'Unknown Product'}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">

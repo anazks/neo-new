@@ -21,6 +21,11 @@ function AddNewAddress({ onAddressAdded, onClose }) {
   const validateForm = () => {
     const errors = {};
     
+    // Name validation - letters only
+    if (newAddress.delivery_person_name && !/^[A-Za-z\s]+$/.test(newAddress.delivery_person_name)) {
+      errors.delivery_person_name = 'Name should contain only letters';
+    }
+    
     // Phone validation
     if (newAddress.phone_number && !/^[0-9]{10}$/.test(newAddress.phone_number)) {
       errors.phone_number = 'Phone number must be 10 digits';
@@ -33,6 +38,11 @@ function AddNewAddress({ onAddressAdded, onClose }) {
     
     if (newAddress.state && !/^[A-Za-z\s]+$/.test(newAddress.state)) {
       errors.state = 'State should contain only letters';
+    }
+    
+    // Zip code validation - non-empty check (you can add specific format if needed)
+    if (newAddress.zip_code && !/^[0-9A-Za-z\s-]+$/.test(newAddress.zip_code)) {
+      errors.zip_code = 'Please enter a valid zip code';
     }
     
     if (newAddress.country && !/^[A-Za-z\s]+$/.test(newAddress.country)) {
@@ -131,25 +141,28 @@ function AddNewAddress({ onAddressAdded, onClose }) {
             <form onSubmit={handleAddNewAddress} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Delivery Person Name*
+                  Delivery Person Name* (letters only)
                 </label>
                 <input
                   type="text"
                   name="delivery_person_name"
                   value={newAddress.delivery_person_name}
                   onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className={`w-full border ${formErrors.delivery_person_name ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors`}
                   placeholder="Full name"
                   required
                   minLength={1}
                   maxLength={255}
                   disabled={loading}
                 />
+                {formErrors.delivery_person_name && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.delivery_person_name}</p>
+                )}
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone Number
+                  Phone Number*
                 </label>
                 <input
                   type="tel"
@@ -239,13 +252,16 @@ function AddNewAddress({ onAddressAdded, onClose }) {
                     name="zip_code"
                     value={newAddress.zip_code}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className={`w-full border ${formErrors.zip_code ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors`}
                     placeholder="Zip code"
                     required
                     minLength={1}
                     maxLength={10}
                     disabled={loading}
                   />
+                  {formErrors.zip_code && (
+                    <p className="text-red-500 text-xs mt-1">{formErrors.zip_code}</p>
+                  )}
                 </div>
                 
                 <div>

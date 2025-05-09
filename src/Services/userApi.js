@@ -352,6 +352,16 @@ export const googleAuth = async (token) => {
     console.log(error)
   }
 };
+export const profileUpdate = async (data)=>{
+  try {
+    console.log(data,'data in profile update ui')
+    let response = await Axios.patch('/authentication/profile/update/',data)
+    console.log(response,"update profile")
+    return response
+  } catch (error) {
+    return error
+  }
+}
 export const logout = async (refresh, token) => {
   console.log('Logging out with:', { refresh, token });
   

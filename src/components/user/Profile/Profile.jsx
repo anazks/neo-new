@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { User, MapPin, Edit, Plus, Save, X, Camera, Check } from 'lucide-react';
 import { useAuth } from '../../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { getMyDeliveryAddress } from '../../../Services/userApi';
+import { getMyDeliveryAddress, profileUpdate,getUserInfo } from '../../../Services/userApi';
 import AddressPopup from './AddNewAddress';
 import axios from 'axios';
+import Nouser from './Nouser';
+import { Loader } from 'lucide-react';
+import BaseURL from '../../../Static/Static';
 
 function UserProfile() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -25,12 +28,29 @@ function UserProfile() {
   // Memoized fetch functions
   const fetchUserData = useCallback(async () => {
     try {
-      if (!user?.id) return;
+      if (!user?.id) {
+        // Try to get from localStorage if not available from context
+        const storedUser = localStorage.getItem('userProfile');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUserData(parsedUser);
+          setFormData({
+            first_name: parsedUser.first_name || '',
+            last_name: parsedUser.last_name || '',
+            phone_number: parsedUser.phone_number || '',
+            date_of_birth: parsedUser.date_of_birth || '',
+            district: parsedUser.district || '',
+            state: parsedUser.state || '',
+            address: parsedUser.address || '',
+            pin_code: parsedUser.pin_code || '',
+            age: parsedUser.age || '',
+          });
+        }
+        return;
+      }
       
-      const response = await axios.get(`/api/get_user_data/${user.id}/`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
+      const response = await getUserInfo()
+      console.log(response,"response")
       if (response.data) {
         setUserData(response.data);
         setFormData({
@@ -48,54 +68,65 @@ function UserProfile() {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-    } finally {
-      setLoading(false);
+      // Try to get from localStorage if API fails
+      const storedUser = localStorage.getItem('userProfile');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUserData(parsedUser);
+        setFormData({
+          first_name: parsedUser.first_name || '',
+          last_name: parsedUser.last_name || '',
+          phone_number: parsedUser.phone_number || '',
+          date_of_birth: parsedUser.date_of_birth || '',
+          district: parsedUser.district || '',
+          state: parsedUser.state || '',
+          address: parsedUser.address || '',
+          pin_code: parsedUser.pin_code || '',
+          age: parsedUser.age || '',
+        });
+      }
     }
   }, [user, token]);
 
   const getAddress = useCallback(async () => {
     try {
       const { data } = await getMyDeliveryAddress();
-      setUserAddresses(data);
+      setUserAddresses(data || []);
     } catch (error) {
       console.error("Error fetching addresses:", error);
+      setUserAddresses([]);
     }
   }, []);
 
-  // Load data on mount
+  // Load data immediately on mount
   useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        if (user) {
-          await fetchUserData();
-        } else {
-          const storedUser = localStorage.getItem('userProfile');
-          if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUserData(parsedUser);
-            setFormData({
-              first_name: parsedUser.first_name || '',
-              last_name: parsedUser.last_name || '',
-              phone_number: parsedUser.phone_number || '',
-              date_of_birth: parsedUser.date_of_birth || '',
-              district: parsedUser.district || '',
-              state: parsedUser.state || '',
-              address: parsedUser.address || '',
-              pin_code: parsedUser.pin_code || '',
-              age: parsedUser.age || '',
-            });
-          }
-        }
-        await getAddress();
-      } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
-        setLoading(false);
+    const loadData = async () => {
+      setLoading(true);
+      // First, try to load from localStorage for immediate display
+      const storedUser = localStorage.getItem('userProfile');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUserData(parsedUser);
+        setFormData({
+          first_name: parsedUser.first_name || '',
+          last_name: parsedUser.last_name || '',
+          phone_number: parsedUser.phone_number || '',
+          date_of_birth: parsedUser.date_of_birth || '',
+          district: parsedUser.district || '',
+          state: parsedUser.state || '',
+          address: parsedUser.address || '',
+          pin_code: parsedUser.pin_code || '',
+          age: parsedUser.age || '',
+        });
       }
+      
+      // Then fetch updated data from API
+      await Promise.all([fetchUserData(), getAddress()]);
+      setLoading(false);
     };
 
-    loadUserData();
-  }, [user, fetchUserData, getAddress]);
+    loadData();
+  }, [fetchUserData, getAddress]);
 
   // Handlers
   const handleLogout = () => {
@@ -124,26 +155,28 @@ function UserProfile() {
     setUpdateError(null);
     
     try {
+      // Create a proper FormData object
       const formDataToSend = new FormData();
       
+      // Add all form fields to FormData
       Object.entries(formData).forEach(([key, value]) => {
-        if (value) formDataToSend.append(key, value);
+        if (value !== undefined && value !== null) {
+          formDataToSend.append(key, value);
+        }
       });
       
+      // Add profile picture if present
       if (profilePicture) {
         formDataToSend.append('profile_picture', profilePicture);
       }
       
-      const { data } = await axios.patch('/api/profile/update/', formDataToSend, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        }
-      });
+      // Call the profileUpdate API with the FormData
+      const { data } = await profileUpdate(formDataToSend);
       
       if (data) {
-        setUserData(prev => ({...prev, ...data}));
-        localStorage.setItem('userProfile', JSON.stringify({...userData, ...data}));
+        const updatedUserData = {...userData, ...data};
+        setUserData(updatedUserData);
+        localStorage.setItem('userProfile', JSON.stringify(updatedUserData));
         setUpdateSuccess(true);
         setTimeout(() => {
           setIsEditing(false);
@@ -192,34 +225,13 @@ function UserProfile() {
   };
 
   // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mx-auto"></div>
-          <p className="mt-4 text-gray-700">Loading profile...</p>
-        </div>
-      </div>
-    );
+  if (loading && !userData) {
+    return <Loader />;
   }
 
   // No user data state
-  if (!userData) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-          <User size={48} className="mx-auto text-red-500 mb-4" />
-          <h3 className="text-xl font-medium text-gray-800">No user data available</h3>
-          <p className="text-gray-600 mt-2">Please log in to view your profile</p>
-          <button 
-            onClick={() => navigate('/login')}
-            className="mt-6 px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all"
-          >
-            Go to Login
-          </button>
-        </div>
-      </div>
-    );
+  if (!loading && !userData) {
+    return <Nouser />;
   }
 
   // Profile Info Component
@@ -329,7 +341,7 @@ const EditProfileForm = ({
         <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
           {getProfilePicture() ? (
             <img 
-              src={getProfilePicture()} 
+              src={BaseURL + getProfilePicture()} 
               alt="Profile" 
               className="w-full h-full object-cover"
             />
@@ -360,7 +372,7 @@ const EditProfileForm = ({
         <input
           type="text"
           name="first_name"
-          value={formData.first_name}
+          value={formData.first_name || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -370,7 +382,7 @@ const EditProfileForm = ({
         <input
           type="text"
           name="last_name"
-          value={formData.last_name}
+          value={formData.last_name || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -379,7 +391,7 @@ const EditProfileForm = ({
         <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
         <input
           type="email"
-          value={userData.email}
+          value={userData.email || ''}
           disabled
           className="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-md text-gray-500"
         />
@@ -390,7 +402,7 @@ const EditProfileForm = ({
         <input
           type="tel"
           name="phone_number"
-          value={formData.phone_number}
+          value={formData.phone_number || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -400,7 +412,7 @@ const EditProfileForm = ({
         <input
           type="date"
           name="date_of_birth"
-          value={formData.date_of_birth}
+          value={formData.date_of_birth || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -410,7 +422,7 @@ const EditProfileForm = ({
         <input
           type="text"
           name="age"
-          value={formData.age}
+          value={formData.age || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -420,7 +432,7 @@ const EditProfileForm = ({
         <input
           type="text"
           name="pin_code"
-          value={formData.pin_code}
+          value={formData.pin_code || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -430,7 +442,7 @@ const EditProfileForm = ({
         <input
           type="text"
           name="district"
-          value={formData.district}
+          value={formData.district || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -440,7 +452,7 @@ const EditProfileForm = ({
         <input
           type="text"
           name="state"
-          value={formData.state}
+          value={formData.state || ''}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
         />
@@ -449,7 +461,7 @@ const EditProfileForm = ({
         <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
         <textarea
           name="address"
-          value={formData.address}
+          value={formData.address || ''}
           onChange={handleInputChange}
           rows="3"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
@@ -476,7 +488,7 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
         <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mb-2">
           {getProfilePicture() ? (
             <img 
-              src={getProfilePicture()} 
+              src={BaseURL + getProfilePicture()} 
               alt="Profile" 
               className="w-full h-full object-cover"
             />
@@ -581,48 +593,44 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
 );
 
 const ProfileSidebar = ({ userData, getProfilePicture, activeTab, setActiveTab, handleLogout }) => (
-  <div className="w-full md:w-1/4">
-    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-      <div className="flex items-center space-x-4">
-        <div className="rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-          {getProfilePicture() ? (
-            <img 
-              src={getProfilePicture()} 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <User size={32} className="text-gray-400" />
-          )}
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold text-gray-800">
-            {userData.first_name} {userData.last_name || ''}
-          </h2>
-          <p className="text-gray-600 text-sm">{userData.email}</p>
-        </div>
+  <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div className="flex items-center space-x-4 mb-6">
+      <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+        {getProfilePicture() ? (
+          <img 
+          src={BaseURL + getProfilePicture()} 
+            alt="Profile" 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <User size={28} className="text-gray-400" />
+        )}
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800">
+          {userData?.first_name} {userData?.last_name || ''}
+        </h2>
+        <p className="text-gray-600 text-sm">{userData?.email}</p>
       </div>
     </div>
     
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      <nav>
-        <button 
-          onClick={() => setActiveTab('profile')}
-          className={`w-full text-left px-6 py-3.5 flex items-center space-x-3 hover:bg-gray-50 transition-colors ${activeTab === 'profile' ? 'border-l-4 border-red-500 bg-red-50' : ''}`}
-        >
-          <User size={20} className={activeTab === 'profile' ? 'text-red-500' : 'text-gray-500'} />
-          <span className={activeTab === 'profile' ? 'font-medium text-red-500' : 'text-gray-700'}>Profile</span>
-        </button>
-      </nav>
-      
-      <div className="px-6 py-4 border-t border-gray-100" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-        <button 
-          className="text-muted-500 font-small hover:text-red-600 transition-colors"
-          onClick={handleLogout}
-        >
-          Delete My Account
-        </button>
-      </div>
+    <nav className="mb-6">
+      <button 
+        onClick={() => setActiveTab('profile')}
+        className={`w-full text-left px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors rounded-md ${activeTab === 'profile' ? 'border-l-4 border-red-500 bg-red-50' : ''}`}
+      >
+        <User size={20} className={activeTab === 'profile' ? 'text-red-500' : 'text-gray-500'} />
+        <span className={activeTab === 'profile' ? 'font-medium text-red-500' : 'text-gray-700'}>Profile</span>
+      </button>
+    </nav>
+    
+    <div className="pt-4 border-t border-gray-100">
+      <button 
+        className="w-full text-left px-4 py-2 text-red-600 font-medium hover:text-red-700 transition-colors rounded-md hover:bg-red-50"
+        onClick={handleLogout}
+      >
+        Delete My Account
+      </button>
     </div>
   </div>
 );
