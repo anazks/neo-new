@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import NavBar from '../NavBar/NavBar';
 import Loader from '../Loader/Loader';
 import RenderRazorpay from "../RazorPay/RenderRazorpay";
@@ -18,7 +18,6 @@ import {
   getMyPrimaryAddress 
 } from "../../../Services/userApi";
 
-// Using the Rajadhanai color scheme with #63A375 (green) and black
 const CartPage = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState({ items: [], id: null });
@@ -53,7 +52,7 @@ const CartPage = () => {
   const handleCreateOrder = async () => {
     try {
       let getPrimaryAddress = await getMyPrimaryAddress();
-      console.log(getPrimaryAddress, "primary address")
+      console.log(getPrimaryAddress, "primary address");
       let order = await CreateOrder(selectedAddressId);
       let newData = order.data;
       
@@ -69,13 +68,15 @@ const CartPage = () => {
       console.error("Error creating order:", error);
     }
   };
-const checkoutHnadle = async () => {
-  try {
-    navigate("/overview");
-  } catch (error) {
-    console.error("Error during checkout:", error);
-  }
-}
+
+  const checkoutHandle = async () => {
+    try {
+      navigate("/overview");
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
+
   const fetchCartItems = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -96,15 +97,12 @@ const checkoutHnadle = async () => {
     try {
       const response = await getMyDeliveryAddress();
       
-      // If we have real addresses from the API, use them
       if (response && response.data && Array.isArray(response.data)) {
         setAddresses(response.data);
-        // Set primary address as selected by default
         const primaryAddress = response.data.find(addr => addr.is_primary);
         if (primaryAddress) {
           setSelectedAddressId(primaryAddress.id);
         } else if (response.data.length > 0) {
-          // If no primary address, select the first one
           setSelectedAddressId(response.data[0].id);
         }
       }
@@ -215,22 +213,19 @@ const checkoutHnadle = async () => {
 
   const calculateSubtotal = () => {
     if (!cartItems || !cartItems.items || !cartItems.items.length) return 0;
-    
     return cartItems.items.reduce((total, item) => {
       return total + (item.price * item.quantity);
     }, 0);
   };
 
-  // Calculations
   const subtotal = calculateSubtotal();
   const discount = promoApplied ? 500 : 0;
   const shipping = subtotal > 0 ? 1200 : 0;
   const grandTotal = subtotal - discount + shipping;
-
   const isCartEmpty = !cartItems?.items || cartItems.items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
+    <div className="min-h-screen bg-gray-100" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
       {displayRazorpay && (
         <RenderRazorpay
           orderDetails={orderDetails}
@@ -258,7 +253,7 @@ const checkoutHnadle = async () => {
           >
             <p className="text-red-600 text-lg mb-4">{error}</p>
             <motion.button 
-              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors uppercase"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
@@ -266,7 +261,7 @@ const checkoutHnadle = async () => {
                 fetchAddresses();
               }}
             >
-              Try Again
+              TRY AGAIN
             </motion.button>
           </motion.div>
         ) : (
@@ -278,7 +273,7 @@ const checkoutHnadle = async () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-bold text-black mb-6">YOUR CART</h2>
+              <h2 className="text-2xl font-bold text-black mb-6 uppercase tracking-wider">YOUR CART</h2>
 
               {isCartEmpty ? (
                 <motion.div 
@@ -290,11 +285,11 @@ const checkoutHnadle = async () => {
                   <p className="text-xl text-gray-600 mb-6">Your cart is empty</p>
                   <Link to="/products">
                     <motion.button 
-                      className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors"
+                      className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors uppercase"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Continue Shopping
+                      CONTINUE SHOPPING
                     </motion.button>
                   </Link>
                 </motion.div>
@@ -321,61 +316,38 @@ const checkoutHnadle = async () => {
                         </div>
                         
                         <div className="flex-grow sm:ml-6">
-                          <div className="flex flex-col sm:flex-row justify-between">
-                            <div>
-                              <p className="text-sm text-gray-500">{item.type}</p>
-                              <p className="text-lg font-medium text-black">{item.product_name}</p>
-                              <div className="flex items-center mt-1">
-                                <span 
-                                  className="inline-block w-2 h-2 rounded-full mr-1" 
-                                  style={{backgroundColor: item.status === "In Stock" ? "#63A375" : "red"}}
-                                ></span>
-                                <span 
-                                  className="text-xs" 
-                                  style={{color: item.status === "In Stock" ? "#63A375" : "red"}}
-                                >
-                                  {item.status === "In Stock" ? "In Stock" : "Out of Stock"}
-                                </span>
+                          <div className="flex flex-col">
+                            <div className="flex justify-between">
+                              <div>
+                                <p className="text-sm text-gray-500 uppercase">{item.type}</p>
+                                <p className="text-lg font-bold text-black uppercase tracking-wider">{item.product_name}</p>
                               </div>
-                              
-                              <div className="mt-4 space-x-3">
-                                  <motion.button 
-                                    onClick={() => handleRemoveItem(item.id)}
-                                    className="text-sm text-white bg-red-500 hover:bg-red-600 flex items-center justify-center p-2 rounded"
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    disabled={isLoading}
-                                  >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                      <path d="M3 6h18"></path>
-                                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                                    </svg>
-                                    REMOVE
-                                  </motion.button>
-                                  <motion.button 
-                                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 flex items-center justify-center p-2 rounded"
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                  >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                      <line x1="12" y1="7" x2="12" y2="13"></line>
-                                      <line x1="15" y1="10" x2="9" y2="10"></line>
-                                    </svg>
-                                    SAVE FOR LATER
-                                  </motion.button>
-                                </div>
+                              <div className="text-lg font-bold text-black" style={{color:"#63A375"}}>
+                                ₹ {item.price.toLocaleString("en-IN")}
+                              </div>
                             </div>
                             
-                            <div className="mt-4 sm:mt-0 flex sm:flex-col sm:items-end justify-between">
-                              <div className="text-lg font-bold text-black">
-                                ₹ {item.price.toLocaleString("en-IN")}/-
+                            <div className="flex justify-between items-end mt-4">
+                              <div className="flex space-x-3">
+                                <motion.button 
+                                  onClick={() => handleRemoveItem(item.id)}
+                                  className="text-sm text-black border border-black hover:bg-gray-100 flex items-center justify-center px-3 py-1 rounded uppercase"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  disabled={isLoading}
+                                >
+                                  REMOVE
+                                </motion.button>
+                                <motion.button 
+                                  className="text-sm text-black border border-black hover:bg-gray-100 flex items-center justify-center px-3 py-1 rounded uppercase"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  SAVE FOR LATER
+                                </motion.button>
                               </div>
                               
-                              <div className="flex items-center border border-gray-300 rounded-md mt-2">
+                              <div className="flex items-center border border-gray-300 rounded-md">
                                 <motion.button 
                                   className="px-3 py-1 text-gray-600 hover:bg-gray-100"
                                   onClick={() => handleQuantityChange(item.product, 'decrease')}
@@ -419,32 +391,31 @@ const checkoutHnadle = async () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
+                style={{
+                boxShadow: "inset 0 0 10px #63A375",
+                border: "1px solid #63A375"
+              }}
               >
-                <h2 className="text-2xl font-bold text-black mb-2">ORDER SUMMARY</h2>
+                <h2 className="text-2xl font-bold text-black mb-6 uppercase tracking-wider">ORDER SUMMARY</h2>
                 
                 {/* Promo Code Section */}
-                <div 
-                  className="border-dashed border-2 rounded-lg p-4 mb-6" 
-                  style={{backgroundColor: "rgba(99, 163, 117, 0.2)", borderColor: "#63A375"}}
-                >
-                  <p className="text-center font-medium mb-2" style={{color: "#63A375"}}>HAVE A PROMO CODE?</p>
+                <div className="mb-6">
+                  <p className="text-center font-medium mb-2 uppercase tracking-wider">HAVE A PROMO CODE?</p>
                   
                   <AnimatePresence>
                     {promoApplied ? (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
+                        className="flex items-center justify-between bg-gray-100 p-2 rounded"
                       >
-                        <div className="bg-white rounded p-2 flex justify-between items-center">
-                          <span className="text-sm font-medium">GEEKY2023</span>
-                          <button 
-                            className="text-xs text-gray-500"
-                            onClick={() => setPromoApplied(false)}
-                          >
-                            REMOVE
-                          </button>
-                        </div>
-                        <p className="text-sm mt-2 text-center" style={{color: "#63A375"}}>Hurray! You've got a discount</p>
+                        <span className="font-medium uppercase">GEEKY2023</span>
+                        <button 
+                          className="text-sm text-gray-500 uppercase"
+                          onClick={() => setPromoApplied(false)}
+                        >
+                          REMOVE
+                        </button>
                       </motion.div>
                     ) : (
                       <motion.div 
@@ -457,10 +428,10 @@ const checkoutHnadle = async () => {
                           value={promoCode}
                           onChange={(e) => setPromoCode(e.target.value)}
                           placeholder="Enter promo code"
-                          className="flex-grow rounded-l border border-gray-300 px-3 py-2 focus:outline-none"
+                          className="flex-grow rounded-l border border-gray-300 px-3 py-2 focus:outline-none uppercase"
                         />
                         <motion.button 
-                          className="bg-black text-white px-4 py-2 rounded-r"
+                          className="bg-black text-white px-4 py-2 rounded-r uppercase"
                           onClick={handleApplyPromo}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -476,20 +447,19 @@ const checkoutHnadle = async () => {
                 {/* Address Section */}
                 {addresses.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="text-lg font-medium mb-2">Delivery Address</h3>
+                    <h3 className="text-lg font-medium mb-2 uppercase tracking-wider">DELIVERY ADDRESS</h3>
                     <div className="space-y-2">
                       {addresses.map(addr => (
                         <motion.div
                           key={addr.id}
-                          className={`border p-3 rounded-md cursor-pointer ${selectedAddressId === addr.id ? 'border-green-500 bg-green-50' : 'border-gray-200'}`}
-                          style={selectedAddressId === addr.id ? {borderColor: "#63A375", backgroundColor: "rgba(99, 163, 117, 0.1)"} : {}}
+                          className={`border p-3 rounded-md cursor-pointer ${selectedAddressId === addr.id ? 'border-black bg-gray-50' : 'border-gray-200'}`}
                           whileHover={{ scale: 1.01 }}
                           onClick={() => setSelectedAddressId(addr.id)}
                         >
                           <div className="flex justify-between">
-                            <h4 className="font-medium">{addr.delivery_person_name}</h4>
+                            <h4 className="font-medium uppercase">{addr.delivery_person_name}</h4>
                             {addr.is_primary && (
-                              <span className="text-xs px-2 py-1 rounded" style={{backgroundColor: "rgba(99, 163, 117, 0.2)", color: "#63A375"}}>Primary</span>
+                              <span className="text-xs px-2 py-1 rounded bg-gray-200 text-black uppercase">PRIMARY</span>
                             )}
                           </div>
                           <p className="text-sm text-gray-600">{addr.phone_number}</p>
@@ -498,13 +468,12 @@ const checkoutHnadle = async () => {
                       ))}
                     </div>
                     <motion.button
-                      className="mt-2 text-sm font-medium"
-                      style={{color: "#63A375"}}
+                      className="mt-2 text-sm font-medium text-black uppercase"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setShowAddressForm(!showAddressForm)}
                     >
-                      {showAddressForm ? 'Cancel' : '+ Add New Address'}
+                      {showAddressForm ? 'CANCEL' : '+ ADD NEW ADDRESS'}
                     </motion.button>
                   </div>
                 )}
@@ -519,82 +488,81 @@ const checkoutHnadle = async () => {
                       exit={{ opacity: 0, height: 0 }}
                       onSubmit={handleAddAddress}
                     >
-                      {/* Form fields */}
                       <div className="grid grid-cols-2 gap-3">
                         <div className="col-span-2 md:col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1">Full Name</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">FULL NAME</label>
                           <input
                             type="text"
                             name="delivery_person_name"
                             value={newAddress.delivery_person_name}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             required
                           />
                         </div>
                         <div className="col-span-2 md:col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1">Phone</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">PHONE</label>
                           <input
                             type="text"
                             name="phone_number"
                             value={newAddress.phone_number}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             required
                           />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-sm text-gray-600 mb-1">Address</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">ADDRESS</label>
                           <textarea
                             name="address"
                             value={newAddress.address}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             rows="2"
                             required
                           ></textarea>
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1">District</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">DISTRICT</label>
                           <input
                             type="text"
                             name="district"
                             value={newAddress.district}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             required
                           />
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1">State</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">STATE</label>
                           <input
                             type="text"
                             name="state"
                             value={newAddress.state}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             required
                           />
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1">Country</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">COUNTRY</label>
                           <input
                             type="text"
                             name="country"
                             value={newAddress.country}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             required
                           />
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1">Zip Code</label>
+                          <label className="block text-sm text-gray-600 mb-1 uppercase">ZIP CODE</label>
                           <input
                             type="text"
                             name="zip_code"
                             value={newAddress.zip_code}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="w-full p-2 border border-gray-300 rounded uppercase"
                             required
                           />
                         </div>
@@ -607,50 +575,50 @@ const checkoutHnadle = async () => {
                             onChange={handleInputChange}
                             className="mr-2"
                           />
-                          <label htmlFor="is_primary" className="text-sm text-gray-700">Set as primary address</label>
+                          <label htmlFor="is_primary" className="text-sm text-gray-700 uppercase">SET AS PRIMARY ADDRESS</label>
                         </div>
                       </div>
                       <motion.button
                         type="submit"
-                        className="w-full mt-3 bg-black text-white p-2 rounded"
+                        className="w-full mt-3 bg-black text-white p-2 rounded uppercase"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        Save Address
+                        SAVE ADDRESS
                       </motion.button>
                     </motion.form>
                   )}
                 </AnimatePresence>
                 
                 {/* Price Summary */}
-                <div className="space-y-3">
+                <div className="space-y-3 border-t border-gray-200 pt-4">
                   <div className="flex justify-between">
-                    <span className="text-gray-700">DISCOUNT</span>
+                    <span className="text-gray-700 uppercase">DISCOUNT</span>
                     <span className="text-gray-700 font-medium">₹ {discount}</span>
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-gray-700">SUB TOTAL</span>
+                    <span className="text-gray-700 uppercase">SUB TOTAL</span>
                     <span className="text-gray-700 font-medium">₹ {subtotal.toLocaleString('en-IN')}</span>
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-gray-700">SHIPPING</span>
+                    <span className="text-gray-700 uppercase">SHIPPING</span>
                     <span className="text-gray-700 font-medium">₹ {shipping}</span>
                   </div>
                   
                   <div className="flex justify-between pt-3 border-t border-gray-200">
-                    <span className="font-bold text-black">GRAND TOTAL</span>
-                    <span className="font-bold text-black">₹ {(cartItems.total_price || grandTotal).toLocaleString('en-IN')}</span>
+                    <span className="font-bold text-black uppercase">GRAND TOTAL</span>
+                    <span className="font-bold text-black" >₹ {(cartItems.total_price || grandTotal).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
                 
                 {/* Checkout Button */}
                 <motion.button 
-                  className="w-full bg-black text-white py-3 rounded font-bold mt-6 hover:bg-gray-800"
+                  className="w-full bg-black text-white py-3 rounded font-bold mt-6 hover:bg-gray-800 uppercase tracking-wider"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={checkoutHnadle}
+                  onClick={checkoutHandle}
                   disabled={isLoading || !selectedAddressId}
                 >
                   PROCEED TO CHECKOUT

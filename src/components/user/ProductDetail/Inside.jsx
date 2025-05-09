@@ -80,7 +80,7 @@ function Inside({ product }) {
         ))
       ) : (
         <div className="specs-section">
-          <h2>SPECIFICATIONS</h2>
+          {/* <h2>SPECIFICATIONS</h2> */}
           <p>No specifications available.</p>
         </div>
       )}

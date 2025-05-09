@@ -54,7 +54,6 @@ function Overview() {
         const fetchOrders = async () => {
             try {
                 const response = await getMyCart();
-                console.log(response.data, "orders");
                 setOrders(response.data || { items: [], total_price: 0 });
             } catch (err) {
                 console.error(err);
@@ -77,7 +76,7 @@ function Overview() {
             [name]: type === 'checkbox' ? checked : value,
             errors: {
                 ...newAddress.errors,
-                [name]: undefined // Clear error when user types
+                [name]: undefined
             }
         });
     };
@@ -86,23 +85,20 @@ function Overview() {
         const errors = {};
         let isValid = true;
 
-        // Delivery Person Name validation
         if (!newAddress.delivery_person_name.trim()) {
             errors.delivery_person_name = 'Name is required';
             isValid = false;
         }
 
-        // Phone Number validation
         const phoneRegex = /^[0-9]{10,15}$/;
         if (!newAddress.phone_number.trim()) {
             errors.phone_number = 'Phone number is required';
             isValid = false;
         } else if (!phoneRegex.test(newAddress.phone_number)) {
-            errors.phone_number = 'Enter a valid phone number (10-15 digits)';
+            errors.phone_number = 'Enter a valid phone number';
             isValid = false;
         }
 
-        // Address validation
         if (!newAddress.address.trim()) {
             errors.address = 'Address is required';
             isValid = false;
@@ -111,31 +107,27 @@ function Overview() {
             isValid = false;
         }
 
-        // District validation
         if (!newAddress.district.trim()) {
             errors.district = 'District is required';
             isValid = false;
         }
 
-        // State validation
         if (!newAddress.state.trim()) {
             errors.state = 'State is required';
             isValid = false;
         }
 
-        // Country validation
         if (!newAddress.country.trim()) {
             errors.country = 'Country is required';
             isValid = false;
         }
 
-        // Zip Code validation
         const zipRegex = /^[0-9]{5,10}$/;
         if (!newAddress.zip_code.trim()) {
             errors.zip_code = 'Zip code is required';
             isValid = false;
         } else if (!zipRegex.test(newAddress.zip_code)) {
-            errors.zip_code = 'Enter a valid zip code (5-10 digits)';
+            errors.zip_code = 'Enter a valid zip code';
             isValid = false;
         }
 
@@ -150,18 +142,14 @@ function Overview() {
     const handleAddNewAddress = async (e) => {
         e.preventDefault();
         
-        if (!validateForm()) {
-            return;
-        }
+        if (!validateForm()) return;
 
         try {
             setLoading(true);
-            // Create a copy of newAddress without the errors property
             const { errors, ...addressData } = newAddress;
             const response = await AddDelievryAddress(addressData);
             const newAddressObj = response.data;
             
-            // Update addresses list
             let updatedAddresses = [...addresses];
             if (newAddressObj.is_primary) {
                 updatedAddresses = updatedAddresses.map(addr => ({
@@ -173,7 +161,6 @@ function Overview() {
             setAddresses([...updatedAddresses, newAddressObj]);
             setSelectedAddressId(newAddressObj.id);
             
-            // Reset form
             setNewAddress({
                 delivery_person_name: "",
                 phone_number: "",
@@ -197,10 +184,8 @@ function Overview() {
     const handleCreateOrder = async () => {
         try {
             let getPrimaryAddress = await getMyPrimaryAddress();
-            console.log(getPrimaryAddress, "primary address");
             let order = await CreateOrder(selectedAddressId);
             let newData = order;
-            console.log(newData, "order data");
             
             setOrderDetails(newData);
             setDisplayRazorpay(true);
@@ -232,34 +217,35 @@ function Overview() {
     }
 
     return (
-        <>
+        <div style={{ fontFamily: "'Rajdhani', sans-serif" }}>
             {displayRazorpay && orderDetails && (
                 <RenderRazorpay
                     orderDetails={orderDetails}
                     setDisplayRazorpay={setDisplayRazorpay}
                 />
             )}
-            <div className="max-w-6xl mx-auto p-6 bg-white">
+            
+            <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white">
                 <div className="mb-8">
-                    <br />
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">Order Overview</h1>
                 </div>
                 
-                <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Left Column - Address and Items */}
-                    <div className="flex-1">
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Left Column */}
+                    <div className="flex-1 space-y-6">
                         {/* Address Section */}
-                        <div className="mb-8 bg-gray-50 rounded-lg p-6 shadow-sm">
+                        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center">
                                     <MapPin className="text-blue-600 mr-2" size={20} />
-                                    <h2 className="text-lg font-medium text-gray-800">Shipping Address</h2>
+                                    <h2 className="text-lg font-bold text-gray-800 uppercase tracking-wider">Shipping Address</h2>
                                 </div>
                                 <button 
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center transition-colors"
                                     onClick={() => setShowAddressModal(true)}
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center transition-colors uppercase"
                                     disabled={loading}
                                 >
-                                    <PlusCircle size={16} className="mr-1" /> Add New Address
+                                    <PlusCircle size={16} className="mr-1" /> Add New
                                 </button>
                             </div>
                             
@@ -268,9 +254,9 @@ function Overview() {
                                     <p className="text-gray-500 mb-4">No addresses found</p>
                                     <button
                                         onClick={() => setShowAddressModal(true)}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 uppercase font-medium"
                                     >
-                                        Add Your First Address
+                                        Add Address
                                     </button>
                                 </div>
                             ) : (
@@ -278,32 +264,31 @@ function Overview() {
                                     {addresses.map(address => (
                                         <div 
                                             key={address.id} 
-                                            className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+                                            className={`border rounded-lg p-4 cursor-pointer transition-all ${
                                                 selectedAddressId === address.id 
-                                                    ? 'border-blue-500 bg-blue-50' 
+                                                    ? 'border-blue-500 bg-blue-50 shadow-md' 
                                                     : 'border-gray-200 hover:border-blue-300'
                                             }`}
                                             onClick={() => handleAddressSelect(address.id)}
                                         >
                                             <div className="flex justify-between mb-2">
-                                                <div className="font-medium text-gray-800">{address.delivery_person_name}</div>
+                                                <div className="font-bold text-gray-800 uppercase">{address.delivery_person_name}</div>
                                                 {address.is_primary && (
-                                                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Primary</span>
+                                                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded uppercase font-bold">Primary</span>
                                                 )}
                                             </div>
                                             <div className="text-gray-600 text-sm space-y-1">
                                                 <p>{address.address}</p>
-                                                <p>{address.district}</p>
-                                                <p>{address.state} {address.zip_code}</p>
+                                                <p>{address.district}, {address.state} {address.zip_code}</p>
                                                 <p>{address.country}</p>
-                                                <p className="pt-1">{address.phone_number}</p>
+                                                <p className="pt-1 font-medium">Phone: {address.phone_number}</p>
                                             </div>
                                             <div className="flex justify-between mt-3 pt-3 border-t border-gray-200">
                                                 <button className="text-blue-600 hover:text-blue-800 text-sm transition-colors">
                                                     Edit
                                                 </button>
                                                 {selectedAddressId === address.id && (
-                                                    <div className="flex items-center text-green-600 text-sm">
+                                                    <div className="flex items-center text-green-600 text-sm font-bold">
                                                         <Check size={16} className="mr-1" /> Selected
                                                     </div>
                                                 )}
@@ -315,10 +300,10 @@ function Overview() {
                         </div>
                         
                         {/* Orders Section */}
-                        <div className="mb-8 bg-gray-50 rounded-lg p-6 shadow-sm">
+                        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                             <div className="flex items-center mb-4">
                                 <ShoppingBag className="text-blue-600 mr-2" size={20} />
-                                <h2 className="text-lg font-medium text-gray-800">Selected Items</h2>
+                                <h2 className="text-lg font-bold text-gray-800 uppercase tracking-wider">Selected Items</h2>
                             </div>
                             
                             <div className="divide-y divide-gray-200">
@@ -326,21 +311,24 @@ function Overview() {
                                     orders.items.map(item => (
                                         <div key={item.id} className="py-4 flex flex-col sm:flex-row justify-between">
                                             <div className="flex items-center mb-2 sm:mb-0">
-                                                <div className="h-12 w-12 bg-gray-100 rounded-md flex items-center justify-center mr-4 overflow-hidden">
+                                                <div className="h-16 w-16 bg-gray-100 rounded-md flex items-center justify-center mr-4 overflow-hidden">
                                                     {item.primary_image && item.primary_image.length > 0 ? (
-                                                        <img src={BaseURL + item.primary_image[0].image} alt={item.name} className="object-cover" />
+                                                        <img 
+                                                            src={BaseURL + item.primary_image[0].image} 
+                                                            alt={item.name} 
+                                                            className="object-cover h-full w-full"
+                                                        />
                                                     ) : (
                                                         <ShoppingBag size={24} className="text-gray-400" />
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-medium text-gray-800">{item.product_name}</h3>
+                                                    <h3 className="font-bold text-gray-800 uppercase">{item.product_name}</h3>
                                                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-between sm:w-1/4">
-                                                <span className="font-medium text-gray-900 sm:hidden">Price:</span>
-                                                <span className="font-medium">INR. <span></span> {item.price || 0}</span>
+                                                <span className="font-bold text-gray-900">₹{item.price || 0}</span>
                                             </div>
                                         </div>
                                     ))
@@ -353,26 +341,30 @@ function Overview() {
                         </div>
                     </div>
                     
-                    {/* Right Column - Summary and Payment */}
+                    {/* Right Column */}
                     <div className="lg:w-1/3">
-                        <div className="sticky top-6">
+                        <div className="sticky top-6 space-y-6">
                             {/* Order Summary */}
-                            <div className="mb-6 bg-gray-50 rounded-lg p-6 shadow-sm">
-                                <h2 className="text-lg font-medium text-gray-800 mb-4">Order Summary</h2>
+                            <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                                <h2 className="text-lg font-bold text-gray-800 mb-4 uppercase tracking-wider">Order Summary</h2>
                                 
                                 <div className="space-y-3 text-sm">
                                     <div className="flex justify-between">
-                                        <span className="text-gray-600">Subtotal ({orders.items?.length || 0} items)</span>
-                                        <span className="font-medium">INR.<span></span>{subtotal.toFixed(2)}</span>
+                                        <span className="text-gray-600 uppercase">Subtotal ({orders.items?.length || 0} items)</span>
+                                        <span className="font-bold">₹{subtotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-gray-600">Coupon Discount</span>
-                                        <span className="font-medium">INR. <span></span>{orders.coupon_discount}</span>
+                                        <span className="text-gray-600 uppercase">Shipping</span>
+                                        <span className="font-bold">₹{shipping.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-600 uppercase">Tax</span>
+                                        <span className="font-bold">₹{tax.toFixed(2)}</span>
                                     </div>
                                     <div className="border-t border-gray-200 pt-3 mt-3">
-                                        <div className="flex justify-between text-base font-medium">
-                                            <span className="text-gray-900">Order Total</span>
-                                            <span className="text-blue-600">INR. <span></span>{orders.total_price.toFixed(2)}</span>
+                                        <div className="flex justify-between text-base font-bold">
+                                            <span className="text-gray-900 uppercase">Total</span>
+                                            <span className="text-blue-600">₹{total.toFixed(2)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -381,8 +373,8 @@ function Overview() {
                             {/* Payment Button */}
                             <button 
                                 onClick={handleCreateOrder}
-                                className={`w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-medium flex items-center justify-center transition-colors duration-300 shadow-sm ${
-                                    !selectedAddressId || orders.items?.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                                className={`w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-bold uppercase tracking-wider flex items-center justify-center transition-colors shadow-md ${
+                                    !selectedAddressId || orders.items?.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 hover:shadow-lg'
                                 }`}
                                 disabled={!selectedAddressId || orders.items?.length === 0 || loading}
                             >
@@ -396,29 +388,34 @@ function Overview() {
                                 )}
                             </button>
                             
-                            <p className="text-xs text-center text-gray-500 mt-4">
+                            <p className="text-xs text-center text-gray-500">
                                 By proceeding, you agree to our Terms of Service and Privacy Policy
                             </p>
                             
-                            {/* Order Status Indicators */}
-                            <div className="mt-8 flex justify-between items-center">
-                                {['Cart', 'Shipping', 'Review', 'Payment'].map((step, index) => (
-                                    <React.Fragment key={step}>
-                                        <div className="flex flex-col items-center flex-1">
-                                            <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                                                index < 3 ? 'bg-blue-600' : 'bg-gray-200'
-                                            }`}>
-                                                {index < 3 ? (
-                                                    <Check size={16} className="text-white" />
-                                                ) : (
-                                                    <CreditCard size={16} className="text-gray-500" />
-                                                )}
+                            {/* Order Status */}
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                                <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Order Status</h3>
+                                <div className="flex justify-between items-center">
+                                    {['Cart', 'Shipping', 'Review', 'Payment'].map((step, index) => (
+                                        <React.Fragment key={step}>
+                                            <div className="flex flex-col items-center flex-1">
+                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                                                    index < 3 ? 'bg-blue-600' : 'bg-gray-200'
+                                                }`}>
+                                                    {index < 3 ? (
+                                                        <Check size={16} className="text-white" />
+                                                    ) : (
+                                                        <CreditCard size={16} className="text-gray-500" />
+                                                    )}
+                                                </div>
+                                                <span className={`text-xs mt-1 ${
+                                                    index < 3 ? 'text-blue-600 font-bold' : 'text-gray-600'
+                                                } uppercase`}>{step}</span>
                                             </div>
-                                            <span className="text-xs mt-1 text-gray-600">{step}</span>
-                                        </div>
-                                        {index < 3 && <div className="h-1 w-4 bg-blue-200"></div>}
-                                    </React.Fragment>
-                                ))}
+                                            {index < 3 && <div className="h-1 w-4 bg-blue-200"></div>}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -427,9 +424,9 @@ function Overview() {
                 {/* Add Address Modal */}
                 {showAddressModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-lg shadow-lg w-full max-w-md max-h-screen overflow-y-auto">
+                        <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-screen overflow-y-auto">
                             <div className="flex justify-between items-center p-6 border-b">
-                                <h3 className="text-lg font-medium text-gray-900">Add New Address</h3>
+                                <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wider">Add New Address</h3>
                                 <button 
                                     onClick={() => {
                                         setShowAddressModal(false);
@@ -448,30 +445,26 @@ function Overview() {
                             <form onSubmit={handleAddNewAddress} className="p-6 space-y-4" noValidate>
                                 {/* Delivery Person Name */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Delivery Person Name*
-                                    </label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">Full Name*</label>
                                     <input
                                         type="text"
                                         name="delivery_person_name"
                                         value={newAddress.delivery_person_name}
                                         onChange={handleInputChange}
                                         onBlur={() => validateForm()}
-                                        className={`w-full border ${newAddress.errors?.delivery_person_name ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                        placeholder="Full name"
+                                        className={`w-full border ${newAddress.errors?.delivery_person_name ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase`}
+                                        placeholder="FULL NAME"
                                         required
                                         disabled={loading}
                                     />
                                     {newAddress.errors?.delivery_person_name && (
-                                        <p className="mt-1 text-sm text-red-600">{newAddress.errors.delivery_person_name}</p>
+                                        <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.delivery_person_name}</p>
                                     )}
                                 </div>
                                 
                                 {/* Phone Number */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Phone Number*
-                                    </label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">Phone Number*</label>
                                     <input
                                         type="tel"
                                         name="phone_number"
@@ -479,75 +472,69 @@ function Overview() {
                                         onChange={handleInputChange}
                                         onBlur={() => validateForm()}
                                         className={`w-full border ${newAddress.errors?.phone_number ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                        placeholder="Phone number"
+                                        placeholder="PHONE NUMBER"
                                         required
                                         disabled={loading}
                                     />
                                     {newAddress.errors?.phone_number && (
-                                        <p className="mt-1 text-sm text-red-600">{newAddress.errors.phone_number}</p>
+                                        <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.phone_number}</p>
                                     )}
                                 </div>
                                 
                                 {/* Address */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Address*
-                                    </label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">Address*</label>
                                     <textarea
                                         name="address"
                                         value={newAddress.address}
                                         onChange={handleInputChange}
                                         onBlur={() => validateForm()}
-                                        className={`w-full border ${newAddress.errors?.address ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                        placeholder="Street address"
+                                        className={`w-full border ${newAddress.errors?.address ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase`}
+                                        placeholder="FULL ADDRESS"
                                         required
                                         rows={3}
                                         disabled={loading}
                                     />
                                     {newAddress.errors?.address && (
-                                        <p className="mt-1 text-sm text-red-600">{newAddress.errors.address}</p>
+                                        <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.address}</p>
                                     )}
                                 </div>
                                 
                                 {/* District and State */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            District*
-                                        </label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">District*</label>
                                         <input
                                             type="text"
                                             name="district"
                                             value={newAddress.district}
                                             onChange={handleInputChange}
                                             onBlur={() => validateForm()}
-                                            className={`w-full border ${newAddress.errors?.district ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                            placeholder="District"
+                                            className={`w-full border ${newAddress.errors?.district ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase`}
+                                            placeholder="DISTRICT"
                                             required
                                             disabled={loading}
                                         />
                                         {newAddress.errors?.district && (
-                                            <p className="mt-1 text-sm text-red-600">{newAddress.errors.district}</p>
+                                            <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.district}</p>
                                         )}
                                     </div>
                                     
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            State*
-                                        </label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">State*</label>
                                         <input
                                             type="text"
                                             name="state"
                                             value={newAddress.state}
                                             onChange={handleInputChange}
                                             onBlur={() => validateForm()}
-                                            className={`w-full border ${newAddress.errors?.state ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                            placeholder="State"
+                                            className={`w-full border ${newAddress.errors?.state ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase`}
+                                            placeholder="STATE"
                                             required
                                             disabled={loading}
                                         />
                                         {newAddress.errors?.state && (
-                                            <p className="mt-1 text-sm text-red-600">{newAddress.errors.state}</p>
+                                            <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.state}</p>
                                         )}
                                     </div>
                                 </div>
@@ -555,9 +542,7 @@ function Overview() {
                                 {/* Zip Code and Country */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Zip Code*
-                                        </label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">Zip Code*</label>
                                         <input
                                             type="text"
                                             name="zip_code"
@@ -565,32 +550,30 @@ function Overview() {
                                             onChange={handleInputChange}
                                             onBlur={() => validateForm()}
                                             className={`w-full border ${newAddress.errors?.zip_code ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                            placeholder="Zip code"
+                                            placeholder="ZIP CODE"
                                             required
                                             disabled={loading}
                                         />
                                         {newAddress.errors?.zip_code && (
-                                            <p className="mt-1 text-sm text-red-600">{newAddress.errors.zip_code}</p>
+                                            <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.zip_code}</p>
                                         )}
                                     </div>
                                     
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Country*
-                                        </label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1 uppercase">Country*</label>
                                         <input
                                             type="text"
                                             name="country"
                                             value={newAddress.country}
                                             onChange={handleInputChange}
                                             onBlur={() => validateForm()}
-                                            className={`w-full border ${newAddress.errors?.country ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                                            placeholder="Country"
+                                            className={`w-full border ${newAddress.errors?.country ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase`}
+                                            placeholder="COUNTRY"
                                             required
                                             disabled={loading}
                                         />
                                         {newAddress.errors?.country && (
-                                            <p className="mt-1 text-sm text-red-600">{newAddress.errors.country}</p>
+                                            <p className="mt-1 text-xs text-red-600 uppercase">{newAddress.errors.country}</p>
                                         )}
                                     </div>
                                 </div>
@@ -606,7 +589,7 @@ function Overview() {
                                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                         disabled={loading}
                                     />
-                                    <label htmlFor="is_primary" className="ml-2 block text-sm text-gray-700">
+                                    <label htmlFor="is_primary" className="ml-2 block text-sm text-gray-700 font-bold uppercase">
                                         Set as primary address
                                     </label>
                                 </div>
@@ -622,14 +605,14 @@ function Overview() {
                                                 errors: {}
                                             }));
                                         }}
-                                        className="mr-3 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                        className="mr-3 px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 uppercase"
                                         disabled={loading}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                        className="px-4 py-2 text-sm font-bold text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 uppercase"
                                         disabled={loading || Object.values(newAddress.errors || {}).some(error => error)}
                                     >
                                         {loading ? 'Saving...' : 'Save Address'}
@@ -640,7 +623,7 @@ function Overview() {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 }
 

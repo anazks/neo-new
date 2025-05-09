@@ -2,10 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { User, MapPin, Edit, Plus, Save, X, Camera, Check } from 'lucide-react';
 import { useAuth } from '../../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { getMyDeliveryAddress, profileUpdate,getUserInfo } from '../../../Services/userApi';
+import { getMyDeliveryAddress, profileUpdate, getUserInfo } from '../../../Services/userApi';
 import AddressPopup from './AddNewAddress';
-import axios from 'axios';
-import Nouser from './Nouser';
 import { Loader } from 'lucide-react';
 import BaseURL from '../../../Static/Static';
 
@@ -28,30 +26,19 @@ function UserProfile() {
   // Memoized fetch functions
   const fetchUserData = useCallback(async () => {
     try {
-      if (!user?.id) {
-        // Try to get from localStorage if not available from context
-        const storedUser = localStorage.getItem('userProfile');
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          setUserData(parsedUser);
-          setFormData({
-            first_name: parsedUser.first_name || '',
-            last_name: parsedUser.last_name || '',
-            phone_number: parsedUser.phone_number || '',
-            date_of_birth: parsedUser.date_of_birth || '',
-            district: parsedUser.district || '',
-            state: parsedUser.state || '',
-            address: parsedUser.address || '',
-            pin_code: parsedUser.pin_code || '',
-            age: parsedUser.age || '',
-          });
-        }
+      // First check if we have a token in localStorage
+      const storedToken = localStorage.getItem('authToken');
+      
+      if (!storedToken && !token) {
+        console.log("No auth token found");
+        navigate('/login');
         return;
       }
       
-      const response = await getUserInfo()
-      console.log(response,"response")
-      if (response.data) {
+      const response = await getUserInfo();
+      console.log("User data response:", response);
+      
+      if (response && response.data) {
         setUserData(response.data);
         setFormData({
           first_name: response.data.first_name || '',
@@ -65,12 +52,22 @@ function UserProfile() {
           age: response.data.age || '',
         });
         localStorage.setItem('userProfile', JSON.stringify(response.data));
+      } else {
+        console.error("No data in response", response);
+        // Try to get from localStorage if API returns empty
+        tryLoadFromLocalStorage();
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       // Try to get from localStorage if API fails
-      const storedUser = localStorage.getItem('userProfile');
-      if (storedUser) {
+      tryLoadFromLocalStorage();
+    }
+  }, [token, navigate]);
+
+  const tryLoadFromLocalStorage = () => {
+    const storedUser = localStorage.getItem('userProfile');
+    if (storedUser) {
+      try {
         const parsedUser = JSON.parse(storedUser);
         setUserData(parsedUser);
         setFormData({
@@ -84,14 +81,23 @@ function UserProfile() {
           pin_code: parsedUser.pin_code || '',
           age: parsedUser.age || '',
         });
+        return true;
+      } catch (e) {
+        console.error("Error parsing stored user data", e);
+        return false;
       }
     }
-  }, [user, token]);
+    return false;
+  };
 
   const getAddress = useCallback(async () => {
     try {
       const { data } = await getMyDeliveryAddress();
-      setUserAddresses(data || []);
+      if (data) {
+        setUserAddresses(data);
+      } else {
+        setUserAddresses([]);
+      }
     } catch (error) {
       console.error("Error fetching addresses:", error);
       setUserAddresses([]);
@@ -102,26 +108,14 @@ function UserProfile() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      // First, try to load from localStorage for immediate display
-      const storedUser = localStorage.getItem('userProfile');
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        setUserData(parsedUser);
-        setFormData({
-          first_name: parsedUser.first_name || '',
-          last_name: parsedUser.last_name || '',
-          phone_number: parsedUser.phone_number || '',
-          date_of_birth: parsedUser.date_of_birth || '',
-          district: parsedUser.district || '',
-          state: parsedUser.state || '',
-          address: parsedUser.address || '',
-          pin_code: parsedUser.pin_code || '',
-          age: parsedUser.age || '',
-        });
-      }
+      
+      // First try to load from localStorage for immediate display
+      const loaded = tryLoadFromLocalStorage();
       
       // Then fetch updated data from API
-      await Promise.all([fetchUserData(), getAddress()]);
+      await fetchUserData();
+      await getAddress();
+      
       setLoading(false);
     };
 
@@ -225,13 +219,37 @@ function UserProfile() {
   };
 
   // Loading state
-  if (loading && !userData) {
-    return <Loader />;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
+        <Loader size={40} className="animate-spin text-red-500" />
+      </div>
+    );
   }
 
-  // No user data state
-  if (!loading && !userData) {
-    return <Nouser />;
+  // No user data state - import the component but we'll avoid using it since it seems to be causing the issue
+  const Nouser = () => (
+    <div className="min-h-screen flex flex-col items-center justify-center" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
+      <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
+        <User size={64} className="mx-auto text-gray-300 mb-4" />
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">No Profile Found</h2>
+        <p className="text-gray-600 mb-6">You need to log in to view your profile.</p>
+        <button 
+          onClick={() => navigate('/login')}
+          className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all"
+        >
+          Log In
+        </button>
+      </div>
+    </div>
+  );
+  
+  // If no userData after loading is complete, redirect to login instead of showing Nouser
+  if (!userData) {
+    console.log("No user data found after loading, redirecting to login");
+    // Redirect to login instead of showing the Nouser component
+    navigate('/login');
+    return null;
   }
 
   // Profile Info Component
@@ -341,7 +359,7 @@ const EditProfileForm = ({
         <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
           {getProfilePicture() ? (
             <img 
-              src={BaseURL + getProfilePicture()} 
+              src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
               alt="Profile" 
               className="w-full h-full object-cover"
             />
@@ -488,7 +506,7 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
         <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mb-2">
           {getProfilePicture() ? (
             <img 
-              src={BaseURL + getProfilePicture()} 
+              src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
               alt="Profile" 
               className="w-full h-full object-cover"
             />
@@ -598,7 +616,7 @@ const ProfileSidebar = ({ userData, getProfilePicture, activeTab, setActiveTab, 
       <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
         {getProfilePicture() ? (
           <img 
-          src={BaseURL + getProfilePicture()} 
+            src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
             alt="Profile" 
             className="w-full h-full object-cover"
           />

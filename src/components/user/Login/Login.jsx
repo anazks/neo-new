@@ -142,7 +142,7 @@ const Login = () => {
     let response = await RegisterUser(registrationData);
     console.log(response, "response from register user");
     if (response.status === 400) {
-      console.log(response.response.datal, "error message");
+      console.log(response, "error message");
       setErrorMessage(response.response.data.detail);
     } else {
       setMessage(response.data.message);
