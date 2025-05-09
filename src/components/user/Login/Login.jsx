@@ -5,6 +5,7 @@ import {
 } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { RegisterUser } from "../../../Services/userApi";
+import {OtpForUserRegistration} from "../../../Services/userApi";
 import Apple from "../../../Images/LoginWith/apple.png";
 import Linkedin from "../../../Images/LoginWith/Linkedin.png";
 import Google from "../../../Images/LoginWith/Google.png";
@@ -15,9 +16,12 @@ import Alert from "../Alert/Alert";
 import Pro from "../../../Images/pro.jpg";
 import GoogleLoginComponent from "../../user/Google/GoogleLoginComponent";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../../Context/UserContext";
+
 
 const Login = () => {
   const navigate = useNavigate();
+  const { token, setToken, user } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [googleAuth, setGoogleAuth] = useState(false);
@@ -80,8 +84,9 @@ const Login = () => {
     password: false,
     terms: false,
     first_name: false,
-    last_name: false,
+    
     phone_number: false,
+    otp: false,
     date_of_birth: false,
     pin_code: false,
     district: false,
@@ -94,9 +99,8 @@ const Login = () => {
     "email",
     "password",
     "terms",
-    "first_name",
-    "phone_number",
-    "submit",
+    "otp",
+    
   ];
 
   const calculateProgress = () => {
@@ -125,11 +129,13 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const registrationData = {
       email: formData.email,
       password: formData.password,
@@ -139,17 +145,88 @@ const Login = () => {
     };
 
     console.log("Registration Data:", registrationData);
-    let response = await RegisterUser(registrationData);
-    console.log(response, "response from register user");
-    if (response.status === 400) {
-      console.log(response.response.datal, "error message");
-      setErrorMessage(response.response.data.detail);
-    } else {
-      setMessage(response.data.message);
-    }
+    try {
+      let response = await RegisterUser(registrationData);
+      console.log(response, "response from register user");
 
-    setIsLogin(true);
+      if (response.status === 400) {
+        console.log(response.response.data, "error message");
+        setErrorMessage(response.response.data.detail);
+        // Stay on the current page and display the error message
+      } else {
+        // OTP is sent automatically by the backend after registration
+        setMessage(
+          "Registration successful! Please enter the OTP sent to your email."
+        );
+        moveToNextField(); // Move to OTP field
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setErrorMessage(
+        error.response?.data?.detail || "Registration failed. Please try again."
+      );
+    }
   };
+
+
+
+// Add a function to handle OTP verification
+const verifyOTPRegistration = async (e) => {
+  e.preventDefault();
+  
+  
+  // Clear any previous messages
+  setErrorMessage("");
+  setMessage("");
+  
+  if (!formData.otp) {
+    setErrorMessage("Please enter the verification code");
+    return;
+  }
+  
+  const otpData = {
+    otp: formData.otp,
+    identifier: formData.email
+  };
+  
+  console.log("OTP Data:", otpData);
+  
+  try {
+    // Call your OTP verification API
+    const response = await OtpForUserRegistration(otpData);
+    console.log(response, "response from OTP verification");
+    
+    if (response.status === 200 || response.status === 201) {
+      // OTP verification successful
+      setMessage("Verification successful!");
+      
+      // Store token in localStorage and set in context
+      const data = response.data;
+      localStorage.setItem("refresh", data.refresh);
+      
+      // Use the Auth context to set the token
+      if (setToken) {
+        setToken(data.access);
+      }
+      
+      // Set a brief delay before redirecting to home page
+      setTimeout(() => {
+        if (navigate) {
+          navigate('/');
+        } else {
+          // Fallback if navigate is not available
+          window.location.href = '/';
+        }
+      }, 1000);
+    } else {
+      setErrorMessage(response.data?.detail || "Invalid OTP. Please try again.");
+    }
+  } catch (error) {
+    console.error("OTP verification error:", error);
+    setErrorMessage(error.response?.data?.detail || "Error verifying OTP. Please try again.");
+  }
+};
+
 
   const moveToNextField = () => {
     const currentIndex = registrationFields.indexOf(currentField);
@@ -178,7 +255,7 @@ const Login = () => {
     if (["first_name", "email", "phone_number"].includes(field)) return 1;
     if (["password", "cpassword"].includes(field)) return 2;
     if (["terms"].includes(field)) return 3;
-    // if (["district", "state", "address", "submit"].includes(field)) return 4;
+    if (["otp"].includes(field)) return 4;
     return 1;
   };
 
@@ -202,7 +279,7 @@ const Login = () => {
         {/* Step indicator */}
         <div className="flex flex-col mb-8">
           <div className="flex justify-between mb-2">
-            {[1, 2, 3].map((step) => (
+            {[1, 2, 3, 4].map((step) => (
               <div
                 key={step}
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
@@ -246,6 +323,13 @@ const Login = () => {
             <>
               <h2 className="text-2xl font-bold mb-2">Please Agree Terms</h2>
               <p className="text-gray-600">Almost there!</p>
+            </>
+          )}
+
+{currentStep === 4 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2">We are not verified You</h2>
+              <p className="text-gray-600">We've sent a verification code to your email address.</p>
             </>
           )}
         </div>
@@ -801,6 +885,7 @@ const Login = () => {
                       marginTop: "15px",
                     }}
                     className="text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                    
                     onClick={handleSubmit}
                   >
                     Confirm
@@ -810,46 +895,104 @@ const Login = () => {
             </div>
           )}
 
-          {/* OTP field */}
-          {formFieldsVisible.first_name && (
-            <div>
+
+
+          {formFieldsVisible.otp && (
+            <div
+              className={`relative ${currentField === "otp" ? "" : "hidden"}`}
+            >
+              <div className="text-center mb-4">
+                {/* <h3 className="text-lg font-medium">Verification Code</h3>
+                <p className="text-sm text-gray-600">
+                  We've sent a verification code to your email address.
+                </p> */}
+
+                {/* Display success or error messages */}
+                {message && (
+                  <div className="mt-2 p-2 bg-green-100 text-green-700 rounded-lg">
+                    {message}
+                  </div>
+                )}
+                {errorMessage && (
+                  <div className="mt-2 p-2 bg-red-100 text-red-700 rounded-lg">
+                    {errorMessage}
+                  </div>
+                )}
+              </div>
+
               <div className="relative" style={{ marginTop: "10px" }}>
                 <input
-                  type="number"
-                  name="OTP"
-                  value={formData.password1}
+                  type="text"
+                  name="otp"
+                  value={formData.otp}
                   onChange={handleChange}
                   id="otp"
                   required
                   className="w-full pt-5 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   style={{
                     borderRadius: "20px",
-                    // border: "2px solid black",
-                    backgroundColor: "lightgray",
+                    border: "2px solid black",
+                    backgroundColor: "white",
                     textAlign: "center",
-
                     padding: "1rem 0.4rem 0.5rem 0.4rem",
+                    fontSize: "18px",
+                    letterSpacing: "0.5em", // Add spacing between characters for better OTP readability
                   }}
+                  maxLength="6" // Assuming 6-digit OTP
                 />
                 <label
                   htmlFor="otp"
-                  className={`absolute left-3 transition-all duration-200 pointer-events-none ${
-                    formData.OTP
+                  className={`absolute left-0 right-0 text-center transition-all duration-200 pointer-events-none ${
+                    formData.otp
                       ? "text-xs top-1 text-gray-600"
                       : "text-base top-3 text-gray-400"
                   }`}
-                  style={{ marginLeft: "0.5rem" }}
                 >
-                  OTP
+                  Enter OTP
                 </label>
               </div>
 
-              <button
-                className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors"
-                style={{ borderRadius: "20px", marginTop: "15px" }}
+              <div
+                className=""
+                style={{
+                  display: "flex",
+                  justifyContent: "center", // Changed to center for single button
+                  flexWrap: "wrap",
+                  gap: "20px",
+                  marginTop: "20px",
+                }}
               >
-                SUBMIT
-              </button>
+                <button
+                
+                  style={{
+                    backgroundColor: formData.otp ? "black" : "#999",
+                    height: "40px",
+                    width: "200px",
+                    borderRadius: "20px",
+                    opacity: formData.otp ? "1" : "0.7",
+                    cursor: formData.otp ? "pointer" : "not-allowed",
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  className="text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                  
+                  disabled={!formData.otp}
+                  onClick={verifyOTPRegistration}
+                >
+                  SUBMIT
+                </button>
+              </div>
+
+              <div className="mt-4 text-center">
+                <button
+                  className="text-blue-600 text-sm"
+                  
+                >
+                  Didn't receive a code? Resend
+                </button>
+              </div>
             </div>
           )}
 
@@ -958,7 +1101,7 @@ const Login = () => {
             <button
               className={`px-6 py-2 rounded-full transition-colors ${
                 isLogin
-                  ? "bg-black text-white hover:bg-gray-800"
+                  ? "bg-black text-yellow-500 hover:bg-gray-800"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
               onClick={() => setIsLogin(true)}
@@ -968,7 +1111,7 @@ const Login = () => {
             <button
               className={`px-6 py-2 rounded-full transition-colors ${
                 !isLogin
-                  ? "bg-black text-white hover:bg-gray-800"
+                  ? "bg-black text-yellow-500 hover:bg-gray-800"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
               onClick={() => {
