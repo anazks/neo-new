@@ -5,6 +5,8 @@ import Loader from '../../../../Loader/Loader';
 import { getCategory, getBrand, getTax } from '../../../../Services/Settings'
 import BaseURL from '../../../../Static/Static';
 import Alert from '../../../user/Alert/Alert';
+import Paired from './Paired';
+import SetRecomendation from './SetRecomendation';
 
 function UpdateProduct() {
     const [videoFile, setVideoFile] = useState(null);
@@ -48,7 +50,8 @@ function UpdateProduct() {
     const [showVideoModal, setShowVideoModal] = useState(false);
     const [showVariantModal, setShowVariantModal] = useState(false);
     const [showOverviewModal, setShowOverviewModal] = useState(false);
-
+    const [ShowPairingModal,setShowPairingModal] =useState(false)
+    const [RecommendationModal,setRecommendationMoal] = useState(false)
     // Form states for modals
     const [photos, setPhotos] = useState([]);
     const [primaryPhotoIndex, setPrimaryPhotoIndex] = useState(0);
@@ -641,6 +644,20 @@ function UpdateProduct() {
                     >
                         Add Overview
                     </button>
+                    <button
+                        type="button"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+                        onClick={() => setShowPairingModal(true)}
+                    >
+                        Add Pairing
+                    </button>
+                    <button
+                        type="button"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+                        onClick={() => setRecommendationMoal(true)}
+                    >
+                        Add Recommendation
+                    </button>
                 </div>
 
                 {/* Availability Toggle */}
@@ -672,6 +689,16 @@ function UpdateProduct() {
             </form>
 
             {/* Modals (keep the same as before) */}
+            {
+                RecommendationModal && (
+                    <>
+                        <SetRecomendation
+                            product={product}
+                            products={products}
+                        />
+                    </>
+                )
+            }
             {showPhotosModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
@@ -766,6 +793,14 @@ function UpdateProduct() {
                     </div>
                 </div>
             )}
+
+            {
+                ShowPairingModal &&(
+                    <>
+                        <Paired product={product} products={products}/>
+                    </>
+                )
+            }
 
     {showVideoModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

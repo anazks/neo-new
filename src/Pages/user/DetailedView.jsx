@@ -7,7 +7,7 @@ import ProductFooter from "../../components/user/Footer/ProductFooter";
 import BestPairedWith from "../../components/user/BestPairedWith/BestPairedWith";
 import { useParams } from "react-router-dom";
 import { getSingleProduct } from "../../Services/Products";
-
+import  Loader from "../../Loader/Loader"
 function DetailedView() {
   const { id } = useParams(); // Get product ID from URL
   const [product, setProduct] = useState(null); // Store product details
@@ -32,14 +32,14 @@ function DetailedView() {
   }, [id]); // ✅ Add dependency array to re-run when `id` changes
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <Loader/>
   }
 
   return (
     <div>
       <Details product={product} /> {/* ✅ Pass product as prop */}
       <Inside product={product}/>
-      <BestPairedWith />
+      <BestPairedWith product={product} />
       <Rating product={product}/>
       <ProductCard/>
       <ProductFooter/>

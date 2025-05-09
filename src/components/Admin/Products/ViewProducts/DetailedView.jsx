@@ -4,6 +4,9 @@ import './DetailedView.css';
 import { getSingleProduct } from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import Loader from '../../../../Loader/Loader';
+import PairedProducts from './PairedProdcuts';
+import ViewImages from './ViewImages';
+import Varient from './Varient';
 
 function ProductView() {
   const { id } = useParams();
@@ -44,7 +47,8 @@ function ProductView() {
   }
 
   return (
-    <div className="pv-wrapper">
+  <>
+      <div className="pv-wrapper">
       <div className="pv-title-section">
         <h1>{product.name}</h1>
         <div className="pv-id">Product Code: {product.product_code}</div>
@@ -146,6 +150,12 @@ function ProductView() {
         </div>
       </div>
     </div>
+    <PairedProducts product={product}/>
+    <br/>
+    <ViewImages product={product}/>
+    <br />
+  <Varient product={product}/>
+  </>
   );
 }
 

@@ -482,7 +482,7 @@ function Overview({ product }) {
                                 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Phone Number* (10 digits)
+                                        Phone Number
                                     </label>
                                     <input
                                         type="tel"
@@ -521,7 +521,7 @@ function Overview({ product }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            District* (letters only)
+                                            District
                                         </label>
                                         <input
                                             type="text"
@@ -542,7 +542,7 @@ function Overview({ product }) {
                                     
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            State* (letters only)
+                                            State
                                         </label>
                                         <input
                                             type="text"
@@ -583,7 +583,7 @@ function Overview({ product }) {
                                     
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Country* (letters only)
+                                            Country
                                         </label>
                                         <input
                                             type="text"

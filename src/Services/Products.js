@@ -311,5 +311,102 @@ const productDelete = async(id)=>{
        return error 
     }
 }
+
+const pairProdcut = async(formData)=>{
+    try {
+        let response = await Axios.post(`/inventory/product-pairings/`,formData)
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getPairedProduct = async(id)=>{
+    try {
+        let response = await Axios.get(`/inventory/products/${id}/with-pairings/`)
+        console.log(response,"pairig ")
+        return response
+    } catch (error) {
+        return error
+    }
+}
+
+const Addrecomendation = async(data)=>{
+    try {
+        let response = await Axios.post('/inventory/recommendations/',data)
+        return response
+    } catch (error) {
+        return error
+    }
+}
+const recomendation = async(data)=>{
+    try {
+        let response = await Axios.get('/inventory/recommendations/')
+        return response
+    } catch (error) {
+        return error
+    }
+}
+const recentlyViewed = async()=>{
+    try {
+        let response = await Axios.get('/inventory/recommendations/')
+        return response
+    } catch (error) {
+        return error
+    }
+}
+const deletePairedProduct= async(id)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+const getVarient = async(id)=>{
+    try {
+        console.log(id,"---------------id")
+        let response = await Axios.get(`/inventory/product_variant/${id}/`)
+        return response
+    } catch (error) {
+        return error
+    }
+}
+const payemntCallBack = async(data)=>{
+    try {
+        let response = await Axios.post('/orders/payment/callback/',data)
+        console.log(response)
+        return response
+    } catch (error) {
+        
+    }
+}
+const deleteVarient = async(id)=>{
+    try {
+        console.log(id,"---------------id")
+        let response = await Axios.delete(`/inventory/product_variant/${id}/`)
+        return response
+    } catch (error) {
+        return error
+    }
+}
+const getImage = async(id)=>{
+    try {
+      let response =  await Axios.get(`/inventory/products/${id}/images/`)
+      return response
+    } catch (error) {
+       return error 
+    }
+}
+const deleteImage = async(data)=>{
+    try {
+        console.log(data)
+        let {imageId}= data
+        let {productid} = data
+        let response = await Axios.delete(`/inventory/products/${productid}/delete-image/${imageId}/`)
+        console.log(response,"deleted")
+    } catch (error) {
+        
+    }
+}
 // Correct way to export multiple functions
-export {productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
