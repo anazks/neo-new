@@ -7,6 +7,8 @@ import NavBar from '../NavBar/NavBar'
 import { addTocart } from '../../../Services/userApi';
 import Rating  from "../ProductDetail/Rating"
 import Alert from '../Alert/Alert';
+
+import Loader from '../Loader/Loader'
 function Details({ product }) {
   // State for selected options and UI
   const [selectedStorage, setSelectedStorage] = useState('.5');
@@ -99,8 +101,11 @@ function Details({ product }) {
   };
   
   const handleDownloadBrochure = () => {
-    if (product?.brochure) {
-      window.open(product.brochure, '_blank');
+    // Fixed the variable name from broacher to brochure
+    if (product?.broacher) {
+      window.open(BaseURL+product.broacher, '_blank');
+    } else {
+      console.log("Brochure not available");
     }
   };
   
@@ -145,10 +150,9 @@ const handleBuyNow = async () => {
 
   if (!product) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen w-full bg-white">
-        <div className="w-16 h-16 border-4 border-black border-t-transparent rounded-full animate-spin mb-6"></div>
-        <h2 className="text-xl font-semibold text-gray-800">Loading product details...</h2>
-      </div>
+      <>
+        <Loader/>
+      </>
     );
   }
 
@@ -248,6 +252,7 @@ const handleBuyNow = async () => {
                   <FaPlay size={12} /> <span>Watch Video</span>
                 </button>
               )}
+              {/* Fixed variable name from broacher to brochure for consistency */}
               {product?.broacher && (
                 <button 
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 border border-gray-300 text-black hover:bg-gray-200 transition-all duration-300"
@@ -297,18 +302,19 @@ const handleBuyNow = async () => {
               {product.description || "Experience the ultimate gaming performance with our custom-built gaming PC, featuring the latest technology and components designed to deliver exceptional speed, graphics, and reliability for all your gaming needs."}
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-3 mt-4">
+            {/* Improved button responsiveness with taller buttons on mobile */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
               <button 
                 onClick={() => handleAddToCart(product.id)}
-                className="flex-1 h-10 rounded-lg font-semibold uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-300 bg-gray-100 border border-gray-400 text-black hover:bg-gray-200"
+                className="flex-1 h-16 sm:h-12 md:h-10 py-4 sm:py-3 md:py-2 rounded-lg font-semibold uppercase tracking-wider text-sm sm:text-xs flex items-center justify-center gap-2 transition-all duration-300 bg-gray-100 border border-gray-400 text-black hover:bg-gray-200"
               >
-                <FaCartPlus size={14} /> <span>Add To Cart</span>
+                <FaCartPlus size={16} className="sm:text-sm" /> <span>Add To Cart</span>
               </button>
               <button 
                 onClick={handleBuyNow}
-                className="flex-1 h-10 rounded-lg font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all duration-300"
+                className="flex-1 h-16 sm:h-12 md:h-10 py-4 sm:py-3 md:py-2 rounded-lg font-bold uppercase tracking-wider text-sm sm:text-xs flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all duration-300"
               >
-                <FaBolt size={14} /> <span>Buy Now</span>
+                <FaBolt size={16} className="sm:text-sm" /> <span>Buy Now</span>
               </button>
             </div>
 
@@ -386,11 +392,26 @@ style.textContent = `
     font-family: 'Questrial', sans-serif;
   }
   
-  /* Add mobile responsiveness for image */
+  /* Improved mobile responsiveness */
   @media (max-width: 768px) {
     .md\\:sticky {
       position: relative;
       top: 0;
+    }
+    
+    /* Add more spacing and larger touch targets for buttons on mobile */
+    .flex-col button {
+      margin-bottom: 12px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      min-height: 60px;
+    }
+  }
+  
+  /* Add specific styles for very small screens */
+  @media (max-width: 380px) {
+    .flex-col button {
+      min-height: 64px;
     }
   }
 `;

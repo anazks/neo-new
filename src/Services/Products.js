@@ -311,5 +311,14 @@ const productDelete = async(id)=>{
        return error 
     }
 }
+
+const pairProdcut = async(formData)=>{
+    try {
+        let response = await Axios.post(`/inventory/product-pairings/`,formData)
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+}
 // Correct way to export multiple functions
-export {productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
