@@ -5,6 +5,8 @@ import { getSingleProduct } from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import Loader from '../../../../Loader/Loader';
 import PairedProducts from './PairedProdcuts';
+import ViewImages from './ViewImages';
+import Varient from './Varient';
 
 function ProductView() {
   const { id } = useParams();
@@ -149,6 +151,10 @@ function ProductView() {
       </div>
     </div>
     <PairedProducts product={product}/>
+    <br/>
+    <ViewImages product={product}/>
+    <br />
+  <Varient product={product}/>
   </>
   );
 }

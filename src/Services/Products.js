@@ -362,7 +362,15 @@ const deletePairedProduct= async(id)=>{
         
     }
 }
-
+const getVarient = async(id)=>{
+    try {
+        console.log(id,"---------------id")
+        let response = await Axios.get(`/inventory/product_variant/${id}/`)
+        return response
+    } catch (error) {
+        return error
+    }
+}
 const payemntCallBack = async(data)=>{
     try {
         let response = await Axios.post('/orders/payment/callback/',data)
@@ -372,5 +380,22 @@ const payemntCallBack = async(data)=>{
         
     }
 }
+const deleteVarient = async(id)=>{
+    try {
+        console.log(id,"---------------id")
+        let response = await Axios.delete(`/inventory/product_variant/${id}/`)
+        return response
+    } catch (error) {
+        return error
+    }
+}
+const getImage = async(id)=>{
+    try {
+      let response =  await Axios.get(`/inventory/products/${id}/images/`)
+      return response
+    } catch (error) {
+       return error 
+    }
+}
 // Correct way to export multiple functions
-export {payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
