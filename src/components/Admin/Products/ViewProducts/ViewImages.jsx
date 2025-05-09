@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getImage } from '../../../../Services/Products';
+import { getImage ,deleteImage} from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import { Trash2, X, AlertCircle } from 'lucide-react';
 
@@ -36,13 +36,18 @@ function ViewImages({ product, onImageDelete }) {
     try {
       // Assuming there's a deleteImage API function
       // await deleteImage(imageId);
-      
+       let data = {
+          imageId,
+          productid:product.id
+        }
+         let response = await deleteImage(data)
       // For now, let's just update the UI
       setImages(images.filter(img => img.id !== imageId));
       
       // Notify parent component if needed
       if (onImageDelete) {
         onImageDelete(imageId);
+       
       }
 
       setDeleteConfirm(null);

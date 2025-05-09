@@ -397,5 +397,16 @@ const getImage = async(id)=>{
        return error 
     }
 }
+const deleteImage = async(data)=>{
+    try {
+        console.log(data)
+        let {imageId}= data
+        let {productid} = data
+        let response = await Axios.delete(`/inventory/products/${productid}/delete-image/${imageId}/`)
+        console.log(response,"deleted")
+    } catch (error) {
+        
+    }
+}
 // Correct way to export multiple functions
-export {getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
