@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Axios from '../../../Axios/Axios';
 import PaymentDone from '../PaymentDone/PaymentDone';
-
+import {payemntCallBack} from '../../../Services/Products'
 const loadScript = (src) => new Promise((resolve) => {
   const script = document.createElement('script');
   script.src = src;
@@ -112,10 +112,10 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
       };
 
       console.log("Sending payment result to server:", data);
-      const response = await Axios.post(`/orders/payment/callback/`, data);
+      const response = await payemntCallBack(data);
       console.log("Server response:", response.data);
       if (response.data.payment === true) {
-        window.location.href = "/cart";
+        window.location.href = "/payed";
         localStorage.setItem("payed", true);
         console.log("Payment status updated successfully on server.");  
       } else {
