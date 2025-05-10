@@ -1,24 +1,12 @@
 import React from "react";
 import { IoArrowForwardCircleSharp } from "react-icons/io5";
-
 import "./about.css";
 import About from "./About";
-
-
 
 function AboutUs() {
   return (
     <div className="w-[95%] mx-auto my-12 md:my-16 min-h-[90vh] bg-white rounded-2xl shadow-lg p-6 md:p-10 flex flex-col md:flex-row justify-between items-center">
       {/* Left Section */}
-
-      <About/>
-      <div className="about">
-        <h1>About Us</h1>
-        <div className="descrpt">
-          <h1>Why We Stand Out</h1>
-          <span>For Gamers by Gamers</span>
-          <p>
-
       <div className="w-full md:w-[48%] text-black mb-10 md:mb-0">
         <h1 className="text-3xl md:text-4xl font-normal leading-tight text-center md:text-left font-['Radio_Canada']">
           About Us
@@ -32,7 +20,6 @@ function AboutUs() {
             For Gamers by Gamers
           </span>
           <p className="font-['Raleway'] text-base md:text-lg font-normal leading-7 text-justify">
-
             We specialize in creating high-performance custom PCs tailored to
             your needs. Our team of experts ensures top-quality components and
             exceptional craftsmanship to deliver the ultimate gaming and
@@ -62,21 +49,14 @@ function AboutUs() {
       </div>
 
       {/* Right Section */}
-
-      <div className="imageDiv">
-        <div>
-
-        </div>
-
       <div className="w-full sm:w-4/5 md:w-[45%] h-80 md:h-auto rounded-lg flex items-center justify-center">
-        <div 
+        <div
           className="h-64 sm:h-72 md:h-80 lg:h-96 w-full rounded-tl-[150px] rounded-br-[150px] bg-cover bg-center"
           style={{
             clipPath: "polygon(0% 45%, 36% 0%, 100% 0%, 100% 74%, 67% 100%, 0% 99%)",
             backgroundImage: "url('../../../Images/coffyWith.png')"
           }}
         ></div>
-
       </div>
     </div>
   );

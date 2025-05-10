@@ -27,8 +27,6 @@ import ProfilePage from "./Pages/user/ProfilePage";
 
 import Payed from './components/user/RazorPay/Payed';
 import Nvidia from "./components/user/Nvidia/Nvidia";
-
-import Payed from './components/user/RazorPay/Payed'
 import Failed from './components/user/RazorPay/Failed'
 
 function App() {
