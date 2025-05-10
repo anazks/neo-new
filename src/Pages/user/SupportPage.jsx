@@ -3,6 +3,12 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Logo from '../../Images/LoginWith/neo_tokyo-logo.png';
 import NavBar from '../../components/user/NavBar/NavBar';
 import Footer from '../../components/user/Footer/Footer';
+
+import {useAuth} from '../../Context/UserContext'
+import About from '../../components/user/AboutUs/About';
+import QualityStandards from '../../components/user/AboutUs/Quality';
+import DirectionalSection from '../../components/user/AboutUs/Directional'
+
 import { useAuth } from '../../Context/UserContext';
 import About from '../../components/user/AboutUs/AboutUs';
 import Quality from '../../components/user/AboutUs/Quality';
@@ -16,8 +22,8 @@ const HeaderCard = () => (
     viewport={{ once: false, margin: "-100px" }}
     transition={{ duration: 0.6 }}
   >
-    <h1 className="text-4xl font-bold">Embark on your Troubleshooting Journey</h1>
-    <div className="h-1 bg-black w-full mt-2"></div>
+    <h1 className="text-4xl">Embark on your <br /> Troubleshooting Journey</h1>
+    <div className="h-1 bg-black w-full mt-2" style={{height:"10px", borderRadius:"5px",marginTop:"6px"}}></div>
   </motion.div>
 );
 
@@ -30,6 +36,12 @@ const StackedCard = ({ children, index = 0, total = 1 }) => {
   const zIndex = total - index;
 
   return (
+
+    <motion.div 
+      className="w-full max-w-6xl mx-auto  overflow-hidden"
+      initial={{ opacity: 0, y: 100, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+
     <motion.div
       className="w-full rounded-2xl shadow-xl overflow-hidden bg-white"
       style={{ 
@@ -43,9 +55,44 @@ const StackedCard = ({ children, index = 0, total = 1 }) => {
       }}
       initial={{ opacity: 0, y: 100, scale: scale - 0.1 }}
       whileInView={{ opacity: 1 - (index * 0.2), y: offsetY, scale }}
+
       viewport={{ once: false, margin: "-50px" }}
       transition={{ duration: 0.7, delay }}
     >
+
+      <div className="flex flex-col md:flex-row " style={{gap:"30px",fontFamily:"Raleway , sans-serif ",}}>
+        {/* Left Section */}
+        <div className="w-full md:w-7/12 p-8 bg-white" style={{border:"1.5px solid black",borderRadius:"20px",padding:"30px"}}>
+          <h2 className="text-2xl font-semibold mb-6">Hi {
+                user ?(<>test</>  ): ""}, How can we Help you?</h2>
+          
+          {/* Raise a Ticket Section */}
+          <div className="border-b border-gray-300 pb-6 mb-6">
+            <div className="flex flex-col mb-4">
+              {
+                user ? (<>
+                <div className="inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-large font-semibold">Raise a Ticket</span>
+                <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span>
+              </div>
+              <div className="inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-large font-semibold">View Live Tickets</span>
+                {/* <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span> */}
+              </div>
+              <div className="inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-large font-semibold">Manage Tickets</span>
+                {/* <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span> */}
+              </div>
+
+
+                </>
+                
+              ):''
+              }
+              
+              
+    
+
       {children}
     </motion.div>
   );
@@ -119,6 +166,7 @@ const SupportContentCard = () => {
               <button className="text-blue-600 flex items-center text-sm">
                 View More <span className="ml-1">+</span>
               </button>
+
             </div>
             
             {/* Queries Section */}
@@ -133,6 +181,25 @@ const SupportContentCard = () => {
             </div>
           </div>
           
+
+          {/* Browse Help Topics */}
+          <div>
+            <h3 className="font-bold">Browse Help Topics</h3>
+          </div>
+        </div>
+        
+        {/* Right Section */}
+        <div className="w-full md:w-5/12 p-8 bg-white" style={{border:"1.5px solid black",borderRadius:"20px",padding:"30px"}}>
+          {/* Navigation Card */}
+          <div className="bg-white rounded-lg p-6 shadow-md mb-6">
+            <h3 className="font-bold mb-4 text-xl">Navigation</h3>
+            
+            <div className="mb-6">
+              <h4 className="font-medium mb-2">Reach Us</h4>
+              <div className="flex items-start mb-4">
+                <div className=" rounded-full p-3 mr-4">
+                  <img src={Logo} alt="Logo.jpg" className="w-6 h-6" />
+
           {/* Right Section */}
           <div className="w-full md:w-5/12 p-8 bg-gray-50">
             {/* Navigation Card */}
@@ -151,6 +218,7 @@ const SupportContentCard = () => {
                     <p>opposite to V-Guard, Vennala,</p>
                     <p>Kochi, Kerala 682028</p>
                   </div>
+
                 </div>
                 
                 <div className="flex items-start">
@@ -232,12 +300,33 @@ const FAQsCard = () => {
             </div>
           </div>
         </div>
+      </div>
+
+    </motion.div>
+
+  );
+};
+
+const AboutCard = () => {
+  return (
+    <motion.div >
+<About/>
+    </motion.div>
+      
+   
+  );
+};
+
+
+const FAQsCard = () => {
+
       </StackedCard>
     </div>
   );
 };
 
 const AboutUsCard = () => {
+
   return (
     <div className="relative w-full max-w-6xl mx-auto mb-16 pb-12">
       {/* Stack effect - creating shadow cards underneath */}
@@ -357,8 +446,8 @@ function SupportPage() {
   return (
     <div 
       ref={containerRef} 
-      className="min-h-screen bg-gradient-to-r from-white to-green-200"
-      style={{width:"90%", margin:"auto", borderRadius:"30px", overflow: "hidden", position: "relative"}}
+      className="min-h-screen bg-gradient-to-r from-white to-green-300"
+      style={{width:"100%", margin:"auto", borderRadius:"30px", overflow: "hidden", position: "relative"}}
     >
       <NavBar />
       <LiveChatButton />
@@ -379,8 +468,14 @@ function SupportPage() {
           
           <div className="space-y-24">
             <SupportContentCard />
+
+            <AboutCard/>
+            <QualityStandards/>
+            <DirectionalSection/>
+
             <AboutUsCard />
             <QualityCard />
+
             <FAQsCard />
             <ContactCard />
           </div>

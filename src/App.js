@@ -4,6 +4,7 @@ import Products from "./Pages/user/Products";
 import DetailedView from "./Pages/user/DetailedView";
 import CardPage from "./components/user/CardPage/CartPage";
 import Login from "./Pages/user/Login";
+import LoginComponent from './components/user/Login/Login'
 import Recomends from "./components/user/Recomendation/Recomends";
 import SupportPage from "./Pages/user/SupportPage";
 import Register from "././components//user/Registraion/Register";
@@ -23,15 +24,20 @@ import Ticket from "./components/user/Tickets/Tickets"
 import Solutions from "./components/user/Solutions/Solutions"
 import Profile from "./components/user/Profile/Profile";
 import ProfilePage from "./Pages/user/ProfilePage";
+
+import Payed from './components/user/RazorPay/Payed';
+import Nvidia from "./components/user/Nvidia/Nvidia";
+
 import Payed from './components/user/RazorPay/Payed'
 import Failed from './components/user/RazorPay/Failed'
+
 function App() {
   return (
     <>
     <AuthProvider>
       <Routes>
             <Route path="/" element={ <Home/> } />
-            <Route path="/Login" element={<Login/>}/>
+            <Route path="/Login" element={<LoginComponent/>}/>
             <Route path="/Register" element={<Register/>}/>
             <Route path="/products" element={ <Products/> } />
             <Route path="/details/:id" element={<DetailedView />} />
@@ -48,7 +54,11 @@ function App() {
             <Route path="/Solutions" element={<Solutions/>}/>
             <Route path="/profile"  element={<ProfilePage/>}/>
             <Route path="/payed" element={<Payed/>} />
+
+            <Route path="/nvidia" element={<Nvidia/>} />
+
             <Route path="/failed" element={<Failed/>} />
+
 
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
