@@ -13,6 +13,9 @@ import NavBar from "../NavBar/NavBar";
 import WelcomeSection from "./welcomepage";
 import Tokyo from "../Tokyo/Tokyo";
 import Tickets from "../Tickets/Tickets"
+import About from '../AboutUs/AboutUs'
+import Qulality from '../AboutUs/Quality'
+import Directionlal from '../AboutUs/Directional'
 const WelcomeHome = () => {
   // const [scrollY, setScrollY] = useState(0);
   const wrapperRef = useRef(null);
@@ -70,7 +73,7 @@ const WelcomeHome = () => {
         Tokyo,
         Quick,
         FeedBack,
-        // PriorityOne,
+        PriorityOne,
         GamingPage,
         Gaming,
         Footer
