@@ -92,7 +92,7 @@ function Sidebar({ isExpanded, toggleSidebar }) {
         </li>
         <li className="border-t border-gray-700 mt-4">
           <a 
-            href="/logout" 
+            href="/" 
             className="flex items-center p-4 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
           >
             <FaSignOutAlt className="text-xl" />

@@ -127,7 +127,7 @@ function ProductView() {
 
           {product.attributes?.length > 0 && (
             <div className="pv-specs">
-              <h3>Specifications</h3>
+              {/* <h3>Specifications</h3> */}
               <table className="pv-spec-table">
                 <tbody>
                   {product.attributes.map((attr) => (

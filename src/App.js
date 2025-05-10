@@ -24,8 +24,13 @@ import Ticket from "./components/user/Tickets/Tickets"
 import Solutions from "./components/user/Solutions/Solutions"
 import Profile from "./components/user/Profile/Profile";
 import ProfilePage from "./Pages/user/ProfilePage";
+
 import Payed from './components/user/RazorPay/Payed';
 import Nvidia from "./components/user/Nvidia/Nvidia";
+
+import Payed from './components/user/RazorPay/Payed'
+import Failed from './components/user/RazorPay/Failed'
+
 function App() {
   return (
     <>
@@ -49,7 +54,12 @@ function App() {
             <Route path="/Solutions" element={<Solutions/>}/>
             <Route path="/profile"  element={<ProfilePage/>}/>
             <Route path="/payed" element={<Payed/>} />
+
             <Route path="/nvidia" element={<Nvidia/>} />
+
+            <Route path="/failed" element={<Failed/>} />
+
+
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/Home" element={<AdminHome/>}/> */}

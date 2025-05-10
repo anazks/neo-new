@@ -89,11 +89,12 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
 
     rzpInstance.current.on('payment.failed', async (response) => {
       console.log("Payment Failed:", response.error);
-      paymentId.current = response.error.metadata?.payment_id || null;
-      await handlePayment("failed", {
-        ...response.error,
-        raz_order_id: orderDetails.raz_order_id,
-      });
+       window.location.href = "/failed";
+      // paymentId.current = response.error.metadata?.payment_id || null;
+      // await handlePayment("failed", {
+      //   ...response.error,
+      //   raz_order_id: orderDetails.raz_order_id,
+      // });
       rzpInstance.current.close();
       setDisplayRazorpay(false);
     });

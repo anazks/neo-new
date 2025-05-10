@@ -7,9 +7,12 @@ import NavBar from '../NavBar/NavBar'
 import { addTocart } from '../../../Services/userApi';
 import Rating  from "../ProductDetail/Rating"
 import Alert from '../Alert/Alert';
+import {useAuth} from '../../../Context/UserContext'
 
 import Loader from '../Loader/Loader'
 function Details({ product }) {
+  const { token, setToken, user } = useAuth();
+  
   // State for selected options and UI
   const [selectedStorage, setSelectedStorage] = useState('.5');
   const [selectedRam, setSelectedRam] = useState('8');
@@ -310,12 +313,19 @@ const handleBuyNow = async () => {
               >
                 <FaCartPlus size={16} className="sm:text-sm" /> <span>Add To Cart</span>
               </button>
-              <button 
+              {
+                token ? (
+                  <>
+                     <button 
                 onClick={handleBuyNow}
                 className="flex-1 h-16 sm:h-12 md:h-10 py-4 sm:py-3 md:py-2 rounded-lg font-bold uppercase tracking-wider text-sm sm:text-xs flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all duration-300"
               >
                 <FaBolt size={16} className="sm:text-sm" /> <span>Buy Now</span>
               </button>
+                  </>
+                ) :""
+              }
+             
             </div>
 
           </div>
