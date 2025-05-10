@@ -4,7 +4,9 @@ import Logo from '../../Images/LoginWith/neo_tokyo-logo.png'
 import NavBar from '../../components/user/NavBar/NavBar';
 import Footer from '../../components/user/Footer/Footer';
 import {useAuth} from '../../Context/UserContext'
-
+import About from '../../components/user/AboutUs/About';
+import QualityStandards from '../../components/user/AboutUs/Quality';
+import DirectionalSection from '../../components/user/AboutUs/Directional'
 // Card components for stacking
 const HeaderCard = () => (
   <motion.div 
@@ -14,8 +16,8 @@ const HeaderCard = () => (
     viewport={{ once: false, margin: "-100px" }}
     transition={{ duration: 0.6 }}
   >
-    <h1 className="text-4xl font-bold">Embark on your Troubleshooting Journey</h1>
-    <div className="h-1 bg-black w-full mt-2"></div>
+    <h1 className="text-4xl">Embark on your <br /> Troubleshooting Journey</h1>
+    <div className="h-1 bg-black w-full mt-2" style={{height:"10px", borderRadius:"5px",marginTop:"6px"}}></div>
   </motion.div>
 );
 
@@ -24,37 +26,44 @@ const SupportContentCard = () => {
 
   return (
     <motion.div 
-      className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
+      className="w-full max-w-6xl mx-auto  overflow-hidden"
       initial={{ opacity: 0, y: 100, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: false, margin: "-50px" }}
       transition={{ duration: 0.7 }}
     >
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row " style={{gap:"30px",fontFamily:"Raleway , sans-serif ",}}>
         {/* Left Section */}
-        <div className="w-full md:w-7/12 p-8">
-          <h2 className="text-2xl font-semibold mb-6">Hi Julian, How can we Help you?</h2>
+        <div className="w-full md:w-7/12 p-8 bg-white" style={{border:"1.5px solid black",borderRadius:"20px",padding:"30px"}}>
+          <h2 className="text-2xl font-semibold mb-6">Hi {
+                user ?(<>test</>  ): ""}, How can we Help you?</h2>
           
           {/* Raise a Ticket Section */}
           <div className="border-b border-gray-300 pb-6 mb-6">
             <div className="flex flex-col mb-4">
               {
                 user ? (<>
-                <div className="border border-blue-300 inline-block px-3 py-1 w-fit mb-2">
-                <span className="font-medium">Raise a Ticket</span>
+                <div className="inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-large font-semibold">Raise a Ticket</span>
                 <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span>
               </div>
-                </>):''
+              <div className="inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-large font-semibold">View Live Tickets</span>
+                {/* <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span> */}
+              </div>
+              <div className="inline-block px-3 py-1 w-fit mb-2">
+                <span className="font-large font-semibold">Manage Tickets</span>
+                {/* <span className="text-blue-600 ml-2 underline cursor-pointer"><a href="/tickets">Click Here</a></span> */}
+              </div>
+
+
+                </>
+                
+              ):''
               }
               
               
-              <div className="bg-blue-500 text-white inline-block px-6 py-1 w-fit text-xs">
-                140 × 32
-              </div>
-              
-              <div className="mt-2">
-                <span className="text-sm">Manage tickets</span>
-              </div>
+    
             </div>
           </div>
           
@@ -98,7 +107,7 @@ const SupportContentCard = () => {
         </div>
         
         {/* Right Section */}
-        <div className="w-full md:w-5/12 p-8 bg-gray-50">
+        <div className="w-full md:w-5/12 p-8 bg-white" style={{border:"1.5px solid black",borderRadius:"20px",padding:"30px"}}>
           {/* Navigation Card */}
           <div className="bg-white rounded-lg p-6 shadow-md mb-6">
             <h3 className="font-bold mb-4 text-xl">Navigation</h3>
@@ -152,9 +161,22 @@ const SupportContentCard = () => {
           </div>
         </div>
       </div>
+
     </motion.div>
+
   );
 };
+
+const AboutCard = () => {
+  return (
+    <motion.div >
+<About/>
+    </motion.div>
+      
+   
+  );
+};
+
 
 const FAQsCard = () => {
   return (
@@ -258,8 +280,8 @@ function SupportPage() {
   return (
     <div 
       ref={containerRef} 
-      className="min-h-screen bg-gradient-to-r from-white to-green-200"
-      style={{width:"90%", margin:"auto", borderRadius:"30px", overflow: "hidden", position: "relative"}}
+      className="min-h-screen bg-gradient-to-r from-white to-green-300"
+      style={{width:"100%", margin:"auto", borderRadius:"30px", overflow: "hidden", position: "relative"}}
     >
       <NavBar />
       <LiveChatButton />
@@ -280,6 +302,9 @@ function SupportPage() {
           
           <div className="space-y-32">
             <SupportContentCard />
+            <AboutCard/>
+            <QualityStandards/>
+            <DirectionalSection/>
             <FAQsCard />
             <ContactCard />
           </div>

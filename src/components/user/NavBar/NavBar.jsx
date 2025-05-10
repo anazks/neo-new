@@ -67,6 +67,12 @@ const ModernNavbar = () => {
 
   return (
     <>
+     {/* Fixed Logo that stays visible when navbar is hidden */}
+     <div className="fixed-logo">
+        <a href="/">
+          <img src={logo} className="logo-img" alt="Logo" />
+        </a>
+      </div>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Mobile Logo */}

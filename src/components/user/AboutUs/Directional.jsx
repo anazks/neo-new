@@ -1,42 +1,77 @@
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import directional1 from "../../../Images/diractional1.png"
+import directional2 from "../../../Images/Diractional2.png"
 
-  // AboutUs.jsx
-  import React from 'react';
-  import './directional.css';
-import { IoArrowForwardCircleSharp } from 'react-icons/io5';
-  
-  function Directional() {
-    return (
-      <div className='mainDiv'>
-        <div className='leftDiv'>
-          <div>
-            <h1 >Directional</h1>
-            <span>AI and ML Tech</span>
-            <p>We specialize in creating high-performance custom PCs tailored to your needs. Our team of experts ensures top-quality components and exceptional craftsmanship to deliver the ultimate gaming and workstation experience.</p>
+export default function DirectionalSection() {
+  return (
+    <div className="max-w-6xl mx-auto p-4" style={{fontFamily:"Raleway , sans-serif ",}}>
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Left column - Text content and small image */}
+        <div className="flex-1 space-y-10">
+          {/* Text content section */}
+          <div className="space-y-4 mb-8">
+            <h1 className="text-4xl font-bold">Directional</h1>
+            <h3 className="text-xl font-medium text-pink-600">AI and ML Tech</h3>
+            <p className="text-gray-800">
+              We specialize in creating high-performance custom PCs tailored to your needs. 
+              Our team of experts ensures top-quality components and exceptional craftsmanship 
+              to deliver the ultimate gaming and workstation experience.
+            </p>
+            
+            <div className="pt-4">
+              <button className="flex items-center bg-black text-white rounded-full py-2 px-6">
+                <span className="mr-2">Support</span>
+                <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
-          <button className="team-button">
-                    <IoArrowForwardCircleSharp className='iconsbtn-team' />
-                    <span className='Team' style={{ color: 'white' }} >Blog </span>
-        </button>
-          <div className='leftB'>
-                <div className="bottomImage">
-                        <div className="imgD">
-                            <img src="https://s3-alpha-sig.figma.com/img/5088/d6d8/978fe3f781b518aed7a1334da88580fe?Expires=1734912000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=nCMipDnSf7Ma44soI~2yBiBkZlK0S9L-Rv6Pyw6hXSJwa3rZ3tewwt9XoJ4j7GHxh6p9Iw5YitmodA9-r~tD6Enq8ibxyAGQcsgxvygdvi8KsRreBI~yMyNhERP3nzKq4Fn~TEpiv-5Ok5JzMRcjhKoAS1e9dgYSjlUz0nSS8KowDlr7DZZP2bNVlM1ZiRngjMO5M3HmbEuR0HxLE4UUyjjIX4tu9ORDMNqxwCzVrWJJeuHNGD1pG8HWbUzZ~Mv5-wfukr0Idw6tez7V1q16Drfk4MPgBbtT2Ye24pX5cpZQaLBnv9tGDn~Pjqv8dMsqHdoFmeDRe0f8QtcfEOU6uw__" alt="" />
-                        </div>
+          
+          {/* Small image container */}
+          <div className="rounded-3xl overflow-hidden border border-gray-200 w-full">
+            <div className="relative">
+              {/* Diagonal cut shape using clip-path */}
+              <div className="w-full aspect-video" style={{
+                clipPath: "polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)",
+                background: "linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0))"
+              }}>
+                <img 
+                  src={directional1} 
+                  alt="Tech component closeup" 
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Right column - Large image */}
+        <div className="flex-1">
+          <div className="rounded-3xl overflow-hidden border border-gray-200">
+            <div className="relative">
+              {/* Full image with overlay text */}
+              <div className="w-full h-full aspect-square">
+                <img 
+                  src={directional2} 
+                  alt="Desktop workspace with laptop, coffee and tech gadgets" 
+                  className="object-cover w-full h-full"
+                />
+                
+                {/* Overlay text */}
+                <div className="absolute top-8 right-8 text-white text-3xl font-medium">
+                  Future
                 </div>
+                
+                {/* Bottom right circular button */}
+                <div className="absolute bottom-6 right-6">
+                  <button className="flex items-center justify-center bg-white rounded-full w-12 h-12 shadow-md">
+                    <ArrowUpRight size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <br /><br />
         </div>
-        <div className='rightDiv'>
-          <div className="box">
-            <p></p>
-          </div>
-        </div>
-
-        <br />
-        <br />
       </div>
-    );
-  }
-  
-  export default Directional;
-  
+    </div>
+  );
+}

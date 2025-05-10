@@ -1,7 +1,9 @@
 import React from 'react';
+import About from '../AboutUs/About';
 
 export default function SupportPage() {
   return (
+    
     <div  className="min-h-screen bg-gradient-to-r from-white to-emerald-500 flex justify-center items-center p-5 w-full mx-auto mt-8 rounded-3xl box-border">
       <div className="w-full max-w-4xl flex flex-col gap-5">
         <div className="w-full rounded-lg overflow-hidden">
@@ -36,6 +38,8 @@ export default function SupportPage() {
                   <li className="my-2">✓ Warranty & Repairs</li>
                 </ul>
               </div>
+
+    
               
               {/* Content Box 2 */}
               <div className="flex-1 min-w-[300px] p-5 rounded-lg bg-white shadow-md border-2 border-blue-600">
@@ -117,5 +121,6 @@ export default function SupportPage() {
         </div>
       </div>
     </div>
+    
   );
 }

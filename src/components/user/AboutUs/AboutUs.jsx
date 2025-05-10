@@ -1,11 +1,13 @@
 import React from "react";
 import { IoArrowForwardCircleSharp } from "react-icons/io5";
 import "./about.css";
+import About from "./About";
 
 function AboutUs() {
   return (
     <div className="aboutMianDiv">
       {/* Left Section */}
+      <About/>
       <div className="about">
         <h1>About Us</h1>
         <div className="descrpt">
@@ -38,7 +40,9 @@ function AboutUs() {
 
       {/* Right Section */}
       <div className="imageDiv">
-        <div></div>
+        <div>
+
+        </div>
       </div>
     </div>
   );

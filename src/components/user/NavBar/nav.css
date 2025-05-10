@@ -21,7 +21,39 @@
 .navbar.hidden {
   transform: translateY(-100%);
 }
+/* Fixed logo that appears when navbar is hidden */
+.fixed-logo {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 999;
+  opacity: 1;
+  /* visibility: ; */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
 
+.navbar.hidden + .fixed-logo,
+.navbar.hidden ~ .fixed-logo {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fixed-logo img {
+  height: 40px;
+  width: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .fixed-logo {
+    top: 10px;
+    left: 10px;
+  }
+  
+  .fixed-logo img {
+    height: 32px;
+  }
+}
 /* Nav Container */
 .nav-container {
   display: flex;
