@@ -4,6 +4,7 @@ import Products from "./Pages/user/Products";
 import DetailedView from "./Pages/user/DetailedView";
 import CardPage from "./components/user/CardPage/CartPage";
 import Login from "./Pages/user/Login";
+import LoginComponent from './components/user/Login/Login'
 import Recomends from "./components/user/Recomendation/Recomends";
 import SupportPage from "./Pages/user/SupportPage";
 import Register from "././components//user/Registraion/Register";
@@ -31,7 +32,7 @@ function App() {
     <AuthProvider>
       <Routes>
             <Route path="/" element={ <Home/> } />
-            <Route path="/Login" element={<Login/>}/>
+            <Route path="/Login" element={<LoginComponent/>}/>
             <Route path="/Register" element={<Register/>}/>
             <Route path="/products" element={ <Products/> } />
             <Route path="/details/:id" element={<DetailedView />} />

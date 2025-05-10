@@ -29,6 +29,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showEmailInput, setShowEmailInput] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   const LoginWith = async (data) => {
     try {
@@ -39,22 +40,17 @@ const Login = () => {
     }
   };
   const [formDataPass, setFormDataPass] = useState({
-    password: '',
-    cpassword: '',
+    password: "",
+    cpassword: "",
   });
   const [validationState, setValidationState] = useState({
     hasMinLength: false,
     hasNumber: false,
     hasSpecialChar: false,
-    passwordsMatch: false
+    passwordsMatch: false,
   });
 
- 
-
   const [showValidation, setShowValidation] = useState(false);
-
-
-  
 
   const [formData, setFormData] = useState({
     email: "",
@@ -71,14 +67,28 @@ const Login = () => {
     role: "user",
   });
 
+  // Function to validate if phone number follows the rules
+const isValidPhoneNumber = (phone) => {
+  // Check if phone number exists and has the correct length
+  if (!phone) return false;
+  
+  // Check if it's only digits
+  const isDigitsOnly = /^\d+$/.test(phone);
+  
+  // Check if length is between 10 and 12
+  const isCorrectLength = phone.length >= 10 && phone.length <= 12;
+  
+  return isDigitsOnly && isCorrectLength;
+};
 
-   // Update validation state whenever password changes
-   useEffect(() => {
+  // Update validation state whenever password changes
+  useEffect(() => {
     setValidationState({
       hasMinLength: formData.password.length >= 8,
       hasNumber: /\d/.test(formData.password),
       hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
-      passwordsMatch: formData.password === formData.cpassword && formData.password !== ''
+      passwordsMatch:
+        formData.password === formData.cpassword && formData.password !== "",
     });
   }, [formData]);
 
@@ -149,33 +159,65 @@ const Login = () => {
     }
   }, [formData.date_of_birth]);
 
+  // Modified handlePhoneChange function to only allow digits and validate length
+const handlePhoneChange = (e) => {
+  const { name, value } = e.target;
+  
+  // Only allow digits
+  if (name === "phone_number") {
+    // Filter out non-digit characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Update form data with filtered value
+    setFormData({
+      ...formData,
+      [name]: numericValue
+    });
+    
+    // Validate and set error messages
+    if (numericValue && !(/^\d+$/.test(numericValue))) {
+      setPhoneError("Only numbers are allowed");
+    } else if (numericValue && (numericValue.length < 10 || numericValue.length > 12)) {
+      setPhoneError("Phone number must be 10-12 digits");
+    } else {
+      setPhoneError("");
+    }
+  } else {
+    // Handle other form fields normally
+    handleChange(e);
+  }
+};
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-  if (!showValidation && name === 'password' && value.length > 0) {
+    if (!showValidation && name === "password" && value.length > 0) {
       setShowValidation(true);
     }
+    
   };
-  
+
   const isPasswordValid = () => {
-    return validationState.hasMinLength && 
-           validationState.hasNumber && 
-           validationState.hasSpecialChar;
+    return (
+      validationState.hasMinLength &&
+      validationState.hasNumber &&
+      validationState.hasSpecialChar
+    );
   };
-  
+
   const isFormValid = () => {
     return isPasswordValid() && validationState.passwordsMatch;
   };
-  
+
   const moveToPrevious = () => {
-    console.log('Move to previous field');
+    console.log("Move to previous field");
   };
-  
+
   const moveToNext = () => {
     if (isFormValid()) {
-      console.log('Move to next field');
+      console.log("Move to next field");
     }
   };
 
@@ -433,9 +475,7 @@ const Login = () => {
                   className="w-full pt-5 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   style={{
                     borderRadius: "20px",
-                    // border: "2px solid black",
                     backgroundColor: "lightgray",
-
                     padding: "1rem 0.4rem 0.5rem 0.4rem",
                   }}
                 />
@@ -452,20 +492,21 @@ const Login = () => {
                 </label>
               </div>
 
-              <div className="relative " style={{ marginTop: "10px" }}>
+              <div className="relative" style={{ marginTop: "10px" }}>
                 <input
                   type="tel"
                   name="phone_number"
                   value={formData.phone_number}
-                  onChange={handleChange}
+                  onChange={handlePhoneChange}
                   id="tel"
                   required
                   className="w-full pt-5 pb-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   style={{
                     borderRadius: "20px",
-                    // border: "2px solid black",
                     padding: "1rem 0.4rem 0.5rem 0.4rem",
                     backgroundColor: "lightgray",
+                    borderColor: phoneError ? "red" : "transparent",
+                    borderWidth: phoneError ? "2px" : "0px",
                   }}
                 />
                 <label
@@ -479,32 +520,39 @@ const Login = () => {
                 >
                   Phone Number
                 </label>
+                {phoneError && (
+                  <div className="text-red-500 text-xs mt-1 ml-2">
+                    {phoneError}
+                  </div>
+                )}
               </div>
+
               <div
                 className=""
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  flexWrap: "wap",
+                  flexWrap: "wrap",
                   gap: "20px",
                 }}
               >
-                {/* Always display the button, but make it disabled when validation fails */}
                 <button
                   disabled={
                     !(
                       isFieldValid("email") &&
                       isFieldValid("phone_number") &&
-                      isFieldValid("first_name")
+                      isFieldValid("first_name") &&
+                      isValidPhoneNumber(formData.phone_number)
                     )
                   }
                   style={{
                     backgroundColor:
                       isFieldValid("email") &&
                       isFieldValid("phone_number") &&
-                      isFieldValid("first_name")
+                      isFieldValid("first_name") &&
+                      isValidPhoneNumber(formData.phone_number)
                         ? "black"
-                        : "#999", // Gray color when disabled
+                        : "#999",
                     height: "40px",
                     width: "200px",
                     borderRadius: "20px",
@@ -512,32 +560,33 @@ const Login = () => {
                     opacity:
                       isFieldValid("email") &&
                       isFieldValid("phone_number") &&
-                      isFieldValid("first_name")
+                      isFieldValid("first_name") &&
+                      isValidPhoneNumber(formData.phone_number)
                         ? "1"
-                        : "0.7", // Reduced opacity when disabled
+                        : "0.7",
                     cursor:
                       isFieldValid("email") &&
                       isFieldValid("phone_number") &&
-                      isFieldValid("first_name")
+                      isFieldValid("first_name") &&
+                      isValidPhoneNumber(formData.phone_number)
                         ? "pointer"
                         : "not-allowed",
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    paddingRight: "40px", // Make room for the arrow circle
+                    paddingRight: "40px",
                   }}
                   className="text-white px-3 py-1 rounded text-sm transition-colors"
                   onClick={moveToNextField}
                 >
                   Next
-                  {/* Arrow circle positioned on the right side */}
                   <div
                     style={{
                       position: "absolute",
                       right: "0",
                       top: "0",
-                      height: "100%", // Full height of button
+                      height: "100%",
                       width: "40px",
                       display: "flex",
                       alignItems: "center",
@@ -557,7 +606,6 @@ const Login = () => {
                         justifyContent: "center",
                       }}
                     >
-                      {/* Black arrow pointing right */}
                       <svg
                         width="12"
                         height="12"
@@ -577,14 +625,6 @@ const Login = () => {
                   </div>
                 </button>
               </div>
-              {/* {currentField === "email" && isFieldValid("email") && (
-                <button
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600"
-                  onClick={moveToNextField}
-                >
-                  <IoArrowForwardCircleSharp className="text-2xl" />
-                </button>
-              )} */}
             </div>
           )}
 
@@ -1105,8 +1145,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-      <div className="w-[95%] h-[98%] mx-auto shadow-xl rounded-xl overflow-hidden bg-white flex flex-col md:flex-row">
+    <div className="w-full min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="w-full mx-auto shadow-xl rounded-xl overflow-hidden bg-white flex flex-col md:flex-row">
         {/* Left Section */}
         <div className="md:w-1/2 relative text-white p-8 flex flex-col justify-between">
           <div className="absolute inset-0 z-0">
