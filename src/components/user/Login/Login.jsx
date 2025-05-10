@@ -1179,16 +1179,22 @@ const handlePhoneChange = (e) => {
 
             <div
               className="text-center md:text-left absolute z-20"
-              style={{ top: "50%" }}
+              style={{ top: "60%",left:"10%" }}
             >
               <p
-                className="text-xl md:text-3xl tracking-tight font-normal"
+                className=" md:text-3xl tracking-tight  text-black"
                 style={{
                   // fontFamily: "'Bebas Neue', 'Oswald', 'Barlow Condensed', sans-serif",
-                  letterSpacing: "-0.05em",
+                  fontFamily:"Barlow Condensed, sans-serif",
+                  letterSpacing: "4px",
+                  lineHeight:"40px",
                   fontWeight: "300",
                   textTransform: "uppercase",
-                  textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
+                  // textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
+                  textShadow: '2px 2px 6px rgba(3, 3, 3, 0.57)',
+                  fontSize:"40px",
+                  
+
                 }}
               >
                 NEW THINKING
