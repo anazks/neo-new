@@ -24,7 +24,6 @@ import Ticket from "./components/user/Tickets/Tickets"
 import Solutions from "./components/user/Solutions/Solutions"
 import Profile from "./components/user/Profile/Profile";
 import ProfilePage from "./Pages/user/ProfilePage";
-
 import Payed from './components/user/RazorPay/Payed';
 import Nvidia from "./components/user/Nvidia/Nvidia";
 import Failed from './components/user/RazorPay/Failed'

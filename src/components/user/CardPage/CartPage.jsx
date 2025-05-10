@@ -1,23 +1,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-import NavBar from '../NavBar/NavBar';
-import Loader from '../Loader/Loader';
+import { Link, Navigate } from "react-router-dom";
+import NavBar from "../NavBar/NavBar";
+import Loader from "../Loader/Loader";
 import RenderRazorpay from "../RazorPay/RenderRazorpay";
 import BaseURL from "../../../Static/Static";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { 
-  getMyCart, 
-  RemoveFromCart, 
-  cartIncrement, 
-  cartDecrement, 
-  CreateOrder, 
-  AddDelievryAddress, 
+import {
+  getMyCart,
+  RemoveFromCart,
+  cartIncrement,
+  cartDecrement,
+  CreateOrder,
+  AddDelievryAddress,
   getMyDeliveryAddress,
-  getMyPrimaryAddress 
+  getMyPrimaryAddress,
 } from "../../../Services/userApi";
 
+// Using the Rajadhanai color scheme with #63A375 (green) and black
 const CartPage = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState({ items: [], id: null });
@@ -33,7 +34,7 @@ const CartPage = () => {
     keyId: null,
     razorpayOrderId: null,
   });
-  
+
   // Address related states
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -55,28 +56,26 @@ const CartPage = () => {
       console.log(getPrimaryAddress, "primary address");
       let order = await CreateOrder(selectedAddressId);
       let newData = order.data;
-      
+
       setOrderDetails({
         razorpayOrderId: newData.raz_order_id,
         currency: newData.currency,
         amount: newData.amount,
         keyId: newData.key,
       });
-      
+
       setDisplayRazorpay(true);
     } catch (error) {
       console.error("Error creating order:", error);
     }
   };
-
-  const checkoutHandle = async () => {
+  const checkoutHnadle = async () => {
     try {
       navigate("/overview");
     } catch (error) {
       console.error("Error during checkout:", error);
     }
   };
-
   const fetchCartItems = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -96,13 +95,16 @@ const CartPage = () => {
   const fetchAddresses = useCallback(async () => {
     try {
       const response = await getMyDeliveryAddress();
-      
+
+      // If we have real addresses from the API, use them
       if (response && response.data && Array.isArray(response.data)) {
         setAddresses(response.data);
-        const primaryAddress = response.data.find(addr => addr.is_primary);
+        // Set primary address as selected by default
+        const primaryAddress = response.data.find((addr) => addr.is_primary);
         if (primaryAddress) {
           setSelectedAddressId(primaryAddress.id);
         } else if (response.data.length > 0) {
+          // If no primary address, select the first one
           setSelectedAddressId(response.data[0].id);
         }
       }
@@ -120,17 +122,17 @@ const CartPage = () => {
     try {
       setIsLoading(true);
       const cartId = cartItems.id;
-      
+
       if (!cartId || !productId) {
         throw new Error("Missing cart or product information");
       }
-      
-      if (action === 'increase') {
+
+      if (action === "increase") {
         await cartIncrement(productId, cartId);
-      } else if (action === 'decrease') {
+      } else if (action === "decrease") {
         await cartDecrement(productId, cartId);
       }
-      
+
       await fetchCartItems();
     } catch (error) {
       console.error(`Error ${action}ing quantity:`, error);
@@ -166,7 +168,7 @@ const CartPage = () => {
     const { name, value, type, checked } = e.target;
     setNewAddress({
       ...newAddress,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -174,7 +176,7 @@ const CartPage = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      
+
       const addressToAdd = {
         delivery_person_name: newAddress.delivery_person_name,
         phone_number: newAddress.phone_number,
@@ -185,9 +187,9 @@ const CartPage = () => {
         address: newAddress.address,
         is_primary: newAddress.is_primary,
       };
-      
+
       const response = await AddDelievryAddress(addressToAdd);
-      
+
       if (response && response.data) {
         await fetchAddresses();
         setShowAddressForm(false);
@@ -213,29 +215,32 @@ const CartPage = () => {
 
   const calculateSubtotal = () => {
     if (!cartItems || !cartItems.items || !cartItems.items.length) return 0;
+
     return cartItems.items.reduce((total, item) => {
-      return total + (item.price * item.quantity);
+      return total + item.price * item.quantity;
     }, 0);
   };
 
+  // Calculations
   const subtotal = calculateSubtotal();
   const discount = promoApplied ? 500 : 0;
   const shipping = subtotal > 0 ? 1200 : 0;
   const grandTotal = subtotal - discount + shipping;
+
   const isCartEmpty = !cartItems?.items || cartItems.items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gray-100" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+    <div className="min-h-screen bg-gray-100 font-sans">
       {displayRazorpay && (
         <RenderRazorpay
           orderDetails={orderDetails}
           setDisplayRazorpay={setDisplayRazorpay}
         />
       )}
-      
+
       <NavBar />
-      
-      <motion.div 
+
+      <motion.div
         className="max-w-7xl mx-auto px-4 pt-32 pb-16 sm:px-6 lg:px-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -246,14 +251,14 @@ const CartPage = () => {
             <Loader />
           </div>
         ) : error ? (
-          <motion.div 
+          <motion.div
             className="text-center py-12 bg-white rounded-lg shadow-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
             <p className="text-red-600 text-lg mb-4">{error}</p>
-            <motion.button 
-              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors uppercase"
+            <motion.button
+              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
@@ -261,35 +266,37 @@ const CartPage = () => {
                 fetchAddresses();
               }}
             >
-              TRY AGAIN
+              Try Again
             </motion.button>
           </motion.div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Cart Items Section */}
-            <motion.div 
+            <motion.div
               className="lg:w-2/3 bg-white rounded-lg shadow-md p-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-bold text-black mb-6 uppercase tracking-wider">YOUR CART</h2>
+              <h2 className="text-2xl font-bold text-black mb-6">YOUR CART</h2>
 
               {isCartEmpty ? (
-                <motion.div 
-                  className="text-center py-12"
+                <motion.div
+                  className="text-center py-6"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
-                  <div className="text-5xl mb-4">🛒</div>
-                  <p className="text-xl text-gray-600 mb-6">Your cart is empty</p>
+                  <div className="text-5xl mb-12">🛒</div>
+                  <p className="text-xl text-gray-600 mb-6">
+                    Your cart is empty
+                  </p>
                   <Link to="/products">
-                    <motion.button 
-                      className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors uppercase"
+                    <motion.button
+                      className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      CONTINUE SHOPPING
+                      Continue Shopping
                     </motion.button>
                   </Link>
                 </motion.div>
@@ -297,81 +304,197 @@ const CartPage = () => {
                 <div className="space-y-6">
                   <AnimatePresence>
                     {cartItems.items.map((item, index) => (
-                      <motion.div 
-                        key={item.id} 
-                        className="flex flex-col sm:flex-row border-b border-gray-200 pb-6"
+                      <motion.div
+                        key={item.id}
+                        className="flex flex-col md:flex-row items-center border-b border-gray-200 py-8"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <div className="sm:w-32 sm:h-32 mb-4 sm:mb-0 flex-shrink-0">
-                          <img
-                            src={BaseURL + (item.primary_image ? item.primary_image.image : '')}
-                            alt={item.product_name || "Product"}
-                            className="w-full h-full object-cover rounded-md"
-                            loading="lazy"
-                            onError={(e) => {e.target.src = "/path/to/placeholder.jpg"}}
-                          />
+                        {/* Product Image with circular glow effect */}
+                        <div className="relative w-full md:w-72 h-72 mb-6 md:mb-0 flex-shrink-0">
+                          <div className="relative w-full h-full">
+                            <img
+                              src={
+                                BaseURL +
+                                (item.primary_image
+                                  ? item.primary_image.image
+                                  : "")
+                              }
+                              alt={item.product_name || "Product"}
+                              className="w-full h-full object-contain"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.target.src = "/path/to/placeholder.jpg";
+                              }}
+                            />
+                            {/* Red circular gradient effect below product - matching the example */}
+                            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3/4 h-8 bg-gradient-to-r from-transparent via-red-200 to-transparent opacity-60 rounded-full blur-md"></div>
+                          </div>
                         </div>
-                        
-                        <div className="flex-grow sm:ml-6">
+
+                        {/* Product Details */}
+                        <div className="flex-grow md:ml-8 w-full">
                           <div className="flex flex-col">
-                            <div className="flex justify-between">
-                              <div>
-                                <p className="text-sm text-gray-500 uppercase">{item.type}</p>
-                                <p className="text-lg font-bold text-black uppercase tracking-wider">{item.product_name}</p>
+                            {/* Product Category & Name Section */}
+                            <div className="mb-4">
+                              <h3 className="text-md font-medium text-black uppercase">
+                                GAMING PC
+                              </h3>
+                              <h2 className="text-lg font-bold text-black uppercase tracking-wide">
+                                THE {item.product_name}
+                              </h2>
+                            </div>
+
+                            {/* Price Display */}
+                            <div className="mb-6 text-left">
+                              <span className="text-xl font-medium font-bold text-green-600">
+                                ₹ {item.price.toLocaleString("en-IN")}/-
+                              </span>
+                            </div>
+
+                            {/* Status Badge */}
+                            <div className="mb-8">
+                              <div
+                                className="inline-flex items-center px-5 py-2 rounded-md bg-green-50"
+                                style={{
+                                  backgroundColor:
+                                    item.product_stock >= 1
+                                      ? "rgba(99, 163, 117, 0.1)"
+                                      : "rgba(255, 0, 0, 0.05)",
+                                }}
+                              >
+                                <span
+                                  className="text-sm font-medium"
+                                  style={{
+                                    color:
+                                      item.product_stock >= 1
+                                        ? "#63A375"
+                                        : "red",
+                                  }}
+                                >
+                                  {item.product_stock >= 1
+                                    ? "In Stock"
+                                    : "Out of Stock"}
+                                </span>
                               </div>
-                              <div className="text-lg font-bold text-black" style={{color:"#63A375"}}>
-                                ₹ {item.price.toLocaleString("en-IN")}
+
+                              {/* Color variant with icon */}
+                              <div className="inline-flex items-center ml-4">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="mr-1 text-gray-600"
+                                >
+                                  <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                                <span className="text-sm font-medium text-gray-600">
+                                  OBSIDIAN BLACK
+                                </span>
                               </div>
                             </div>
-                            
-                            <div className="flex justify-between items-end mt-4">
-                              <div className="flex space-x-3">
-                                <motion.button 
-                                  onClick={() => handleRemoveItem(item.id)}
-                                  className="text-sm text-black border border-black hover:bg-gray-100 flex items-center justify-center px-3 py-1 rounded uppercase"
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  disabled={isLoading}
+
+                            {/* Action Controls in a row */}
+                            <div className="flex flex-wrap items-center space-x-4">
+                              {/* REMOVE Button */}
+                              <motion.button
+                                onClick={() => handleRemoveItem(item.id)}
+                                className="flex items-center space-x-2 text-gray-600"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                disabled={isLoading}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 >
-                                  REMOVE
-                                </motion.button>
-                                <motion.button 
-                                  className="text-sm text-black border border-black hover:bg-gray-100 flex items-center justify-center px-3 py-1 rounded uppercase"
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
+                                  <path d="M3 6h18"></path>
+                                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                </svg>
+                                <span className="font-small">REMOVE</span>
+                              </motion.button>
+
+                              {/* SAVE FOR LATER Button */}
+                              <motion.button
+                                className="flex items-center space-x-2 text-gray-600"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 >
+                                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span className="font-small">
                                   SAVE FOR LATER
-                                </motion.button>
-                              </div>
-                              
-                              <div className="flex items-center border border-gray-300 rounded-md">
-                                <motion.button 
-                                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
-                                  onClick={() => handleQuantityChange(item.product, 'decrease')}
-                                  whileHover={{ backgroundColor: "#f3f4f6" }}
+                                </span>
+                              </motion.button>
+
+                              {/* Spacer to push quantity controls to the right */}
+                              {/* <div className="flex-grow"></div> */}
+
+                              {/* Quantity Controls */}
+                              <div className="flex items-right border border-gray-300 rounded">
+                                <motion.button
+                                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                                  onClick={() =>
+                                    handleQuantityChange(
+                                      item.product,
+                                      "decrease"
+                                    )
+                                  }
+                                  whileHover={{ backgroundColor: "#f9fafb" }}
                                   whileTap={{ scale: 0.95 }}
                                   disabled={isLoading || item.quantity <= 1}
+                                  aria-label="Decrease quantity"
                                 >
-                                  -
+                                  <span className="text-xl font-medium">−</span>
                                 </motion.button>
-                                <input 
-                                  type="text" 
-                                  value={item.quantity} 
+                                <input
+                                  type="text"
+                                  value={item.quantity}
                                   readOnly
-                                  className="w-12 text-center border-none focus:outline-none"
+                                  className="w-6 h-6 text-center border-x border-gray-300 focus:outline-none"
                                   aria-label="Item quantity"
                                 />
-                                <motion.button 
-                                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
-                                  onClick={() => handleQuantityChange(item.product, 'increase')}
-                                  whileHover={{ backgroundColor: "#f3f4f6" }}
+                                <motion.button
+                                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                                  onClick={() =>
+                                    handleQuantityChange(
+                                      item.product,
+                                      "increase"
+                                    )
+                                  }
+                                  whileHover={{ backgroundColor: "#f9fafb" }}
                                   whileTap={{ scale: 0.95 }}
                                   disabled={isLoading}
+                                  aria-label="Increase quantity"
                                 >
-                                  +
+                                  <span className="text-xl font-medium">+</span>
                                 </motion.button>
                               </div>
                             </div>
@@ -386,52 +509,68 @@ const CartPage = () => {
 
             {/* Order Summary Section */}
             {!isCartEmpty && (
-              <motion.div 
+              <motion.div
                 className="lg:w-1/3 bg-white rounded-lg shadow-md p-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
-                style={{
-                boxShadow: "inset 0 0 10px #63A375",
-                border: "1px solid #63A375"
-              }}
               >
-                <h2 className="text-2xl font-bold text-black mb-6 uppercase tracking-wider">ORDER SUMMARY</h2>
-                
+                <h2 className="text-2xl font-bold text-black mb-2">
+                  ORDER SUMMARY
+                </h2>
+
                 {/* Promo Code Section */}
-                <div className="mb-6">
-                  <p className="text-center font-medium mb-2 uppercase tracking-wider">HAVE A PROMO CODE?</p>
-                  
+                <div
+                  className="border-dashed border-2 rounded-lg p-4 mb-6"
+                  style={{
+                    backgroundColor: "rgba(99, 163, 117, 0.2)",
+                    borderColor: "#63A375",
+                  }}
+                >
+                  <p
+                    className="text-center font-medium mb-2"
+                    style={{ color: "#63A375" }}
+                  >
+                    HAVE A PROMO CODE?
+                  </p>
+
                   <AnimatePresence>
                     {promoApplied ? (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex items-center justify-between bg-gray-100 p-2 rounded"
                       >
-                        <span className="font-medium uppercase">GEEKY2023</span>
-                        <button 
-                          className="text-sm text-gray-500 uppercase"
-                          onClick={() => setPromoApplied(false)}
+                        <div className="bg-white rounded p-2 flex justify-between items-center">
+                          <span className="text-sm font-medium">GEEKY2023</span>
+                          <button
+                            className="text-xs text-gray-500"
+                            onClick={() => setPromoApplied(false)}
+                          >
+                            REMOVE
+                          </button>
+                        </div>
+                        <p
+                          className="text-sm mt-2 text-center"
+                          style={{ color: "#63A375" }}
                         >
-                          REMOVE
-                        </button>
+                          Hurray! You've got a discount
+                        </p>
                       </motion.div>
                     ) : (
-                      <motion.div 
+                      <motion.div
                         className="flex"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                       >
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={promoCode}
                           onChange={(e) => setPromoCode(e.target.value)}
                           placeholder="Enter promo code"
-                          className="flex-grow rounded-l border border-gray-300 px-3 py-2 focus:outline-none uppercase"
+                          className="flex-grow rounded-l border border-gray-300 px-3 py-2 focus:outline-none"
                         />
-                        <motion.button 
-                          className="bg-black text-white px-4 py-2 rounded-r uppercase"
+                        <motion.button
+                          className="bg-black text-white px-4 py-2 rounded-r"
                           onClick={handleApplyPromo}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -443,126 +582,171 @@ const CartPage = () => {
                     )}
                   </AnimatePresence>
                 </div>
-                
+
                 {/* Address Section */}
                 {addresses.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="text-lg font-medium mb-2 uppercase tracking-wider">DELIVERY ADDRESS</h3>
+                    <h3 className="text-lg font-medium mb-2">
+                      Delivery Address
+                    </h3>
                     <div className="space-y-2">
-                      {addresses.map(addr => (
+                      {addresses.map((addr) => (
                         <motion.div
                           key={addr.id}
-                          className={`border p-3 rounded-md cursor-pointer ${selectedAddressId === addr.id ? 'border-black bg-gray-50' : 'border-gray-200'}`}
+                          className={`border p-3 rounded-md cursor-pointer ${
+                            selectedAddressId === addr.id
+                              ? "border-green-500 bg-green-50"
+                              : "border-gray-200"
+                          }`}
+                          style={
+                            selectedAddressId === addr.id
+                              ? {
+                                  borderColor: "#63A375",
+                                  backgroundColor: "rgba(99, 163, 117, 0.1)",
+                                }
+                              : {}
+                          }
                           whileHover={{ scale: 1.01 }}
                           onClick={() => setSelectedAddressId(addr.id)}
                         >
                           <div className="flex justify-between">
-                            <h4 className="font-medium uppercase">{addr.delivery_person_name}</h4>
+                            <h4 className="font-medium">
+                              {addr.delivery_person_name}
+                            </h4>
                             {addr.is_primary && (
-                              <span className="text-xs px-2 py-1 rounded bg-gray-200 text-black uppercase">PRIMARY</span>
+                              <span
+                                className="text-xs px-2 py-1 rounded"
+                                style={{
+                                  backgroundColor: "rgba(99, 163, 117, 0.2)",
+                                  color: "#63A375",
+                                }}
+                              >
+                                Primary
+                              </span>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600">{addr.phone_number}</p>
-                          <p className="text-sm text-gray-600">{addr.address}, {addr.district}, {addr.state}, {addr.country} - {addr.zip_code}</p>
+                          <p className="text-sm text-gray-600">
+                            {addr.phone_number}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {addr.address}, {addr.district}, {addr.state},{" "}
+                            {addr.country} - {addr.zip_code}
+                          </p>
                         </motion.div>
                       ))}
                     </div>
                     <motion.button
-                      className="mt-2 text-sm font-medium text-black uppercase"
+                      className="mt-2 text-sm font-medium"
+                      style={{ color: "#63A375" }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setShowAddressForm(!showAddressForm)}
                     >
-                      {showAddressForm ? 'CANCEL' : '+ ADD NEW ADDRESS'}
+                      {showAddressForm ? "Cancel" : "+ Add New Address"}
                     </motion.button>
                   </div>
                 )}
-                
+
                 {/* Address Form */}
                 <AnimatePresence>
                   {showAddressForm && (
                     <motion.form
                       className="mb-4 border border-gray-200 rounded-md p-4"
-                      initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+                      animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       onSubmit={handleAddAddress}
                     >
+                      {/* Form fields */}
                       <div className="grid grid-cols-2 gap-3">
                         <div className="col-span-2 md:col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">FULL NAME</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            Full Name
+                          </label>
                           <input
                             type="text"
                             name="delivery_person_name"
                             value={newAddress.delivery_person_name}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             required
                           />
                         </div>
                         <div className="col-span-2 md:col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">PHONE</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            Phone
+                          </label>
                           <input
                             type="text"
                             name="phone_number"
                             value={newAddress.phone_number}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             required
                           />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">ADDRESS</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            Address
+                          </label>
                           <textarea
                             name="address"
                             value={newAddress.address}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             rows="2"
                             required
                           ></textarea>
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">DISTRICT</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            District
+                          </label>
                           <input
                             type="text"
                             name="district"
                             value={newAddress.district}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             required
                           />
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">STATE</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            State
+                          </label>
                           <input
                             type="text"
                             name="state"
                             value={newAddress.state}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             required
                           />
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">COUNTRY</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            Country
+                          </label>
                           <input
                             type="text"
                             name="country"
                             value={newAddress.country}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             required
                           />
                         </div>
                         <div className="col-span-1">
-                          <label className="block text-sm text-gray-600 mb-1 uppercase">ZIP CODE</label>
+                          <label className="block text-sm text-gray-600 mb-1">
+                            Zip Code
+                          </label>
                           <input
                             type="text"
                             name="zip_code"
                             value={newAddress.zip_code}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded uppercase"
+                            className="w-full p-2 border border-gray-300 rounded"
                             required
                           />
                         </div>
@@ -575,50 +759,66 @@ const CartPage = () => {
                             onChange={handleInputChange}
                             className="mr-2"
                           />
-                          <label htmlFor="is_primary" className="text-sm text-gray-700 uppercase">SET AS PRIMARY ADDRESS</label>
+                          <label
+                            htmlFor="is_primary"
+                            className="text-sm text-gray-700"
+                          >
+                            Set as primary address
+                          </label>
                         </div>
                       </div>
                       <motion.button
                         type="submit"
-                        className="w-full mt-3 bg-black text-white p-2 rounded uppercase"
+                        className="w-full mt-3 bg-black text-white p-2 rounded"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        SAVE ADDRESS
+                        Save Address
                       </motion.button>
                     </motion.form>
                   )}
                 </AnimatePresence>
-                
+
                 {/* Price Summary */}
-                <div className="space-y-3 border-t border-gray-200 pt-4">
+                <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-700 uppercase">DISCOUNT</span>
-                    <span className="text-gray-700 font-medium">₹ {discount}</span>
+                    <span className="text-gray-700">DISCOUNT</span>
+                    <span className="text-gray-700 font-medium">
+                      ₹ {discount}
+                    </span>
                   </div>
-                  
+
                   <div className="flex justify-between">
-                    <span className="text-gray-700 uppercase">SUB TOTAL</span>
-                    <span className="text-gray-700 font-medium">₹ {subtotal.toLocaleString('en-IN')}</span>
+                    <span className="text-gray-700">SUB TOTAL</span>
+                    <span className="text-gray-700 font-medium">
+                      ₹ {subtotal.toLocaleString("en-IN")}
+                    </span>
                   </div>
-                  
+
                   <div className="flex justify-between">
-                    <span className="text-gray-700 uppercase">SHIPPING</span>
-                    <span className="text-gray-700 font-medium">₹ {shipping}</span>
+                    <span className="text-gray-700">SHIPPING</span>
+                    <span className="text-gray-700 font-medium">
+                      ₹ {shipping}
+                    </span>
                   </div>
-                  
+
                   <div className="flex justify-between pt-3 border-t border-gray-200">
-                    <span className="font-bold text-black uppercase">GRAND TOTAL</span>
-                    <span className="font-bold text-black" >₹ {(cartItems.total_price || grandTotal).toLocaleString('en-IN')}</span>
+                    <span className="font-bold text-black">GRAND TOTAL</span>
+                    <span className="font-bold text-black">
+                      ₹{" "}
+                      {(cartItems.total_price || grandTotal).toLocaleString(
+                        "en-IN"
+                      )}
+                    </span>
                   </div>
                 </div>
-                
+
                 {/* Checkout Button */}
-                <motion.button 
-                  className="w-full bg-black text-white py-3 rounded font-bold mt-6 hover:bg-gray-800 uppercase tracking-wider"
+                <motion.button
+                  className="w-full bg-black text-white py-3 rounded font-bold mt-6 hover:bg-gray-800"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={checkoutHandle}
+                  onClick={checkoutHnadle}
                   disabled={isLoading || !selectedAddressId}
                 >
                   PROCEED TO CHECKOUT
