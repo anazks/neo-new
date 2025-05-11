@@ -104,7 +104,7 @@ function ProductsList() {
           message: "Item successfully added to cart",
           productId: id
         });
-        navigate("/cart")
+        // navigate("/cart")
       }
     } catch (error) {
       console.log(error);
