@@ -144,6 +144,7 @@ function Details({ product }) {
 
 const handleBuyNow = async () => {
   try {
+    console.log("buy now")
     setOverView(true)
   } catch (error) {
     console.error("Error in buy now:", error);

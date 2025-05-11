@@ -13,6 +13,7 @@ function Overview() {
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [displayRazorpay, setDisplayRazorpay] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
+    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     
     const [newAddress, setNewAddress] = useState({
         delivery_person_name: "",
@@ -28,9 +29,9 @@ function Overview() {
 
     // Calculate order totals
     const subtotal = orders.total_price || 0;
-    const shipping = 5.99;
-    const tax = subtotal * 0.08;
-    const total = subtotal + shipping + tax;
+    const shipping = 0;
+    const tax = 0;
+    const total = subtotal;
     const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
 
     // Fetch addresses on component mount
@@ -183,6 +184,7 @@ function Overview() {
 
     const handleCreateOrder = async () => {
         try {
+            setIsProcessingPayment(true);
             let getPrimaryAddress = await getMyPrimaryAddress();
             let order = await CreateOrder(selectedAddressId);
             let newData = order;
@@ -191,8 +193,17 @@ function Overview() {
             setDisplayRazorpay(true);
         } catch (error) {
             console.error("Error creating order:", error);
+            setIsProcessingPayment(false);
         }
     };
+
+    // Handle Razorpay completion
+    useEffect(() => {
+        if (!displayRazorpay && isProcessingPayment) {
+            // Razorpay has closed, reset processing state
+            setIsProcessingPayment(false);
+        }
+    }, [displayRazorpay, isProcessingPayment]);
 
     if (loading && addresses.length === 0) {
         return (
@@ -222,9 +233,21 @@ function Overview() {
                 <RenderRazorpay
                     orderDetails={orderDetails}
                     setDisplayRazorpay={setDisplayRazorpay}
+                    onClose={() => setIsProcessingPayment(false)}
                 />
             )}
             
+            {/* Payment Processing Loader */}
+            {isProcessingPayment && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                        <p className="text-lg font-bold text-gray-800 uppercase">Processing Payment...</p>
+                        <p className="text-sm text-gray-600 mt-1">Please wait while we prepare your payment</p>
+                    </div>
+                </div>
+            )}
+
             <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white">
                 <div className="mb-8">
                     <h1 className="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">Order Overview</h1>
@@ -376,9 +399,9 @@ function Overview() {
                                 className={`w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-bold uppercase tracking-wider flex items-center justify-center transition-colors shadow-md ${
                                     !selectedAddressId || orders.items?.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 hover:shadow-lg'
                                 }`}
-                                disabled={!selectedAddressId || orders.items?.length === 0 || loading}
+                                disabled={!selectedAddressId || orders.items?.length === 0 || loading || isProcessingPayment}
                             >
-                                {loading ? (
+                                {isProcessingPayment ? (
                                     <span>Processing...</span>
                                 ) : (
                                     <>
