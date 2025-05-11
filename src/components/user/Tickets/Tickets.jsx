@@ -3,7 +3,7 @@ import ModernNavbar from "../NavBar/NavBar";
 import ProductFooter from "../Footer/ProductFooter";
 import { useNavigate } from "react-router-dom";
 import { AddTicket } from '../../../Services/userApi';
-import Alert from '../../../components/user/Alert/Alert'
+import Alert from '../../../components/user/Alert/Alert';
 
 const Tickets = () => {
   const [formData, setFormData] = useState({
@@ -23,8 +23,9 @@ const Tickets = () => {
   const containerRef = useRef(null);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  const [alert,setAlert] = useState(false)
-  const [alertMessage,setAlertMessage] = useState(false)
+  const [alert, setAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   // Update the dashed lines when grievance text changes
   useEffect(() => {
     if (textareaRef.current) {
@@ -36,7 +37,7 @@ const Tickets = () => {
       setRows(Array(Math.ceil(numberOfLines)).fill(0));
     }
   }, [formData.grievance]);
-  
+
   // Create a preview for the image
   useEffect(() => {
     if (!formData.image) {
@@ -135,16 +136,11 @@ const Tickets = () => {
         submissionData.append('image', formData.image);
       }
 
-      // Log the form data for debugging
-      for (let [key, value] of submissionData.entries()) {
-        console.log(`${key}:`, value);
-      }
-
       const response = await AddTicket(submissionData);
 
-      if (response.status==201) {
-            setAlert(true)
-            setAlertMessage("Your Ticket has been uploaded")
+      if (response.status === 201) {
+        setAlert(true);
+        setAlertMessage("Your Ticket has been uploaded");
       }
 
       const result = await response.json();
@@ -153,29 +149,18 @@ const Tickets = () => {
       navigate("/ticketsresolved");
     } catch (error) {
       console.error('Error submitting ticket:', error);
-      // You might want to show an error message to the user here
     }
   };
   
   return (
     <>
       <ModernNavbar />
-      {/* {
-        <Alert?(
-          <Alert 
+      {alert && (
+        <Alert
           type="success"
           message={alertMessage}
-          />
-        )
-      } */}
-      {
-            alert ? (
-              <Alert
-              type="success"
-              message={alertMessage}
-              />
-            ):""
-      }
+        />
+      )}
       <div className="w-full bg-black p-3 md:p-5 rounded-xl">
         <div className="flex flex-col md:flex-row justify-between gap-5 p-3 md:p-5" ref={containerRef}>
           {/* Left Column */}
@@ -196,7 +181,7 @@ const Tickets = () => {
             
             <div className="text-white mt-10 md:mt-24 transition-all duration-300">
               <h6 className="font-mono mb-5 font-semibold">
-                Recent tickets (Click The barcode for resolution)
+                Recent tickets
               </h6>
 
               <div className="bg-gray-100 p-4 md:p-5 w-full md:w-4/5 rounded-b-2xl transition-all duration-300 hover:shadow-lg">
@@ -205,13 +190,12 @@ const Tickets = () => {
                   --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                 </p>
 
-                <div className="text-center my-5 transition-transform duration-300 hover:scale-105 cursor-pointer" onClick={handleTicketResolution}>
-                  <img
-                    src="https://t3.ftcdn.net/jpg/02/55/97/94/360_F_255979498_vewTRAL5en9T0VBNQlaDBoXHlCvJzpDl.jpg"
-                    alt="Ticket Barcode"
-                    className="w-full h-5"
-                  />
-                </div>
+                <button
+                  onClick={handleTicketResolution}
+                  className="w-full p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-mono transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  View Resolved Tickets
+                </button>
               </div>
             </div>
           </div>
@@ -393,14 +377,6 @@ const Tickets = () => {
                         rows={7}
                         placeholder="Start typing here (required)..."
                         required
-                      />
-                    </div>
-
-                    <div className="text-center my-5 transition-transform duration-300 hover:scale-105 cursor-pointer" onClick={handleTicketResolution}>
-                      <img
-                        src="https://tse2.mm.bing.net/th?id=OIP.y1ztqwIPRHhG3FAbArBZvAHaDT&pid=Api&P=0&h=180"
-                        alt="Ticket Barcode"
-                        className="w-full h-5"
                       />
                     </div>
 

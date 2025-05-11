@@ -299,7 +299,7 @@ const TicketManagement = () => {
                       </div>
 
                       {/* Grievance textarea with fancy line styling */}
-                      <div className="mb-6">
+                      {/* <div className="mb-6">
                         <p className="font-['Courier_New',_monospace] mb-2 font-semibold">Grievance:</p>
                         <div className="relative">
                           <div className="absolute inset-0 pointer-events-none">
@@ -326,7 +326,7 @@ const TicketManagement = () => {
                             placeholder="Start typing here..."
                           />
                         </div>
-                      </div>
+                      </div> */}
 
                       <div className="text-center mb-6">
                         <div className="bg-contain bg-no-repeat bg-center h-6 w-full" 
@@ -334,7 +334,7 @@ const TicketManagement = () => {
                         </div>
                       </div>
 
-                      <button
+                      {/* <button
                         className={`w-full py-3 bg-[#63a375] text-white font-['Courier_New',_monospace] rounded-lg transition-all duration-200 ${
                           isSubmitting 
                             ? "opacity-70 cursor-not-allowed" 
@@ -344,7 +344,7 @@ const TicketManagement = () => {
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? "Submitting..." : "Submit"}
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>

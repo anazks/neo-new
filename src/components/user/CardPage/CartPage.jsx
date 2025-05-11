@@ -19,7 +19,6 @@ import {
 } from "../../../Services/userApi";
 
 const CartPage = () => {
-  
   // Cart state
   const [cartItems, setCartItems] = useState({ items: [], id: null });
   const [isLoading, setIsLoading] = useState(true);
@@ -95,9 +94,6 @@ const CartPage = () => {
       setIsLoading(false);
     }
   };
-useEffect(() => {
-  console.log("Selected Address ID:", selectedAddressId);
-}, [selectedAddressId]);
 
   // Remove item from cart
   const handleRemoveItem = async (itemId) => {
@@ -264,6 +260,9 @@ useEffect(() => {
                 grandTotal={grandTotal}
               />
 
+
+                  
+
            <button
                   className={`w-full py-3 rounded font-bold mt-6 transition-colors ${
                     isLoading || !selectedAddressId
@@ -372,6 +371,8 @@ const CartItem = ({ item, onRemove, onQuantityChange, isLoading }) => (
   </motion.div>
 );
 
+
+
 const StockStatus = ({ stock }) => (
   <div 
     className="inline-flex items-center px-5 py-2 rounded-md"
@@ -380,7 +381,10 @@ const StockStatus = ({ stock }) => (
     }}
   >
     <span style={{ color: stock >= 1 ? "#63A375" : "red" }}>
-      {stock >= 1 ? "In Stock" : "Out of Stock"}
+      {stock >= 1 ? "In Stock" : 
+      
+      (  "Out of Stock")
+      } 
     </span>
   </div>
 );
