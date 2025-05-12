@@ -78,33 +78,51 @@ const CartPage = () => {
     fetchAddresses();
   }, [fetchCartItems, fetchAddresses]);
 
-  // Handle quantity changes
+  // Handle quantity changes - OPTIMIZED VERSION
   const handleQuantityChange = async (productId, action) => {
     try {
-      setIsLoading(true);
+      // Optimistic UI update
+      setCartItems(prev => ({
+        ...prev,
+        items: prev.items.map(item => {
+          if (item.product === productId) {
+            return {
+              ...item,
+              quantity: action === "increase" 
+                ? item.quantity + 1 
+                : Math.max(1, item.quantity - 1)
+            };
+          }
+          return item;
+        })
+      }));
+
+      // API call
       if (action === "increase") {
         await cartIncrement(productId, cartItems.id);
       } else {
         await cartDecrement(productId, cartItems.id);
       }
-      await fetchCartItems();
     } catch (error) {
+      // Revert on error
       setError("Failed to update quantity");
-    } finally {
-      setIsLoading(false);
+      fetchCartItems();
     }
   };
 
-  // Remove item from cart
+  // Remove item from cart - OPTIMIZED VERSION
   const handleRemoveItem = async (itemId) => {
     try {
-      setIsLoading(true);
+      // Optimistic UI update
+      setCartItems(prev => ({
+        ...prev,
+        items: prev.items.filter(item => item.id !== itemId)
+      }));
+      
       await RemoveFromCart(itemId);
-      await fetchCartItems();
     } catch (error) {
       setError("Failed to remove item");
-    } finally {
-      setIsLoading(false);
+      fetchCartItems(); // Revert on error
     }
   };
 
@@ -121,7 +139,6 @@ const CartPage = () => {
 
   // Initiate checkout
   const handleCheckout = () => {
-    console.log("checkout")
     if (!selectedAddressId) {
       setError("Please select delivery address");
       setTimeout(() => setError(null), 3000);
@@ -210,7 +227,7 @@ const CartPage = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        {isLoading ? (
+        {isLoading && cartItems.items.length === 0 ? (
           <div className="flex justify-center py-12">
             <Loader />
           </div>
@@ -229,7 +246,6 @@ const CartPage = () => {
                     item={item}
                     onRemove={handleRemoveItem}
                     onQuantityChange={handleQuantityChange}
-                    isLoading={isLoading}
                   />
                 ))}
               </div>
@@ -260,31 +276,23 @@ const CartPage = () => {
                 grandTotal={grandTotal}
               />
 
+              <button
+                className={`w-full py-3 rounded font-bold mt-6 transition-colors ${
+                  !selectedAddressId
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-black hover:bg-gray-800 text-white"
+                }`}
+                onClick={handleCheckout}
+                disabled={!selectedAddressId}
+              >
+                PROCEED TO CHECKOUT
+              </button>
 
-                  
-
-           <button
-                  className={`w-full py-3 rounded font-bold mt-6 transition-colors ${
-                    isLoading || !selectedAddressId
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-black hover:bg-gray-800 text-white"
-                  }`}
-                  onClick={handleCheckout}
-                  disabled={isLoading || !selectedAddressId}
-                >
-                  {isLoading ? "Please wait..." : "PROCEED TO CHECKOUT"}
-                </button>
-
-                {!selectedAddressId && (
-                  <p className="text-red-500 text-sm mt-2 text-center">
-                    Please select a delivery address to continue.
-                  </p>
-                )}
-
-                {error && (
-                  <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
-                )}
-
+              {!selectedAddressId && (
+                <p className="text-red-500 text-sm mt-2 text-center">
+                  Please select a delivery address to continue.
+                </p>
+              )}
 
               {error && (
                 <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
@@ -298,6 +306,7 @@ const CartPage = () => {
 };
 
 // Sub-components
+
 const EmptyCart = () => (
   <motion.div 
     className="text-center py-6 bg-white rounded-lg shadow-md"
@@ -318,7 +327,7 @@ const EmptyCart = () => (
   </motion.div>
 );
 
-const CartItem = ({ item, onRemove, onQuantityChange, isLoading }) => (
+const CartItem = ({ item, onRemove, onQuantityChange }) => (
   <motion.div 
     className="flex flex-col md:flex-row items-center border-b border-gray-200 py-8"
     initial={{ opacity: 0, y: 20 }}
@@ -354,7 +363,6 @@ const CartItem = ({ item, onRemove, onQuantityChange, isLoading }) => (
         <button 
           className="flex items-center space-x-2 text-gray-600"
           onClick={() => onRemove(item.id)}
-          disabled={isLoading}
         >
           <TrashIcon />
           <span>REMOVE</span>
@@ -364,14 +372,11 @@ const CartItem = ({ item, onRemove, onQuantityChange, isLoading }) => (
           quantity={item.quantity}
           onIncrease={() => onQuantityChange(item.product, "increase")}
           onDecrease={() => onQuantityChange(item.product, "decrease")}
-          disabled={isLoading}
         />
       </div>
     </div>
   </motion.div>
 );
-
-
 
 const StockStatus = ({ stock }) => (
   <div 
@@ -381,20 +386,17 @@ const StockStatus = ({ stock }) => (
     }}
   >
     <span style={{ color: stock >= 1 ? "#63A375" : "red" }}>
-      {stock >= 1 ? "In Stock" : 
-      
-      (  "Out of Stock")
-      } 
+      {stock >= 1 ? "In Stock" : "Out of Stock"}
     </span>
   </div>
 );
 
-const QuantityControls = ({ quantity, onIncrease, onDecrease, disabled }) => (
+const QuantityControls = ({ quantity, onIncrease, onDecrease }) => (
   <div className="flex items-center border border-gray-300 rounded">
     <button
       className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-50"
       onClick={onDecrease}
-      disabled={disabled || quantity <= 1}
+      disabled={quantity <= 1}
     >
       <span className="text-xl">−</span>
     </button>
@@ -402,9 +404,8 @@ const QuantityControls = ({ quantity, onIncrease, onDecrease, disabled }) => (
       {quantity}
     </span>
     <button
-      className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+      className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-50"
       onClick={onIncrease}
-      disabled={disabled}
     >
       <span className="text-xl">+</span>
     </button>

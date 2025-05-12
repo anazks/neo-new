@@ -418,3 +418,13 @@ export const logout = async (refresh, token) => {
     throw error;
   }
 };
+
+export const deleteMyAccount = async (data)=>{
+  try {
+    let data = Axios.delete('/authentication/user/delete/')
+    console.log(data)
+    return data
+  } catch (error) {
+    return error
+  }
+}

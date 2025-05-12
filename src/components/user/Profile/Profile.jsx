@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { User, MapPin, Edit, Plus, Save, X, Camera, Check } from 'lucide-react';
 import { useAuth } from '../../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { getMyDeliveryAddress, profileUpdate, getUserInfo } from '../../../Services/userApi';
+import { getMyDeliveryAddress, profileUpdate, getUserInfo, deleteMyAccount } from '../../../Services/userApi';
 import AddressPopup from './AddNewAddress';
 import { Loader } from 'lucide-react';
 import BaseURL from '../../../Static/Static';
@@ -227,30 +227,39 @@ function UserProfile() {
     );
   }
 
-  // No user data state - import the component but we'll avoid using it since it seems to be causing the issue
-  const Nouser = () => (
-    <div className="min-h-screen flex flex-col items-center justify-center" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
-      <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
-        <User size={64} className="mx-auto text-gray-300 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">No Profile Found</h2>
-        <p className="text-gray-600 mb-6">You need to log in to view your profile.</p>
-        <button 
-          onClick={() => navigate('/login')}
-          className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all"
-        >
-          Log In
-        </button>
-      </div>
-    </div>
-  );
-  
-  // If no userData after loading is complete, redirect to login instead of showing Nouser
+  // If no userData after loading is complete, redirect to login
   if (!userData) {
     console.log("No user data found after loading, redirecting to login");
-    // Redirect to login instead of showing the Nouser component
     navigate('/login');
     return null;
   }
+
+  // Delete Confirmation Popup Component
+  const DeleteConfirmationPopup = ({ onClose, onConfirm }) => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Confirm Account Deletion</h3>
+        <p className="text-gray-600 mb-6">
+          Are you sure you want to delete your account? This action cannot be undone. 
+          All your data will be permanently removed.
+        </p>
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   // Profile Info Component
   const ProfileInfo = () => (
@@ -278,6 +287,79 @@ function UserProfile() {
       )}
     </div>
   );
+
+  // Profile Sidebar Component
+  const ProfileSidebar = ({ userData, getProfilePicture, activeTab, setActiveTab, handleLogout }) => {
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    const handleDeleteAccount = async () => {
+      try {
+        setLoading(true);
+        await deleteMyAccount();
+        
+        // Clear user data and logout
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('authToken');
+        setToken(null);
+        navigate('/');
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        // You might want to show an error message to the user here
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="flex items-center space-x-4 mb-6">
+          <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+            {getProfilePicture() ? (
+              <img 
+                src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
+                alt="Profile" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User size={28} className="text-gray-400" />
+            )}
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800">
+              {userData?.first_name} {userData?.last_name || ''}
+            </h2>
+            <p className="text-gray-600 text-sm">{userData?.email}</p>
+          </div>
+        </div>
+        
+        <nav className="mb-6">
+          <button 
+            onClick={() => setActiveTab('profile')}
+            className={`w-full text-left px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors rounded-md ${activeTab === 'profile' ? 'border-l-4 border-red-500 bg-red-50' : ''}`}
+          >
+            <User size={20} className={activeTab === 'profile' ? 'text-red-500' : 'text-gray-500'} />
+            <span className={activeTab === 'profile' ? 'font-medium text-red-500' : 'text-gray-700'}>Profile</span>
+          </button>
+        </nav>
+        
+        <div className="pt-4 border-t border-gray-100">
+          <button 
+            className="w-full text-left px-4 py-2 text-red-600 font-medium hover:text-red-700 transition-colors rounded-md hover:bg-red-50"
+            onClick={() => setShowDeleteConfirmation(true)}
+          >
+            Delete My Account
+          </button>
+        </div>
+
+        {showDeleteConfirmation && (
+          <DeleteConfirmationPopup 
+            onClose={() => setShowDeleteConfirmation(false)}
+            onConfirm={handleDeleteAccount}
+          />
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
@@ -606,49 +688,6 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
           </button>
         </div>
       )}
-    </div>
-  </div>
-);
-
-const ProfileSidebar = ({ userData, getProfilePicture, activeTab, setActiveTab, handleLogout }) => (
-  <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-    <div className="flex items-center space-x-4 mb-6">
-      <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-        {getProfilePicture() ? (
-          <img 
-            src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
-            alt="Profile" 
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <User size={28} className="text-gray-400" />
-        )}
-      </div>
-      <div>
-        <h2 className="text-lg font-semibold text-gray-800">
-          {userData?.first_name} {userData?.last_name || ''}
-        </h2>
-        <p className="text-gray-600 text-sm">{userData?.email}</p>
-      </div>
-    </div>
-    
-    <nav className="mb-6">
-      <button 
-        onClick={() => setActiveTab('profile')}
-        className={`w-full text-left px-4 py-3 flex items-center space-x-3 hover:bg-gray-50 transition-colors rounded-md ${activeTab === 'profile' ? 'border-l-4 border-red-500 bg-red-50' : ''}`}
-      >
-        <User size={20} className={activeTab === 'profile' ? 'text-red-500' : 'text-gray-500'} />
-        <span className={activeTab === 'profile' ? 'font-medium text-red-500' : 'text-gray-700'}>Profile</span>
-      </button>
-    </nav>
-    
-    <div className="pt-4 border-t border-gray-100">
-      <button 
-        className="w-full text-left px-4 py-2 text-red-600 font-medium hover:text-red-700 transition-colors rounded-md hover:bg-red-50"
-        onClick={handleLogout}
-      >
-        Delete My Account
-      </button>
     </div>
   </div>
 );
