@@ -167,6 +167,12 @@ const CartPage = () => {
     }
   };
 
+  // Handle new address added
+  const handleAddressAdded = async () => {
+    await fetchAddresses();
+    setAddressModal(false);
+  };
+
   // Calculate totals
   const subtotal = cartItems.items.reduce((total, item) => 
     total + item.price * item.quantity, 0
@@ -193,7 +199,7 @@ const CartPage = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <AddNewAddress 
               onClose={() => setAddressModal(false)} 
-              fetchAddresses={fetchAddresses}
+              fetchAddresses={handleAddressAdded}
             />
           </div>
         </div>
@@ -288,7 +294,7 @@ const CartPage = () => {
                 PROCEED TO CHECKOUT
               </button>
 
-              {!selectedAddressId && (
+              {!selectedAddressId && addresses.length > 0 && (
                 <p className="text-red-500 text-sm mt-2 text-center">
                   Please select a delivery address to continue.
                 </p>
