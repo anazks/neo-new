@@ -874,7 +874,7 @@ function UpdateProduct() {
 
 
                                 <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <div>
+                                    {/* <div>
                                         <label className="block mb-2">Price</label>
                                         <input
                                             type="number"
@@ -885,8 +885,8 @@ function UpdateProduct() {
                                             step="0.01"
                                             required
                                         />
-                                    </div>
-                                    <div>
+                                    </div> */}
+                                    {/* <div>
                                         <label className="block mb-2">Stock</label>
                                         <input
                                             type="number"
@@ -896,7 +896,7 @@ function UpdateProduct() {
                                             min="0"
                                             required
                                         />
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className="mb-4">
