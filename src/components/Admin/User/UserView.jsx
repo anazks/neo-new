@@ -22,7 +22,7 @@ function UserView() {
     try {
       setLoading(true);
       const response = await getAllUsers();
-      console.log(response,"reposne user ")
+      console.log(response, "response user");
       setUsers(response.data);
       setError(null);
     } catch (err) {
@@ -41,7 +41,7 @@ function UserView() {
     if (!deleteConfirmId) return;
     try {
       setProcessingUserId(deleteConfirmId);
-      const response = await deleteUser(deleteConfirmId);
+      await deleteUser(deleteConfirmId);
 
       // Remove user from state after successful deletion
       setUsers((prev) => prev.filter(user => user.id !== deleteConfirmId));
@@ -55,7 +55,7 @@ function UserView() {
     }
   };
 
-  const handleToggleStatus = async (userId, currentStatus) => {
+  const handleToggleStatus = async (userId, isActive) => {
     try {
       setProcessingUserId(userId);
       await ToggleUsers(userId);
@@ -63,10 +63,10 @@ function UserView() {
       // Update user's status locally
       setUsers((prev) =>
         prev.map(user =>
-          user.id === userId ? { ...user, status: currentStatus === 'active' ? 'inactive' : 'active' } : user
+          user.id === userId ? { ...user, is_active: !isActive } : user
         )
       );
-      showNotification(`User status updated to ${currentStatus === 'active' ? 'inactive' : 'active'}`);
+      showNotification(`User status updated to ${!isActive ? 'active' : 'inactive'}`);
     } catch (err) {
       console.error("Toggle status error:", err);
       showNotification('Failed to update status', 'error');
@@ -75,8 +75,8 @@ function UserView() {
     }
   };
 
-  const getStatusBadge = useMemo(() => (status) =>
-    status === 'active' ? (
+  const getStatusBadge = useMemo(() => (isActive) =>
+    isActive === true ? (
       <span className="flex items-center text-green-400">
         <FiCheckCircle className="mr-1" /> Active
       </span>
@@ -165,41 +165,41 @@ function UserView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700">
-              {users.map(({ id, first_name, email, phone_number, district, state, status, role }) => (
-                <tr key={id} className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap">{first_name || 'Unknown User'}</td>
+              {users.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-750">
+                  <td className="px-6 py-4 whitespace-nowrap">{user.first_name || 'Unknown User'}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {email ? <a href={`mailto:${email}`} className="text-blue-400 hover:text-blue-300">{email}</a> : <span className="text-gray-400">No email</span>}
+                    {user.email ? <a href={`mailto:${user.email}`} className="text-blue-400 hover:text-blue-300">{user.email}</a> : <span className="text-gray-400">No email</span>}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {phone_number ? <a href={`tel:${phone_number}`} className="hover:text-blue-400">{phone_number}</a> : <span className="text-gray-400">No phone</span>}
+                    {user.phone_number ? <a href={`tel:${user.phone_number}`} className="hover:text-blue-400">{user.phone_number}</a> : <span className="text-gray-400">No phone</span>}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{district || 'Unknown'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{state || 'Unknown'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(status)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{getRoleBadge(role)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.district || 'Unknown'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.state || 'Unknown'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(user.is_active)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{getRoleBadge(user.role)}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex space-x-2">
                       <button
                         className="text-blue-400 hover:text-blue-300 p-1 rounded hover:bg-gray-700"
                         title="Edit user"
-                        disabled={processingUserId === id}
+                        disabled={processingUserId === user.id}
                       >
                         <FiEdit2 />
                       </button>
                       <button
-                        className={`p-1 rounded hover:bg-gray-700 ${status === 'active' ? 'text-green-400 hover:text-green-300' : 'text-red-400 hover:text-red-300'}`}
-                        title={`${status === 'active' ? 'Deactivate' : 'Activate'} user`}
-                        onClick={() => handleToggleStatus(id, status)}
-                        disabled={processingUserId === id}
+                        className={`p-1 rounded hover:bg-gray-700 ${user.is_active ? 'text-green-400 hover:text-green-300' : 'text-red-400 hover:text-red-300'}`}
+                        title={`${user.is_active ? 'Deactivate' : 'Activate'} user`}
+                        onClick={() => handleToggleStatus(user.id, user.is_active)}
+                        disabled={processingUserId === user.id}
                       >
-                        {status === 'active' ? <FiToggleRight /> : <FiToggleLeft />}
+                        {user.is_active ? <FiToggleRight /> : <FiToggleLeft />}
                       </button>
                       <button
                         className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-gray-700"
                         title="Delete user"
-                        onClick={() => setDeleteConfirmId(id)}
-                        disabled={processingUserId === id}
+                        onClick={() => setDeleteConfirmId(user.id)}
+                        disabled={processingUserId === user.id}
                       >
                         <FiTrash2 />
                       </button>
