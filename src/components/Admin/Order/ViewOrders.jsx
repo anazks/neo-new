@@ -122,7 +122,7 @@ function ViewOrders() {
                 <td>${order.total.toFixed(2)}</td>
                 <td>{order.paymentMethod}</td>
                 <td className="shipping-address">{order.shippingAddress}</td>
-                <td>{getStatusBadge(order.status)}</td>
+                <td>{getStatusBadge(order.order_status)}</td>
                 <td className="actions">
                   <button className="action-btn view-btn" title="View Order">
                     <FiEye />
