@@ -77,14 +77,14 @@ function Order() {
   };
 
   const getPaymentBadge = (status) => {
-    if (!status) return (
+    if (status == "FAILED" ) return (
       <span className="flex items-center bg-red-600 bg-opacity-20 text-red-400 px-3 py-1 rounded-full text-sm">
         <FiAlertCircle className="mr-1" /> Unpaid
       </span>
     );
     
     switch (status.toLowerCase()) {
-      case 'paid':
+      case 'PAID':
         return (
           <span className="flex items-center bg-green-600 bg-opacity-20 text-green-400 px-3 py-1 rounded-full text-sm">
             <FiCheckCircle className="mr-1" /> Paid
