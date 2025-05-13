@@ -23,7 +23,7 @@ function SideBar({ isOpen, onClose }) {
       localStorage.removeItem("token");
       let refresh = localStorage.getItem("refresh")
       const response = await logout(refresh,token);
-      console.log(response,"logot response")
+      console.log(response,"logout response")
       navigate("/");
       onClose();
     } catch (error) {

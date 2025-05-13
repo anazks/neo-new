@@ -47,7 +47,7 @@ function Sidebar({ isExpanded, toggleSidebar }) {
         </li>
         <li>
           <a 
-            href="/admin/orders" 
+            href="/admin/order-list" 
             className="flex items-center p-4 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
           >
             <FaShoppingBag className="text-xl" />
