@@ -293,7 +293,7 @@ const OrderList = () => {
 
   if (selectedOrder) {
     return (
-      <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+      <div className="bg-dark rounded-lg shadow-lg p-6">
         <button
           className="mb-6 flex items-center text-blue-600 hover:text-blue-800"
           onClick={backToOrderList}
@@ -471,7 +471,7 @@ const OrderList = () => {
   }
 
   return (
-    <div className="bg-black rounded-lg shadow-lg p-6">
+    <div className="bg-dark rounded-lg shadow-lg p-6">
       <h2 className="text-2xl font-bold text-black-800 mb-6">
         Order Management
       </h2>

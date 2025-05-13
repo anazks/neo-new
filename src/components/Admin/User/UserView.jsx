@@ -22,6 +22,7 @@ function UserView() {
     try {
       setLoading(true);
       const response = await getAllUsers();
+      console.log(response,"reposne user ")
       setUsers(response.data);
       setError(null);
     } catch (err) {
