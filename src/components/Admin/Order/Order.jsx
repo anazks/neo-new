@@ -7,7 +7,11 @@ import {
   FiCalendar,
   FiCheckCircle,
   FiClock,
-  FiAlertCircle
+  FiAlertCircle,
+  FiChevronLeft,
+  FiChevronRight,
+  FiPrinter,
+  FiRefreshCw
 } from 'react-icons/fi';
 import { AllOrders } from '../../../Services/Order';
 import Loader from '../../../Loader/Loader';
@@ -111,6 +115,14 @@ function Order() {
     }
   };
 
+  const handlePrevOrder = () => {
+    setSelectedOrderIndex(prev => (prev > 0 ? prev - 1 : orders.length - 1));
+  };
+
+  const handleNextOrder = () => {
+    setSelectedOrderIndex(prev => (prev < orders.length - 1 ? prev + 1 : 0));
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani">
@@ -125,12 +137,12 @@ function Order() {
         <div className="text-red-500 text-4xl mb-4">
           <FiAlertCircle />
         </div>
-        <p className="text-xl mb-6">{error}</p>
+        <p className="text-xl mb-6 text-center">{error}</p>
         <button 
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium flex items-center"
           onClick={fetchOrders}
         >
-          Try Again
+          <FiRefreshCw className="mr-2" /> Try Again
         </button>
       </div>
     );
@@ -141,7 +153,13 @@ function Order() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani p-6">
         <FiPackage className="text-4xl text-gray-400 mb-4" />
         <h2 className="text-xl font-medium mb-2">No Orders Found</h2>
-        <p className="text-gray-400 mb-4">There are currently no orders in the system.</p>
+        <p className="text-gray-400 mb-4 text-center">There are currently no orders in the system.</p>
+        <button 
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium flex items-center"
+          onClick={fetchOrders}
+        >
+          <FiRefreshCw className="mr-2" /> Refresh
+        </button>
       </div>
     );
   }
@@ -156,71 +174,85 @@ function Order() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 font-rajdhani">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Order Management</h1>
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-6 font-rajdhani">
+      {/* Header with Order Navigation */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h1 className="text-2xl font-bold">Order Management</h1>
         
         {orders.length > 1 && (
-          <div className="w-full md:w-auto">
-            <select 
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={selectedOrderIndex}
-              onChange={(e) => setSelectedOrderIndex(Number(e.target.value))}
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            <button 
+              onClick={handlePrevOrder}
+              className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+              aria-label="Previous order"
             >
-              {orders.map((order, index) => (
-                <option key={order.id} value={index}>
-                  Order #{order.invoice_number} - {order.user_name}
-                </option>
-              ))}
-            </select>
+              <FiChevronLeft className="text-xl" />
+            </button>
+            
+            <div className="text-center flex-1">
+              <p className="text-sm text-gray-400">Order {selectedOrderIndex + 1} of {orders.length}</p>
+              <p className="font-medium">
+                #{order.invoice_number} • {order.user_name}
+              </p>
+            </div>
+            
+            <button 
+              onClick={handleNextOrder}
+              className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+              aria-label="Next order"
+            >
+              <FiChevronRight className="text-xl" />
+            </button>
           </div>
         )}
       </div>
 
-      <div className="bg-gray-800 rounded-lg p-6 mb-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+      {/* Order Summary Card */}
+      <div className="bg-gray-800 rounded-lg p-4 md:p-6 mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 className="text-xl font-bold">Order #{order.invoice_number}</h2>
-            <div className="flex items-center space-x-4 text-gray-400 mt-2">
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-4 text-gray-400 mt-2 gap-1 md:gap-0">
               <span className="flex items-center">
                 <FiCalendar className="mr-1" /> {formattedDate}
               </span>
-              <span>|</span>
+              <span className="hidden md:block">|</span>
               <span>Customer: {order.user_name}</span>
             </div>
           </div>
-          <div className="flex space-x-3 mt-4 md:mt-0">
+          <div className="flex flex-wrap gap-2">
             {getStatusBadge(order.order_status)}
             {getPaymentBadge(order.payment_status)}
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
         {/* Customer Details */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-gray-800 rounded-lg p-4 md:p-6">
           <div className="flex items-center mb-4">
             <FiUser className="text-xl mr-2" />
             <h3 className="text-lg font-semibold">Customer Details</h3>
           </div>
           <div className="space-y-3">
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="text-gray-400">Full Name</span>
-              <span>{order.user_name}</span>
+              <span className="text-right sm:text-left">{order.user_name}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="text-gray-400">User ID</span>
-              <span>{order.user}</span>
+              <span className="text-right sm:text-left">{order.user}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="text-gray-400">Phone</span>
-              <span>{order.delivery_address_details?.phone_number || 'N/A'}</span>
+              <span className="text-right sm:text-left">{order.delivery_address_details?.phone_number || 'N/A'}</span>
             </div>
           </div>
         </div>
 
         {/* Shipping Address */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-gray-800 rounded-lg p-4 md:p-6">
           <div className="flex items-center mb-4">
             <FiTruck className="text-xl mr-2" />
             <h3 className="text-lg font-semibold">Shipping Address</h3>
@@ -237,29 +269,29 @@ function Order() {
         </div>
 
         {/* Payment Information */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-gray-800 rounded-lg p-4 md:p-6">
           <div className="flex items-center mb-4">
             <FiCreditCard className="text-xl mr-2" />
             <h3 className="text-lg font-semibold">Payment Information</h3>
           </div>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
               <span className="text-gray-400">Payment Status</span>
               {getPaymentBadge(order.payment_status)}
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="text-gray-400">Payment ID</span>
-              <span>{order.payment_order_id || 'N/A'}</span>
+              <span className="text-right sm:text-left">{order.payment_order_id || 'N/A'}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="text-gray-400">Payment Method</span>
-              <span>{order.payment_method || 'N/A'}</span>
+              <span className="text-right sm:text-left">{order.payment_method || 'N/A'}</span>
             </div>
           </div>
         </div>
 
         {/* Order Summary */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-gray-800 rounded-lg p-4 md:p-6">
           <div className="flex items-center mb-4">
             <FiPackage className="text-xl mr-2" />
             <h3 className="text-lg font-semibold">Order Summary</h3>
@@ -286,31 +318,39 @@ function Order() {
       </div>
 
       {/* Order Items */}
-      <div className="bg-gray-800 rounded-lg p-6 mb-6">
-        <div className="flex items-center mb-4">
-          <FiPackage className="text-xl mr-2" />
-          <h3 className="text-lg font-semibold">Order Items</h3>
+      <div className="bg-gray-800 rounded-lg p-4 md:p-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <FiPackage className="text-xl mr-2" />
+            <h3 className="text-lg font-semibold">Order Items</h3>
+          </div>
+          <span className="text-sm text-gray-400">{order.items?.length || 0} items</span>
         </div>
+        
         <div className="overflow-x-auto">
           <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
             <thead className="bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Product</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Price</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Quantity</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Subtotal</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Product</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Price</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Qty</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Subtotal</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700">
               {order.items && order.items.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-750">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
                         <img 
                           className="h-10 w-10 rounded-md object-cover" 
-                          src="https://www.pngmart.com/files/23/Gaming-Pc-PNG.png" 
+                          src={item.product_image || "https://www.pngmart.com/files/23/Gaming-Pc-PNG.png"} 
                           alt={item.product_name} 
+                          onError={(e) => {
+                            e.target.onerror = null; 
+                            e.target.src = "https://www.pngmart.com/files/23/Gaming-Pc-PNG.png";
+                          }}
                         />
                       </div>
                       <div className="ml-4">
@@ -319,9 +359,9 @@ function Order() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">₹{Number(item.price).toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.quantity}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">₹{(Number(item.price) * item.quantity).toFixed(2)}</td>
+                  <td className="px-4 py-4 whitespace-nowrap">₹{Number(item.price).toFixed(2)}</td>
+                  <td className="px-4 py-4 whitespace-nowrap">{item.quantity}</td>
+                  <td className="px-4 py-4 whitespace-nowrap">₹{(Number(item.price) * item.quantity).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
@@ -330,9 +370,9 @@ function Order() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-end space-x-4">
-        <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded font-medium">
-          Print Invoice
+      <div className="flex flex-col sm:flex-row justify-end gap-3">
+        <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded font-medium flex items-center justify-center">
+          <FiPrinter className="mr-2" /> Print Invoice
         </button>
         <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium">
           Update Status

@@ -114,14 +114,16 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
 
       console.log("Sending payment result to server:", data);
       const response = await payemntCallBack(data);
-      console.log("Server response:", response.data);
-      if (response.data.payment === true) {
-        window.location.href = "/payed";
-        localStorage.setItem("payed", true);
-        console.log("Payment status updated successfully on server.");  
-      } else {
-        console.error("Failed to update payment status on server:", response.data.message);
-      }
+      console.log("Server response:", response);
+
+      console.log("Server response data:", response.data);
+      // if (response.data.payment === true) {
+      //   window.location.href = "/payed";
+      //   localStorage.setItem("payed", true);
+      //   console.log("Payment status updated successfully on server.");  
+      // } else {
+      //   console.error("Failed to update payment status on server:", response.data.message);
+      // }
       return response.data;
     } catch (error) {
       console.error("Error updating payment status:", error);

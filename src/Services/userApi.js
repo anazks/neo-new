@@ -428,3 +428,29 @@ export const deleteMyAccount = async (data)=>{
     return error
   }
 }
+
+export const getAllUsers = async()=>{
+  try {
+    let response = await Axios.get('/authentication/admin/users/')
+    return response
+  } catch (error) {
+      return error
+  }
+}
+export const deleteUser = async(id)=>{
+  try {
+    console.log(id,"user id")
+    let response = Axios.delete(`/authentication/admin/user/${id}/delete/`)
+    return response
+  } catch (error) {
+      return error
+  }
+}
+export const ToggleUsers = async(id)=>{
+  try {
+    let response = await Axios.post(`/authentication/admin/user/${id}/toggle-active/`)
+    return response
+  } catch (error) {
+    return error
+  }
+}
