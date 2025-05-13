@@ -68,18 +68,18 @@ const Login = () => {
   });
 
   // Function to validate if phone number follows the rules
-const isValidPhoneNumber = (phone) => {
-  // Check if phone number exists and has the correct length
-  if (!phone) return false;
-  
-  // Check if it's only digits
-  const isDigitsOnly = /^\d+$/.test(phone);
-  
-  // Check if length is between 10 and 12
-  const isCorrectLength = phone.length >= 10 && phone.length <= 12;
-  
-  return isDigitsOnly && isCorrectLength;
-};
+  const isValidPhoneNumber = (phone) => {
+    // Check if phone number exists and has the correct length
+    if (!phone) return false;
+
+    // Check if it's only digits
+    const isDigitsOnly = /^\d+$/.test(phone);
+
+    // Check if length is between 10 and 12
+    const isCorrectLength = phone.length >= 10 && phone.length <= 12;
+
+    return isDigitsOnly && isCorrectLength;
+  };
 
   // Update validation state whenever password changes
   useEffect(() => {
@@ -102,17 +102,42 @@ const isValidPhoneNumber = (phone) => {
 
   const handleSendOTP = async () => {
     const email = formData.email;
+
     if (email === "") {
+      setMessage("Please enter an email");
       setsentingtOtp(false);
-    } else {
+      return;
+    }
+
+    localStorage.setItem("email", email);
+
+    // Show loading state
+    // setsentingtOtp(true);
+
+    let result = await submitOTP(email);
+
+    if (result.success) {
+      // OTP sent successfully
+      setMessage("OTP sent successfully");
       setShowEmailInput(false);
       setTimeout(() => {
+        // Keep the sending OTP state true to show the OTP input screen
         setsentingtOtp(true);
       }, 300);
+    } else {
+      // Handle error cases
+      setsentingtOtp(false);
+      setShowEmailInput(true);
+      if (result.isActive === false) {
+        // User is inactive
+        setMessage("This user is inactive. Please contact administrator.");
+      } else {
+        // Other errors
+        setMessage(
+          result.errorMessage || "Something went wrong. Please try again."
+        );
+      }
     }
-    localStorage.setItem("email", email);
-    let OTPResponse = await submitOTP(email);
-    console.log(OTPResponse);
   };
 
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -160,33 +185,36 @@ const isValidPhoneNumber = (phone) => {
   }, [formData.date_of_birth]);
 
   // Modified handlePhoneChange function to only allow digits and validate length
-const handlePhoneChange = (e) => {
-  const { name, value } = e.target;
-  
-  // Only allow digits
-  if (name === "phone_number") {
-    // Filter out non-digit characters
-    const numericValue = value.replace(/\D/g, '');
-    
-    // Update form data with filtered value
-    setFormData({
-      ...formData,
-      [name]: numericValue
-    });
-    
-    // Validate and set error messages
-    if (numericValue && !(/^\d+$/.test(numericValue))) {
-      setPhoneError("Only numbers are allowed");
-    } else if (numericValue && (numericValue.length < 10 || numericValue.length > 12)) {
-      setPhoneError("Phone number must be 10-12 digits");
+  const handlePhoneChange = (e) => {
+    const { name, value } = e.target;
+
+    // Only allow digits
+    if (name === "phone_number") {
+      // Filter out non-digit characters
+      const numericValue = value.replace(/\D/g, "");
+
+      // Update form data with filtered value
+      setFormData({
+        ...formData,
+        [name]: numericValue,
+      });
+
+      // Validate and set error messages
+      if (numericValue && !/^\d+$/.test(numericValue)) {
+        setPhoneError("Only numbers are allowed");
+      } else if (
+        numericValue &&
+        (numericValue.length < 10 || numericValue.length > 12)
+      ) {
+        setPhoneError("Phone number must be 10-12 digits");
+      } else {
+        setPhoneError("");
+      }
     } else {
-      setPhoneError("");
+      // Handle other form fields normally
+      handleChange(e);
     }
-  } else {
-    // Handle other form fields normally
-    handleChange(e);
-  }
-};
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -196,7 +224,6 @@ const handlePhoneChange = (e) => {
     if (!showValidation && name === "password" && value.length > 0) {
       setShowValidation(true);
     }
-    
   };
 
   const isPasswordValid = () => {
@@ -1171,32 +1198,30 @@ const handlePhoneChange = (e) => {
 
           <div className="mb-8 relative z-20" style={{ minHeight: "200px" }}>
             <a href="/">
-            <img
-              src={logo}
-              alt="Logo"
-              className="h-12 absolute"
-              style={{ opacity: ".6" }}
-            />
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-12 absolute"
+                style={{ opacity: ".6" }}
+              />
             </a>
 
             <div
               className="text-center md:text-left absolute"
-              style={{ top: "60%",left:"10%" }}
+              style={{ top: "60%", left: "10%" }}
             >
               <p
                 className=" md:text-3xl tracking-tight  text-black"
                 style={{
                   // fontFamily: "'Bebas Neue', 'Oswald', 'Barlow Condensed', sans-serif",
-                  fontFamily:"Barlow Condensed, sans-serif",
+                  fontFamily: "Barlow Condensed, sans-serif",
                   letterSpacing: "4px",
-                  lineHeight:"40px",
+                  lineHeight: "40px",
                   fontWeight: "300",
                   textTransform: "uppercase",
                   // textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
-                  textShadow: '2px 2px 6px rgba(3, 3, 3, 0.57)',
-                  fontSize:"40px",
-                  
-
+                  textShadow: "2px 2px 6px rgba(3, 3, 3, 0.57)",
+                  fontSize: "40px",
                 }}
               >
                 NEW THINKING
