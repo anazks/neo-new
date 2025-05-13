@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { User, MapPin, Edit, Plus, Save, X, Camera, Check } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { User, MapPin, Edit, Plus, Save, X, Camera, Check, Loader } from 'lucide-react';
 import { useAuth } from '../../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { getMyDeliveryAddress, profileUpdate, getUserInfo, deleteMyAccount } from '../../../Services/userApi';
 import AddressPopup from './AddNewAddress';
-import { Loader } from 'lucide-react';
 import BaseURL from '../../../Static/Static';
 
 function UserProfile() {
@@ -19,26 +18,24 @@ function UserProfile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [updateError, setUpdateError] = useState(null);
   const [showAddressPopup, setShowAddressPopup] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   
-  const { token, setToken, user } = useAuth();
+  const { token, setToken } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
-  // Memoized fetch functions
   const fetchUserData = useCallback(async () => {
     try {
-      // First check if we have a token in localStorage
       const storedToken = localStorage.getItem('authToken');
       
       if (!storedToken && !token) {
-        console.log("No auth token found");
         navigate('/login');
         return;
       }
       
       const response = await getUserInfo();
-      console.log("User data response:", response);
       
-      if (response && response.data) {
+      if (response?.data) {
         setUserData(response.data);
         setFormData({
           first_name: response.data.first_name || '',
@@ -53,14 +50,13 @@ function UserProfile() {
         });
         localStorage.setItem('userProfile', JSON.stringify(response.data));
       } else {
-        console.error("No data in response", response);
-        // Try to get from localStorage if API returns empty
         tryLoadFromLocalStorage();
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      // Try to get from localStorage if API fails
       tryLoadFromLocalStorage();
+    } finally {
+      setLoading(false);
     }
   }, [token, navigate]);
 
@@ -81,48 +77,33 @@ function UserProfile() {
           pin_code: parsedUser.pin_code || '',
           age: parsedUser.age || '',
         });
-        return true;
       } catch (e) {
         console.error("Error parsing stored user data", e);
-        return false;
       }
     }
-    return false;
   };
 
   const getAddress = useCallback(async () => {
     try {
       const { data } = await getMyDeliveryAddress();
-      if (data) {
-        setUserAddresses(data);
-      } else {
-        setUserAddresses([]);
-      }
+      setUserAddresses(data || []);
     } catch (error) {
       console.error("Error fetching addresses:", error);
       setUserAddresses([]);
     }
   }, []);
 
-  // Load data immediately on mount
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      
-      // First try to load from localStorage for immediate display
-      const loaded = tryLoadFromLocalStorage();
-      
-      // Then fetch updated data from API
+      tryLoadFromLocalStorage();
       await fetchUserData();
       await getAddress();
-      
-      setLoading(false);
     };
 
     loadData();
   }, [fetchUserData, getAddress]);
 
-  // Handlers
   const handleLogout = () => {
     localStorage.removeItem('userProfile');
     localStorage.removeItem('authToken');
@@ -136,11 +117,15 @@ function UserProfile() {
   };
 
   const handleProfilePicChange = (e) => {
-    if (e.target.files?.[0]) {
-      const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (file) {
       setProfilePicture(file);
       setPreviewImage(URL.createObjectURL(file));
     }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
   };
 
   const handleSubmit = async (e) => {
@@ -149,22 +134,16 @@ function UserProfile() {
     setUpdateError(null);
     
     try {
-      // Create a proper FormData object
       const formDataToSend = new FormData();
       
-      // Add all form fields to FormData
       Object.entries(formData).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formDataToSend.append(key, value);
-        }
+        if (value) formDataToSend.append(key, value);
       });
       
-      // Add profile picture if present
       if (profilePicture) {
         formDataToSend.append('profile_picture', profilePicture);
       }
       
-      // Call the profileUpdate API with the FormData
       const { data } = await profileUpdate(formDataToSend);
       
       if (data) {
@@ -172,20 +151,17 @@ function UserProfile() {
         setUserData(updatedUserData);
         localStorage.setItem('userProfile', JSON.stringify(updatedUserData));
         setUpdateSuccess(true);
-        setTimeout(() => {
-          setIsEditing(false);
-          setUpdateSuccess(false);
-        }, 2000);
+        setTimeout(() => setIsEditing(false), 2000);
       }
     } catch (error) {
-      console.error("Error updating profile:", error);
-      setUpdateError("Failed to update profile. Please try again.");
+      setUpdateError(error.response?.data?.message || "Failed to update profile");
     }
   };
 
   const cancelEdit = () => {
     setIsEditing(false);
     setPreviewImage(null);
+    setProfilePicture(null);
     if (userData) {
       setFormData({
         first_name: userData.first_name || '',
@@ -201,16 +177,21 @@ function UserProfile() {
     }
   };
 
-  const handleAddAddress = () => {
-    setShowAddressPopup(true);
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteMyAccount();
+      localStorage.removeItem('userProfile');
+      localStorage.removeItem('authToken');
+      setToken(null);
+      navigate('/');
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
-  const handleAddressAdded = async () => {
-    await getAddress(); // Refresh addresses after adding new one
-    setShowAddressPopup(false);
-  };
-
-  // Helper functions
   const getProfilePicture = () => {
     if (previewImage) return previewImage;
     if (userData?.profile_picture) return userData.profile_picture;
@@ -218,7 +199,6 @@ function UserProfile() {
     return null;
   };
 
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
@@ -227,90 +207,104 @@ function UserProfile() {
     );
   }
 
-  // If no userData after loading is complete, redirect to login
   if (!userData) {
-    console.log("No user data found after loading, redirecting to login");
     navigate('/login');
     return null;
   }
 
-  // Delete Confirmation Popup Component
-  const DeleteConfirmationPopup = ({ onClose, onConfirm }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">Confirm Account Deletion</h3>
-        <p className="text-gray-600 mb-6">
-          Are you sure you want to delete your account? This action cannot be undone. 
-          All your data will be permanently removed.
-        </p>
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-          >
-            Delete Account
-          </button>
+  return (
+    <div className="min-h-screen" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+          <p className="text-gray-600">Manage your personal information and delivery addresses</p>
+        </div>
+        
+        <div className="flex flex-col md:flex-row gap-6">
+          <ProfileSidebar 
+            userData={userData} 
+            getProfilePicture={getProfilePicture} 
+            activeTab={activeTab} 
+            setActiveTab={setActiveTab}
+            handleLogout={handleLogout}
+            handleDeleteAccount={handleDeleteAccount}
+            isDeleting={isDeleting}
+          />
+          
+          <div className="w-full md:w-3/4">
+            {isEditing ? (
+              <EditProfileForm 
+                formData={formData} 
+                handleInputChange={handleInputChange} 
+                handleSubmit={handleSubmit} 
+                cancelEdit={cancelEdit}
+                getProfilePicture={getProfilePicture}
+                handleProfilePicChange={handleProfilePicChange}
+                updateSuccess={updateSuccess}
+                updateError={updateError}
+                userData={userData}
+                triggerFileInput={triggerFileInput}
+                fileInputRef={fileInputRef}
+              />
+            ) : (
+              <ViewProfile 
+                userData={userData} 
+                userAddresses={userAddresses} 
+                setIsEditing={setIsEditing}
+                getProfilePicture={getProfilePicture}
+                setShowAddressPopup={setShowAddressPopup}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
-
-  // Profile Info Component
-  const ProfileInfo = () => (
-    <div className="space-y-6">
-      {isEditing ? (
-        <EditProfileForm 
-          formData={formData} 
-          handleInputChange={handleInputChange} 
-          handleSubmit={handleSubmit} 
-          cancelEdit={cancelEdit}
-          getProfilePicture={getProfilePicture}
-          handleProfilePicChange={handleProfilePicChange}
-          updateSuccess={updateSuccess}
-          updateError={updateError}
-          userData={userData}
-        />
-      ) : (
-        <ViewProfile 
-          userData={userData} 
-          userAddresses={userAddresses} 
-          setIsEditing={setIsEditing}
-          getProfilePicture={getProfilePicture}
-          handleAddAddress={handleAddAddress}
+      
+      {showAddressPopup && (
+        <AddressPopup 
+          onClose={() => setShowAddressPopup(false)}
+          onSuccess={() => {
+            getAddress();
+            setShowAddressPopup(false);
+          }}
         />
       )}
     </div>
   );
+}
 
-  // Profile Sidebar Component
-  const ProfileSidebar = ({ userData, getProfilePicture, activeTab, setActiveTab, handleLogout }) => {
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+const DeleteConfirmationPopup = ({ onClose, onConfirm, isDeleting }) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 max-w-md w-full">
+      <h3 className="text-xl font-semibold text-gray-800 mb-4">Confirm Account Deletion</h3>
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to delete your account? This action cannot be undone.
+      </p>
+      <div className="flex justify-end space-x-3">
+        <button
+          onClick={onClose}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+          disabled={isDeleting}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onConfirm}
+          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+          disabled={isDeleting}
+        >
+          {isDeleting ? <Loader className="animate-spin mr-2" size={16} /> : null}
+          {isDeleting ? 'Deleting...' : 'Delete Account'}
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
-    const handleDeleteAccount = async () => {
-      try {
-        setLoading(true);
-        await deleteMyAccount();
-        
-        // Clear user data and logout
-        localStorage.removeItem('userProfile');
-        localStorage.removeItem('authToken');
-        setToken(null);
-        navigate('/');
-      } catch (error) {
-        console.error("Error deleting account:", error);
-        // You might want to show an error message to the user here
-      } finally {
-        setLoading(false);
-      }
-    };
+const ProfileSidebar = ({ userData, getProfilePicture, activeTab, setActiveTab, handleLogout, handleDeleteAccount, isDeleting }) => {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
-    return (
+  return (
+    <div className="w-full md:w-1/4">
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center space-x-4 mb-6">
           <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
@@ -355,223 +349,192 @@ function UserProfile() {
           <DeleteConfirmationPopup 
             onClose={() => setShowDeleteConfirmation(false)}
             onConfirm={handleDeleteAccount}
+            isDeleting={isDeleting}
           />
         )}
       </div>
-    );
-  };
-
-  return (
-    <div className="min-h-screen" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
-          <p className="text-gray-600">Manage your personal information and delivery addresses</p>
-        </div>
-        
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar */}
-          <div className="w-full md:w-1/4">
-            <ProfileSidebar 
-              userData={userData} 
-              getProfilePicture={getProfilePicture} 
-              activeTab={activeTab} 
-              setActiveTab={setActiveTab}
-              handleLogout={handleLogout}
-            />
-          </div>
-          
-          {/* Main Content */}
-          <div className="w-full md:w-3/4">
-            <ProfileInfo />
-          </div>
-        </div>
-      </div>
-      
-      {/* Address Popup */}
-      {showAddressPopup && (
-        <AddressPopup 
-          onClose={() => setShowAddressPopup(false)}
-          onSuccess={handleAddressAdded}
-        />
-      )}
     </div>
   );
-}
+};
 
-// Sub-components for better organization
 const EditProfileForm = ({
   formData, handleInputChange, handleSubmit, cancelEdit, 
-  getProfilePicture, handleProfilePicChange, updateSuccess, updateError, userData
-}) => (
-  <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6">
-    <div className="flex justify-between items-center mb-6">
-      <h3 className="text-xl font-semibold text-gray-800">Edit Profile</h3>
-      <div className="flex space-x-2">
-        <button
-          type="button"
-          onClick={cancelEdit}
-          className="flex items-center text-gray-500 hover:text-gray-700"
-        >
-          <X size={18} className="mr-1" /> Cancel
-        </button>
-        <button
-          type="submit"
-          className="flex items-center px-4 py-1.5 bg-red-500 text-white rounded-full hover:bg-red-600"
-        >
-          <Save size={18} className="mr-1" /> Save Changes
-        </button>
-      </div>
-    </div>
-
-    {updateSuccess && (
-      <div className="mb-4 p-2 bg-green-100 border border-green-300 text-green-700 rounded flex items-center">
-        <Check size={16} className="mr-1" /> Profile updated successfully!
-      </div>
-    )}
-    
-    {updateError && (
-      <div className="mb-4 p-2 bg-red-100 border border-red-300 text-red-700 rounded">
-        {updateError}
-      </div>
-    )}
-
-    <div className="mb-6 flex justify-center">
-      <div className="relative">
-        <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-          {getProfilePicture() ? (
-            <img 
-              src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <User size={40} className="text-gray-400" />
-          )}
+  getProfilePicture, handleProfilePicChange, updateSuccess, updateError, userData,
+  triggerFileInput, fileInputRef
+}) => {
+  return (
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold text-gray-800">Edit Profile</h3>
+        <div className="flex space-x-2">
+          <button
+            type="button"
+            onClick={cancelEdit}
+            className="flex items-center text-gray-500 hover:text-gray-700"
+          >
+            <X size={18} className="mr-1" /> Cancel
+          </button>
+          <button
+            type="submit"
+            className="flex items-center px-4 py-1.5 bg-red-500 text-white rounded-full hover:bg-red-600"
+          >
+            <Save size={18} className="mr-1" /> Save Changes
+          </button>
         </div>
-        <label 
-          htmlFor="profile_picture" 
-          className="absolute bottom-0 right-0 bg-red-500 text-white p-1.5 rounded-full cursor-pointer hover:bg-red-600 transition-colors"
-        >
-          <Camera size={16} />
-        </label>
-        <input 
-          type="file" 
-          id="profile_picture" 
-          name="profile_picture" 
-          accept="image/*" 
-          onChange={handleProfilePicChange} 
-          className="hidden" 
-        />
       </div>
-    </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-        <input
-          type="text"
-          name="first_name"
-          value={formData.first_name || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-        <input
-          type="text"
-          name="last_name"
-          value={formData.last_name || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-        <input
-          type="email"
-          value={userData.email || ''}
-          disabled
-          className="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-md text-gray-500"
-        />
-        <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-        <input
-          type="tel"
-          name="phone_number"
-          value={formData.phone_number || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-        <input
-          type="date"
-          name="date_of_birth"
-          value={formData.date_of_birth || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
-        <input
-          type="text"
-          name="age"
-          value={formData.age || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">PIN Code</label>
-        <input
-          type="text"
-          name="pin_code"
-          value={formData.pin_code || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
-        <input
-          type="text"
-          name="district"
-          value={formData.district || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group">
-        <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-        <input
-          type="text"
-          name="state"
-          value={formData.state || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        />
-      </div>
-      <div className="form-group md:col-span-2">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-        <textarea
-          name="address"
-          value={formData.address || ''}
-          onChange={handleInputChange}
-          rows="3"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
-        ></textarea>
-      </div>
-    </div>
-  </form>
-);
+      {updateSuccess && (
+        <div className="mb-4 p-2 bg-green-100 border border-green-300 text-green-700 rounded flex items-center">
+          <Check size={16} className="mr-1" /> Profile updated successfully!
+        </div>
+      )}
+      
+      {updateError && (
+        <div className="mb-4 p-2 bg-red-100 border border-red-300 text-red-700 rounded">
+          {updateError}
+        </div>
+      )}
 
-const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture, handleAddAddress }) => (
+      <div className="mb-6 flex justify-center">
+        <div className="relative">
+          <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center mb-2 cursor-pointer" onClick={triggerFileInput}>
+            {getProfilePicture() ? (
+              <img 
+                src={getProfilePicture().startsWith('http') ? getProfilePicture() : BaseURL + getProfilePicture()} 
+                alt="Profile" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User size={40} className="text-gray-400" />
+            )}
+          </div>
+          <input 
+            type="file" 
+            ref={fileInputRef}
+            onChange={handleProfilePicChange} 
+            className="hidden" 
+            accept="image/*"
+          />
+          <button 
+            type="button"
+            onClick={triggerFileInput}
+            className="absolute bottom-0 right-0 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors"
+          >
+            <Camera size={16} />
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">First Name*</label>
+          <input
+            type="text"
+            name="first_name"
+            value={formData.first_name || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+          <input
+            type="text"
+            name="last_name"
+            value={formData.last_name || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+          <input
+            type="email"
+            value={userData.email || ''}
+            disabled
+            className="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-md text-gray-500"
+          />
+          <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+          <input
+            type="tel"
+            name="phone_number"
+            value={formData.phone_number || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+          <input
+            type="date"
+            name="date_of_birth"
+            value={formData.date_of_birth || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+          <input
+            type="number"
+            name="age"
+            value={formData.age || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+            min="1"
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">PIN Code</label>
+          <input
+            type="text"
+            name="pin_code"
+            value={formData.pin_code || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
+          <input
+            type="text"
+            name="district"
+            value={formData.district || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+          />
+        </div>
+        <div className="form-group">
+          <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state || ''}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+          />
+        </div>
+        <div className="form-group md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+          <textarea
+            name="address"
+            value={formData.address || ''}
+            onChange={handleInputChange}
+            rows="3"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
+          ></textarea>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture, setShowAddressPopup }) => (
   <div className="space-y-6">
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-4">
@@ -638,7 +601,7 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold text-gray-800">Delivery Addresses</h3>
         <button 
-          onClick={handleAddAddress}
+          onClick={() => setShowAddressPopup(true)}
           className="flex items-center px-4 py-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all"
         >
           <Plus size={16} className="mr-1" /> Add New Address
@@ -663,16 +626,6 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
                 {address.zip_code ? ` ${address.zip_code}` : ''}
               </p>
               <p className="text-gray-600 mt-1">{address.phone_number || 'Phone not provided'}</p>
-              
-              <div className="flex gap-3 mt-3">
-                <button className="text-red-600 text-sm font-medium hover:text-red-700">Edit</button>
-                {!address.is_primary && (
-                  <>
-                    <button className="text-red-600 text-sm font-medium hover:text-red-700">Set as Default</button>
-                    <button className="text-gray-600 text-sm font-medium hover:text-gray-800">Remove</button>
-                  </>
-                )}
-              </div>
             </div>
           ))}
         </div>
@@ -681,7 +634,7 @@ const ViewProfile = ({ userData, userAddresses, setIsEditing, getProfilePicture,
           <MapPin size={48} className="mx-auto text-red-300 mb-4" />
           <p className="text-gray-500">No delivery addresses saved yet</p>
           <button 
-            onClick={handleAddAddress}
+            onClick={() => setShowAddressPopup(true)}
             className="mt-3 px-4 py-1.5 bg-red-500 text-white text-sm rounded-full hover:bg-red-600 transition-all"
           >
             Add your first address

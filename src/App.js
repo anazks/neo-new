@@ -51,12 +51,8 @@ function App() {
             <Route path="/Solutions" element={<Solutions/>}/>
             <Route path="/profile"  element={<ProfilePage/>}/>
             <Route path="/payed" element={<Payed/>} />
-
             <Route path="/nvidia" element={<Nvidia/>} />
-
             <Route path="/failed" element={<Failed/>} />
-
-
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/Home" element={<AdminHome/>}/> */}
