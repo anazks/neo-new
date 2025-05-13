@@ -1170,15 +1170,17 @@ const handlePhoneChange = (e) => {
           </div>
 
           <div className="mb-8 relative z-20" style={{ minHeight: "200px" }}>
+            <a href="/">
             <img
               src={logo}
               alt="Logo"
               className="h-12 absolute"
               style={{ opacity: ".6" }}
             />
+            </a>
 
             <div
-              className="text-center md:text-left absolute z-20"
+              className="text-center md:text-left absolute"
               style={{ top: "60%",left:"10%" }}
             >
               <p
