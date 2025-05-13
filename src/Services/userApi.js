@@ -55,10 +55,19 @@ export const submitOTP = async (email) => {
     );
 
     console.log(response.data);
-    return response.data;
+    return { 
+      success: true,
+      data: response.data
+    };
   } catch (error) {
     console.error("Error sending OTP:", error);
-    return null;
+    return { 
+      success: false,
+      error: error,
+      // If we have response data with is_active status, include it
+      isActive: error.response?.data?.is_active,
+      errorMessage: error.response?.data?.error || "Something went wrong"
+    };
   }
 };
 
