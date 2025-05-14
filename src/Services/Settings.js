@@ -175,7 +175,7 @@ export const addProduct = async (productDetails) => {
         
         const taxAmount = productDetails.get('tax_amount');
         if (taxAmount && taxAmount !== '') {
-            data.append('tax_amount', Number(taxAmount));
+            data.append('tax_amount',(taxAmount));
         }
         
         const taxValue = productDetails.get('tax_value');

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getBrand, getCategory, getTax, addProduct } from '../../../../Services/Settings';
 import Alert from '../../../user/Alert/Alert';
+import { useNavigate } from 'react-router-dom';
 
 function AddProducts() {
+    const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     product_code: '',
     name: '',
@@ -144,6 +147,16 @@ function AddProducts() {
   
       try {
         const productFormData = new FormData();
+        // In your handleSubmit function, before creating FormData:
+            let numericTaxAmount = 0; // or whatever default value makes sense
+            if (formData.tax_amount === "Inclusive") {
+              numericTaxAmount = 1; // or whatever numeric value represents "Inclusive"
+            } else if (formData.tax_amount === "Exclusive") {
+              numericTaxAmount = 0; // or whatever numeric value represents "Exclusive"
+            }
+
+// Then when adding to formData:
+productFormData.append("tax_amount", numericTaxAmount);
         
         productFormData.append("product_code", formData.product_code);
         productFormData.append("name", formData.name);
@@ -164,9 +177,9 @@ function AddProducts() {
           productFormData.append("price_before_tax", Number(formData.price_before_tax));
         }
         
-        if (formData.tax_amount) {
-          productFormData.append("tax_amount", String(formData.tax_amount));
-        }
+        // if (formData.tax_amount) {
+        //   productFormData.append("tax_amount",(formData.tax_amount));
+        // }
         
         if (formData.tax_value) {
           productFormData.append("tax_value", Number(formData.tax_value));
@@ -181,7 +194,7 @@ function AddProducts() {
         }
   
         const response = await addProduct(productFormData);
-        
+        console.log(response,"product added")
         if (response && response.status === 201) {
           setSubmitSuccess(true);
           setDebugData(response.data);
@@ -216,7 +229,7 @@ function AddProducts() {
             setIsSubmitting(false);
             setDebugData(null);
           }, 2000);
-          
+          navigate(`/admin/Updateproducts/${response.data.data.id}`)
           return response.data;
         } else {
           throw new Error('Failed to add product');
@@ -371,7 +384,7 @@ function AddProducts() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-300">Discount Amount</label>
+              <label className="block text-sm font-medium text-gray-300">Discount %</label>
               <input 
                 type="number" 
                 name="discount_price" 
@@ -410,15 +423,16 @@ function AddProducts() {
               />
             </div> */}
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-300">Tax Amount</label>
-              <select name="tax_amount" value={formData.tax_amount} id=""  onChange={handleChange} 
-              className='w-full px-3 py-2 bg-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-              >
-                  <option value="Inclusive">Inclusive</option>
-                  <option value="Exclusive">Exclusive</option>
-
-              </select>
+           <div>
+              <select 
+  name="tax_amount" 
+  value={formData.tax_amount} 
+  onChange={handleChange} 
+  className='w-full px-3 py-2 bg-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+>
+  <option value="1">Inclusive</option>
+  <option value="0">Exclusive</option>
+</select>
               {/* <input 
                 type="number" 
                 name="tax_amount" 

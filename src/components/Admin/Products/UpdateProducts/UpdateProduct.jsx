@@ -70,6 +70,7 @@ function UpdateProduct() {
             try {
                 setLoading(true);
                 const productData = await getSingleProduct(id);
+                console.log(productData,"productData")
                 setProduct(productData);
                 setFormData({
                     name: productData.name || '',
@@ -567,7 +568,7 @@ function UpdateProduct() {
                     </div>
 
                     <div>
-                        <label htmlFor="tax_value" className="block mb-2">Tax Value</label>
+                        <label htmlFor="tax_value" className="block mb-2">Tax</label>
                         <input
                             type="number"
                             id="tax"
@@ -588,7 +589,7 @@ function UpdateProduct() {
 
                 {/* Discount Information */}
                 <div className="mb-4">
-                    <label htmlFor="discount_price" className="block mb-2">Discount Price</label>
+                    <label htmlFor="discount_price" className="block mb-2">Discount %</label>
                     <input
                         type="number"
                         id="discount_price"
