@@ -43,8 +43,12 @@ function PriorityOne() {
   ];
 
   return (
-    <div className="priority-one-container">
-      <div className="content-wrappers">
+    <div className="priority-one-container" style={{
+        width:"97vw", 
+        height:"90vh", 
+        fontFamily: "'Rajdhani', sans-serif"
+      }}>
+      <div className="content-wrappers" >
         <header className="header">
           <h1 className="title">Priority One by Neo Tokyo</h1>
           <p className="subtitle">For the One's who want the best we offer</p>

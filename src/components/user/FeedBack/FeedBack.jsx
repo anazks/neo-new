@@ -54,7 +54,11 @@ export default function FeedbackComponent() {
   }, [testimonials.length]);
 
   return (
-    <div className={`feedback-wrapper ${isVisible ? 'feedback-visible' : ''}`}>
+    <div className={`feedback-wrapper ${isVisible ? 'feedback-visible' : ''}`}  style={{
+        width:"97vw", 
+        height:"95vh", 
+        fontFamily: "'Rajdhani', sans-serif"
+      }}>
       <div className="feedback-left-section">
         <h1 className="feedback-main-title">Don't Just Take our Word, Listen to Our Customers</h1>
         

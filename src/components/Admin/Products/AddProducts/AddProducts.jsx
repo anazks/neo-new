@@ -165,7 +165,7 @@ function AddProducts() {
         }
         
         if (formData.tax_amount) {
-          productFormData.append("tax_amount", Number(formData.tax_amount));
+          productFormData.append("tax_amount", String(formData.tax_amount));
         }
         
         if (formData.tax_value) {
@@ -382,7 +382,7 @@ function AddProducts() {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">Selling Price</label>
               <input 
                 type="number" 
@@ -396,9 +396,9 @@ function AddProducts() {
               {discountPercentage() && (
                 <p className="text-green-400 text-sm">{discountPercentage()} OFF</p>
               )}
-            </div>
+            </div> */}
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">Price Before Tax</label>
               <input 
                 type="number" 
@@ -408,11 +408,18 @@ function AddProducts() {
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 step="0.01" 
               />
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-300">Tax Amount</label>
-              <input 
+              <select name="tax_amount" value={formData.tax_amount} id=""  onChange={handleChange} 
+              className='w-full px-3 py-2 bg-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              >
+                  <option value="Inclusive">Inclusive</option>
+                  <option value="Exclusive">Exclusive</option>
+
+              </select>
+              {/* <input 
                 type="number" 
                 name="tax_amount" 
                 value={formData.tax_amount} 
@@ -420,6 +427,7 @@ function AddProducts() {
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 step="0.01" 
               />
+            </div> */}
             </div>
 
             <div className="space-y-2">

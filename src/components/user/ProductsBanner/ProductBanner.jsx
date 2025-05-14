@@ -5,6 +5,7 @@ import "@fontsource/rajdhani";
 import "@fontsource/rajdhani/700.css";
 import "@fontsource/raleway";
 import image from '../../../Images/Rectangle 532.jpg';
+import {feturedProduct} from '../../../Services/Products'
 
 function ProductBanner() {
   const [darkMode, setDarkMode] = useState(false);
@@ -16,7 +17,7 @@ function ProductBanner() {
     const textContent = document.querySelector('.textContents');
     const smallText = document.querySelector('.smallText');
     const rate = document.querySelector('.rate');
-    
+    getFeturedProdcut()
     // Add animation classes after a short delay
     setTimeout(() => {
       textContent?.classList.add('animate-fadeIn');
@@ -27,7 +28,7 @@ function ProductBanner() {
         }, 200);
       }, 200);
     }, 200);
-    
+ 
     // Track mouse movement for overlay effect
     const handleMouseMove = (e) => {
       setMousePosition({
@@ -42,7 +43,14 @@ function ProductBanner() {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
-  
+     const getFeturedProdcut = async()=>{
+      try {
+        let Products = await feturedProduct()
+        console.log(Products,"banner/...")
+      } catch (error) {
+          console.log(error)
+      }
+    }
   // Toggle dark mode function
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
