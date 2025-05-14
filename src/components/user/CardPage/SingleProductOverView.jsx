@@ -34,14 +34,21 @@ function Overview({ product }) {
     const [orderDetails, setOrderDetails] = useState({});
 
     // Calculate order totals based on single product
-    const subtotal = product ? (product.price * quantity) : 0;
-    const shipping = 5.99;
+    let subtotal;
+    if(product.product_details){
+        subtotal = product.product_details ? (product.product_details.price * quantity) : 0;
+    }else{
+        subtotal = product ? (product.price * quantity) : 0;
+
+    }
+    const shipping = 0;
     const tax = subtotal * 0.08;
-    const total = subtotal + shipping + tax;
+    const total = subtotal;
     const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
 
     // Fetch addresses on component mount
     useEffect(() => {
+        console.log(product,"product..Over view")
         const fetchAddresses = async () => {
             try {
                 setLoading(true);
@@ -184,11 +191,16 @@ function Overview({ product }) {
         try {
             let getPrimaryAddress = await getMyPrimaryAddress();
             console.log(getPrimaryAddress, "primary address---");
-            
+            let productId;
+            if(product.product_details){
+                productId = product.product_details.id
+            }else{
+                productId=product.id
+            }
             // Create order with the single product
             let order = await CreateSIngeleOrder({
                 address_id: selectedAddressId,
-                product_id: product.id,
+                product_id: productId,
                 quantity: quantity
             });
             

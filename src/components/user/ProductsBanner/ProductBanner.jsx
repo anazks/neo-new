@@ -6,6 +6,7 @@ import "@fontsource/rajdhani";
 import "@fontsource/rajdhani/700.css";
 import "@fontsource/raleway";
 import { featuredProduct } from "../../../Services/Products";
+import SingeProductOverview from '../CardPage/SingleProductOverView'
 
 function ProductBanner() {
   const [darkMode, setDarkMode] = useState(false);
@@ -15,11 +16,23 @@ function ProductBanner() {
   const overlayRef = useRef(null);
   const carouselRef = useRef(null);
   const intervalRef = useRef(null);
+  const [overView, setOverView] = useState(false)
+
+  const handleBuyNow = async () => {
+    try {
+      console.log("buy now")
+      setOverView(true)
+    } catch (error) {
+      console.error("Error in buy now:", error);
+      alert("Error in buy now:", error);
+    }
+  }
 
   // Fetch featured products
   const getFeaturedProduct = async () => {
     try {
       const response = await featuredProduct();
+      console.log(response, "featuredProduct")
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching featured products:", error);
@@ -114,7 +127,7 @@ function ProductBanner() {
   // Calculate discount
   const calculateDiscount = (price, mrp) => {
     const discountPercentage = 10; // 10% discount for example
-    const discountedPrice =parseFloat(mrp)-  parseFloat(price);
+    const discountedPrice = parseFloat(mrp) - parseFloat(price);
     return {
       original: formatPrice(mrp),
       discounted: formatPrice(price),
@@ -131,10 +144,13 @@ function ProductBanner() {
   }
 
   const currentProduct = products[currentIndex];
-  const priceInfo = calculateDiscount(currentProduct.product_details.price,currentProduct.product_details.mrp);
+  const priceInfo = calculateDiscount(currentProduct.product_details.price, currentProduct.product_details.mrp);
 
   return (
     <>
+      {overView && (
+        <SingeProductOverview product={currentProduct} />
+      )}
       <div
         ref={overlayRef}
         className="fixed inset-0 bg-transparent pointer-events-none z-50 scale-0 rounded-full transition-transform duration-500 ease-in-out"
@@ -161,7 +177,7 @@ function ProductBanner() {
             <img
               src={currentProduct.banner_image}
               alt={currentProduct.featured_name}
-              className="w-full h-auto rounded-3xl transition-transform duration-500 ease-in-out hover:scale-105 object-cover relative z-10 shadow-lg"
+              className="w-full h-auto rounded-3xl transition-transform duration-500 ease-in-out hover:scale-105 object-cover relative z-10"
             />
             {/* Floating spec indicators on the image */}
             <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-purple-600 rounded-full animate-pulse-ring">
@@ -230,16 +246,16 @@ function ProductBanner() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full">
-            <button className="buy-now group flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gradient-to-r hover:from-gray-800 hover:to-gray-600 hover:border-cyan-400 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
+            <button onClick={handleBuyNow} className="buy-now group flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gradient-to-r hover:from-gray-800 hover:to-gray-600 hover:border-cyan-400 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
               <IoArrowForwardCircleSharp className="text-xl md:text-2xl text-cyan-400 transition-transform duration-300 group-hover:translate-x-1" />
               <span className="font-bold text-white group-hover:text-cyan-400">
                 BUY NOW
               </span>
             </button>
 
-            <button className="flex items-center justify-center gap-3 bg-transparent border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gray-100 hover:border-purple-600 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
+            {/* <button className="flex items-center justify-center gap-3 bg-transparent border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gray-100 hover:border-purple-600 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
               <span className="font-bold">View</span>
-            </button>
+            </button> */}
           </div>
         </div>
 

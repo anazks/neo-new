@@ -48,7 +48,7 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_order_id: response.razorpay_order_id,
           razorpay_signature: response.razorpay_signature,
-          raz_order_id: orderDetails.raz_order_id,
+          raz_order_id: data.raz_order_id,
         });
         
         // Close the Razorpay modal
@@ -90,11 +90,11 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
     rzpInstance.current.on('payment.failed', async (response) => {
       console.log("Payment Failed:", response.error);
        window.location.href = "/failed";
-      // paymentId.current = response.error.metadata?.payment_id || null;
-      // await handlePayment("failed", {
-      //   ...response.error,
-      //   raz_order_id: orderDetails.raz_order_id,
-      // });
+      paymentId.current = response.error.metadata?.payment_id || null;
+      await handlePayment("failed", {
+        ...response.error,
+        raz_order_id: orderDetails.raz_order_id,
+      });
       rzpInstance.current.close();
       setDisplayRazorpay(false);
     });
@@ -104,26 +104,27 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
 
   const handlePayment = async (status, paymentDetails) => {
     try {
+      console.log(paymentDetails,"paymentDetails from function")
       const data = {
-        orderId: paymentDetails.raz_order_id,
+        orderId: paymentDetails.razorpay_order_id,
         paymentId: paymentId.current,
         paymentMethod: paymentMethod.current,
+        razorpay_signature:paymentDetails.razorpay_signature,
         status: status,
-        ...paymentDetails,
       };
 
-      console.log("Sending payment result to server:", data);
-      const response = await payemntCallBack(data);
+      console.log("Sending payment result to server:", paymentDetails);
+      const response = await payemntCallBack(paymentDetails);
       console.log("Server response:", response);
 
-      console.log("Server response data:", response.data);
-      // if (response.data.payment === true) {
-      //   window.location.href = "/payed";
-      //   localStorage.setItem("payed", true);
-      //   console.log("Payment status updated successfully on server.");  
-      // } else {
-      //   console.error("Failed to update payment status on server:", response.data.message);
-      // }
+      console.log("Server response data:", response);
+      if (response.data.payment === true) {
+        window.location.href = "/payed";
+        localStorage.setItem("payed", true);
+        console.log("Payment status updated successfully on server.");  
+      } else {
+        console.error("Failed to update payment status on server:", response.data.message);
+      }
       return response.data;
     } catch (error) {
       console.error("Error updating payment status:", error);
