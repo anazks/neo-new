@@ -14,12 +14,14 @@ import OverView from '../components/Admin/OverView/OverView';
 import UpdateProduct from '../components/Admin/Products/UpdateProducts/UpdateProduct';
 import Tickets from '../components/Admin/Tickets/Tickets'
 import OrderList from '../components/Admin/Order/OrderList';
+import FeaturedProduct from '../components/Admin/FeaturedProduct/FeaturedProduct';
 function AdminRoutes() {
   return (
     <Routes>
         <Route path="/admin/Login" element={<LoginAdmin/>} />
         <Route path="/admin/dashboard" element={<Home><Dashboard/></Home>} />
         <Route path="/admin/products" element={<Home><ViewProducts/></Home>} />
+        <Route path="/admin/featured" element={<Home><FeaturedProduct/></Home>} />
         <Route path="/admin/orders" element={<Home><Order/></Home>} />
         <Route path="/admin/order-list" element={<Home><OrderList/></Home>} />
         <Route path="/admin/Vieworders" element={<Home><ViewOrders/></Home>} />
