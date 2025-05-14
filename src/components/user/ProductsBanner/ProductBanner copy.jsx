@@ -1,39 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import { IoArrowForwardCircleSharp } from "react-icons/io5";
 import { FaComputer, FaFire, FaMemory, FaHardDrive } from "react-icons/fa6";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "@fontsource/rajdhani";
 import "@fontsource/rajdhani/700.css";
 import "@fontsource/raleway";
+import image from "../../../Images/Rectangle 532.jpg";
 import { featuredProduct } from "../../../Services/Products";
 
 function ProductBanner() {
   const [darkMode, setDarkMode] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: "50%", y: "50%" });
-  const [products, setProducts] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const overlayRef = useRef(null);
-  const carouselRef = useRef(null);
-  const intervalRef = useRef(null);
-
-  // Fetch featured products
-  const getFeaturedProduct = async () => {
-    try {
-      const response = await featuredProduct();
-      setProducts(response.data);
-    } catch (error) {
-      console.error("Error fetching featured products:", error);
-    }
-  };
 
   // Handle animations on component mount
   useEffect(() => {
-    getFeaturedProduct();
-    
     const textContent = document.querySelector(".textContents");
     const smallText = document.querySelector(".smallText");
     const rate = document.querySelector(".rate");
-
+    featuredProduct();
     // Add animation classes after a short delay
     setTimeout(() => {
       textContent?.classList.add("animate-fadeIn");
@@ -55,83 +39,23 @@ function ProductBanner() {
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Auto-rotate carousel if more than one product
-    if (products.length > 1) {
-      intervalRef.current = setInterval(() => {
-        goToNext();
-      }, 5000);
-    }
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [products.length]);
-
+  }, []);
+  const getFeaturedProduct = async () => {
+    try {
+      let Products = await featuredProduct();
+      console.log(Products, "banner/.....................");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  getFeaturedProduct()
   // Toggle dark mode function
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-
-  // Carousel navigation functions
-  const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? products.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-    resetInterval();
-  };
-
-  const goToNext = () => {
-    const isLastSlide = currentIndex === products.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-    resetInterval();
-  };
-
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
-    resetInterval();
-  };
-
-  const resetInterval = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (products.length > 1) {
-      intervalRef.current = setInterval(() => {
-        goToNext();
-      }, 5000);
-    }
-  };
-
-  // Format price with commas
-  const formatPrice = (price) => {
-    return parseFloat(price).toLocaleString('en-IN', {
-      maximumFractionDigits: 2,
-      style: 'currency',
-      currency: 'INR'
-    }).replace(/\.00$/, '');
-  };
-
-  // Calculate discount
-  const calculateDiscount = (price, mrp) => {
-    const discountPercentage = 10; // 10% discount for example
-    const discountedPrice =parseFloat(mrp)-  parseFloat(price);
-    return {
-      original: formatPrice(mrp),
-      discounted: formatPrice(price),
-      savings: formatPrice(discountedPrice)
-    };
-  };
-
-  if (products.length === 0) {
-    return (
-      <div className="w-full max-w-6xl mx-auto mt-10 md:mt-16 flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
-      </div>
-    );
-  }
-
-  const currentProduct = products[currentIndex];
-  const priceInfo = calculateDiscount(currentProduct.product_details.price,currentProduct.product_details.mrp);
 
   return (
     <>
@@ -155,12 +79,14 @@ function ProductBanner() {
           darkMode ? "text-white bg-gray-900 rounded-xl" : ""
         }`}
       >
+        {/* Toggle dark mode button */}
+
         {/* Image section - on top for mobile */}
         <div className="w-full md:hidden block h-auto relative mb-8">
           <div className="relative w-full h-full">
             <img
-              src={currentProduct.banner_image}
-              alt={currentProduct.featured_name}
+              src={image}
+              alt="FPS MONGER Gaming PC"
               className="w-full h-auto rounded-3xl transition-transform duration-500 ease-in-out hover:scale-105 object-cover relative z-10 shadow-lg"
             />
             {/* Floating spec indicators on the image */}
@@ -181,10 +107,12 @@ function ProductBanner() {
         <div className="w-full md:w-1/2 flex flex-col items-start relative p-0 md:p-5">
           <div className="textContents w-full mt-0 md:mt-5 opacity-0 -translate-x-5 transition-all duration-600 delay-200">
             <span className="text-3xl sm:text-4xl md:text-5xl font-rajdhani font-semibold inline-block">
-              {currentProduct.tagline} <br />
+              FRAMES SPEAK MORE <br /> THAN SPECS. <br />
+              MEET THE <br />
+              FPS{" "}
               <u>
                 <span className="font-mono text-purple-600 animate-glitch">
-                  {currentProduct.featured_name}
+                  MONGER
                 </span>
               </u>
             </span>
@@ -194,38 +122,38 @@ function ProductBanner() {
             <div className="flex items-center my-2 p-2 rounded-lg transition-all duration-300 hover:bg-purple-600/10 hover:translate-x-1">
               <FaComputer className="mr-2 text-purple-600 text-lg" />
               <span className="text-base sm:text-lg font-rajdhani">
-                {currentProduct.cpu} - {currentProduct.cpu_clock}
+                Intel Core i7 14700K - 5.6GHz Max Clock
               </span>
             </div>
             <div className="flex items-center my-2 p-2 rounded-lg transition-all duration-300 hover:bg-purple-600/10 hover:translate-x-1">
               <FaFire className="mr-2 text-purple-600 text-lg" />
               <span className="text-base sm:text-lg font-rajdhani">
-                {currentProduct.gpu} - {currentProduct.gpu_vram}
+                Nvidia RTX 4070Ti - 8GB DDR6 VRAM
               </span>
             </div>
             <div className="flex items-center my-2 p-2 rounded-lg transition-all duration-300 hover:bg-purple-600/10 hover:translate-x-1">
               <FaMemory className="mr-2 text-purple-600 text-lg" />
               <span className="text-base sm:text-lg font-rajdhani">
-                {currentProduct.ram}
+                Corsair Vengeance DDR5 - 16GB
               </span>
             </div>
             <div className="flex items-center my-2 p-2 rounded-lg transition-all duration-300 hover:bg-purple-600/10 hover:translate-x-1">
               <FaHardDrive className="mr-2 text-purple-600 text-lg" />
               <span className="text-base sm:text-lg font-rajdhani">
-                {currentProduct.storage}
+                Samsung 970 Evo Pro - 1TB
               </span>
             </div>
           </div>
 
           <div className="rate text-center relative p-2 my-5 opacity-0 scale-90 transition-all duration-600 delay-600">
             <span className="text-xl sm:text-2xl font-raleway line-through">
-              {priceInfo.original}
+              ₹2,77,990
             </span>
             <span className="text-xl sm:text-2xl font-raleway font-bold ml-2 inline-block relative">
-              {priceInfo.discounted}
+              ₹2,57,990
             </span>
             <div className="absolute -top-4 right-1/3 bg-purple-600 text-white px-2 py-1 text-xs sm:text-sm font-bold rounded-full -rotate-5 animate-pulse">
-              SAVE {priceInfo.savings}
+              SAVE ₹20,000
             </div>
           </div>
 
@@ -238,7 +166,7 @@ function ProductBanner() {
             </button>
 
             <button className="flex items-center justify-center gap-3 bg-transparent border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gray-100 hover:border-purple-600 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
-              <span className="font-bold">View</span>
+              <span className="font-bold">CUSTOMIZE</span>
             </button>
           </div>
         </div>
@@ -247,8 +175,8 @@ function ProductBanner() {
         <div className="hidden md:block w-full md:w-[45%] max-w-lg h-auto relative">
           <div className="relative w-full h-full group">
             <img
-              src={currentProduct.banner_image}
-              alt={currentProduct.featured_name}
+              src={image}
+              alt="FPS MONGER Gaming PC"
               className="w-full h-auto max-h-[80vh] rounded-3xl transition-transform duration-500 ease-in-out group-hover:scale-105 object-cover relative z-10 shadow-xl"
             />
             {/* Floating spec indicators on the image */}
@@ -269,41 +197,7 @@ function ProductBanner() {
             </div>
           </div>
         </div>
-
-        {/* Carousel navigation arrows */}
-        {products.length > 1 && (
-          <>
-            <button
-              onClick={goToPrevious}
-              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-gray-800/80 text-white p-2 rounded-full shadow-lg hover:bg-purple-600 transition-colors duration-300 z-20"
-            >
-              <FiChevronLeft size={24} />
-            </button>
-            <button
-              onClick={goToNext}
-              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-gray-800/80 text-white p-2 rounded-full shadow-lg hover:bg-purple-600 transition-colors duration-300 z-20"
-            >
-              <FiChevronRight size={24} />
-            </button>
-          </>
-        )}
       </div>
-
-      {/* Carousel indicators */}
-      {products.length > 1 && (
-        <div className="flex justify-center mt-4 space-x-2">
-          {products.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentIndex ? "bg-purple-600 w-6" : "bg-gray-400"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
 
       <style jsx>{`
         @keyframes glitch {

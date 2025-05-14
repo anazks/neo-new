@@ -8,7 +8,9 @@ import {
   FaChartPie, 
   FaCogs, 
   FaSignOutAlt, 
-  FaBullseye
+  FaBullseye,
+  FaStar
+ 
 } from 'react-icons/fa';
 
 function Sidebar({ isExpanded, toggleSidebar }) {
@@ -43,6 +45,16 @@ function Sidebar({ isExpanded, toggleSidebar }) {
           >
             <FaBoxOpen className="text-xl" />
             {isExpanded && <span className="ml-3 font-medium">Products</span>}
+          </a>
+        </li>
+        <li>
+          <a 
+            href="/admin/featured" 
+            className="flex items-center p-4 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          >
+            {/* <FaBoxOpen className="text-xl" /> */}
+            <FaStar className="text-xl" />
+            {isExpanded && <span className="ml-3 font-medium">Featured Products</span>}
           </a>
         </li>
         <li>
