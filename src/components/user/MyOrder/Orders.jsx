@@ -1,23 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import { getMyOrder } from '../../../Services/userApi';
-import Loader from '../../../Loader/Loader';
-import './Order.css';
+import React, { useState, useEffect } from "react";
+import { getMyOrder } from "../../../Services/userApi";
 
+import {
+  Package,
+  Truck,
+  Check,
+  ShoppingBag,
+  X,
+  AlertCircle,
+  ChevronRight,
+  Map,
+  Calendar,
+  DollarSign,
+  CreditCard,
+  Eye,
+  Moon,
+  Sun,
+} from "lucide-react";
+import Loader from "../../../Loader/Loader";
+import { useAuth } from "../../../Context/UserContext";
 export default function Orders() {
+  const { token, setToken, user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStatus, setFilterStatus] = useState("all");
   const [darkMode, setDarkMode] = useState(false);
+
+  // Determine what to display for the profile image
+  const renderProfileImage = () => {
+    if (user.profile_picture) {
+      return (
+        <img
+          src={user.profile_picture}
+          alt="Profile"
+          className="w-full h-full object-cover rounded-lg"
+        />
+      );
+    } else if (user.profile_picture_url) {
+      return (
+        <img
+          src={user.profile_picture_url}
+          alt="Profile"
+          className="w-full h-full object-cover rounded-lg"
+        />
+      );
+    } else {
+      // Display first letter of first name if no profile picture is available
+      return (
+        <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg text-3xl font-bold">
+          {user.first_name ? user.first_name.charAt(0) : "U"}
+        </div>
+      );
+    }
+  };
 
   // Check for user's preferred color scheme on component mount
   useEffect(() => {
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedMode = localStorage.getItem('darkMode');
-    
+    const prefersDarkMode = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    const savedMode = localStorage.getItem("darkMode");
+
     if (savedMode !== null) {
-      setDarkMode(savedMode === 'true');
+      setDarkMode(savedMode === "true");
     } else {
       setDarkMode(prefersDarkMode);
     }
@@ -26,15 +73,15 @@ export default function Orders() {
   // Update document with dark mode class and save preference
   useEffect(() => {
     if (darkMode) {
-      document.body.classList.add('dark-mode');
+      document.body.classList.add("dark-mode");
     } else {
-      document.body.classList.remove('dark-mode');
+      document.body.classList.remove("dark-mode");
     }
-    localStorage.setItem('darkMode', darkMode);
+    localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
   const toggleDarkMode = () => {
-    setDarkMode(prevMode => !prevMode);
+    setDarkMode((prevMode) => !prevMode);
   };
 
   const fetchMyOrders = async () => {
@@ -44,12 +91,16 @@ export default function Orders() {
       const response = await getMyOrder();
       if (response && response.data) {
         setOrders(response.data);
+        // Select first order by default if available
+        if (response.data.length > 0) {
+          setSelectedOrder(response.data[0].id);
+        }
       } else {
-        throw new Error('Invalid response format');
+        throw new Error("Invalid response format");
       }
     } catch (err) {
-      console.error('Error fetching orders:', err);
-      setError(err.message || 'Failed to load orders. Please try again.');
+      console.error("Error fetching orders:", err);
+      setError(err.message || "Failed to load orders. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -59,67 +110,90 @@ export default function Orders() {
     fetchMyOrders();
   }, []);
 
-  const toggleOrderDetails = (orderId) => {
-    setSelectedOrder(prev => prev === orderId ? null : orderId);
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   const getStatusConfig = (status) => {
     const statusMap = {
-      delivered: {
-        icon: '✓',
-        label: 'Delivered',
-        color: 'var(--success-color)',
-        bgColor: 'var(--success-light)'
+      DELIVERED: {
+        icon: <Check size={18} />,
+        label: "Delivered",
+        color: "text-green-600",
+        bgColor: "bg-green-100",
+        stepCompleted: 4,
       },
-      shipped: {
-        icon: '🚚',
-        label: 'Shipped',
-        color: 'var(--primary-color)',
-        bgColor: 'var(--primary-light)'
+      SHIPPED: {
+        icon: <Truck size={18} />,
+        label: "Shipped",
+        color: "text-blue-600",
+        bgColor: "bg-blue-100",
+        stepCompleted: 3,
       },
-      processing: {
-        icon: '⋯',
-        label: 'Processing',
-        color: 'var(--processing-color)',
-        bgColor: 'var(--processing-light)'
+      PROCESSING: {
+        icon: <Package size={18} />,
+        label: "Processing",
+        color: "text-yellow-600",
+        bgColor: "bg-yellow-100",
+        stepCompleted: 1,
       },
-      canceled: {
-        icon: '✕',
-        label: 'Canceled',
-        color: 'var(--error-color)',
-        bgColor: 'var(--error-light)'
+      PAID: {
+        icon: <DollarSign size={18} />,
+        label: "Paid",
+        color: "text-purple-600",
+        bgColor: "bg-purple-100",
+        stepCompleted: 2,
       },
-      default: {
-        icon: '•',
-        label: 'Pending',
-        color: 'var(--text-light)',
-        bgColor: 'var(--divider)'
-      }
+      CANCELED: {
+        icon: <X size={18} />,
+        label: "Canceled",
+        color: "text-red-600",
+        bgColor: "bg-red-100",
+        stepCompleted: -1,
+      },
+      PENDING: {
+        icon: <AlertCircle size={18} />,
+        label: "Pending",
+        color: "text-gray-600",
+        bgColor: "bg-gray-100",
+        stepCompleted: 0,
+      },
     };
-    
-    return statusMap[status?.toLowerCase()] || statusMap.default;
+
+    return statusMap[status?.toUpperCase()] || statusMap.PENDING;
   };
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+  const filteredOrders =
+    filterStatus === "all"
+      ? orders
+      : orders.filter(
+          (order) =>
+            order.order_status?.toLowerCase() === filterStatus.toLowerCase()
+        );
 
-  const filteredOrders = filterStatus === 'all' 
-    ? orders 
-    : orders.filter(order => order.order_status?.toLowerCase() === filterStatus);
+  // Get currently selected order
+  const currentOrder = orders.find((order) => order.id === selectedOrder);
 
+  // Loading and error states
   if (loading) {
     return <Loader />;
   }
 
   if (error) {
     return (
-      <div className={`error-state ${darkMode ? 'dark-mode' : ''}`}>
-        <div className="error-icon">⚠️</div>
-        <h2>Unable to Load Orders</h2>
-        <p>{error}</p>
-        <button onClick={fetchMyOrders} className="retry-button">
+      <div
+        className={`flex flex-col items-center justify-center h-screen p-6 ${
+          darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"
+        }`}
+      >
+        <AlertCircle size={48} className="text-red-500 mb-4" />
+        <h2 className="text-xl font-bold mb-2">Unable to Load Orders</h2>
+        <p className="text-center mb-4">{error}</p>
+        <button
+          onClick={fetchMyOrders}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
           Try Again
         </button>
       </div>
@@ -128,11 +202,21 @@ export default function Orders() {
 
   if (orders.length === 0) {
     return (
-      <div className={`empty-state ${darkMode ? 'dark-mode' : ''}`}>
-        <div className="empty-state-icon">📦</div>
-        <h2>No Orders Found</h2>
-        <p>You haven't placed any orders yet. Browse our products and start shopping!</p>
-        <button onClick={() => window.location.href = '/products'} className="browse-products-btn">
+      <div
+        className={`flex flex-col items-center justify-center h-screen p-6 ${
+          darkMode ? "bg-gray-900 text-white " : "bg-white text-gray-800"
+        }`}
+      >
+        <ShoppingBag size={48} className="text-gray-400 mb-4" />
+        <h2 className="text-xl font-bold mb-2">No Orders Found</h2>
+        <p className="text-center mb-6">
+          You haven't placed any orders yet. Browse our products and start
+          shopping!
+        </p>
+        <button
+          onClick={() => (window.location.href = "/products")}
+          className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition"
+        >
           Browse Products
         </button>
       </div>
@@ -140,307 +224,618 @@ export default function Orders() {
   }
 
   return (
-    <div className={`orders-container ${darkMode ? 'dark-mode' : ''}`}>
-      <br /><br /><br />
-      <div className="orders-header">
-        <div className="header-title-group">
-          <h1>My Orders</h1>
-          <button 
-            onClick={toggleDarkMode} 
-            className="theme-toggle"
-            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {darkMode ? '☀️' : '🌙'}
-          </button>
-        </div>
-        <div className="orders-actions">
-          <div className="orders-filter">
-            <select 
-              value={filterStatus} 
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="filter-select"
-            >
-              <option value="all">All Orders</option>
-              <option value="delivered">Delivered</option>
-              <option value="shipped">Shipped</option>
-              <option value="processing">Processing</option>
-              <option value="canceled">Canceled</option>
-            </select>
-          </div>
-          <div className="orders-stats">
-            <span className="orders-count">{filteredOrders.length} {filteredOrders.length === 1 ? 'Order' : 'Orders'}</span>
-          </div>
-        </div>
+    <div className="bg-gradient-to-r from-white to-emerald-500" style={{fontFamily: "'Rajdhani', sans-serif"}}>
+      <div
+      className="mx-auto rounded-3xl bg-white p-4 flex items-start"
+      style={{ width: "90%", marginBottom:"20px", marginTop:"80px" }}
+    >
+      {/* Left side - Profile Image */}
+      <div className="w-24 h-24 overflow-hidden rounded-lg border border-gray-300 mr-4">
+        
+        {
+          user.profile_picture_url ?
+          <>
+            {renderProfileImage()}
+          </> : ''
+        }
       </div>
       
-      {filteredOrders.length === 0 ? (
-        <div className="filtered-empty-state">
-          <p>No orders match the selected filter.</p>
-          <button onClick={() => setFilterStatus('all')} className="reset-filter-btn">
-            Show All Orders
-          </button>
+      {/* Right side - User Details */}
+      <div className="flex-grow">
+        <h3 className="text-xl font-bold mb-1">
+          {user.first_name} {user.last_name}
+        </h3>
+        
+        <p className="text-sm text-gray-600 mb-1">
+          {user.email}
+        </p>
+        
+        <p className="text-sm text-gray-600 mb-3">
+          {user.phone_number}
+        </p>
+        
+        {/* My Products link with red gradient */}
+        <div className="text-right">
+          <a 
+            href="/my-products" 
+            className="inline-block font-medium text-white px-4 py-1 rounded-md"
+            style={{
+              background: "linear-gradient(to right, #ff416c, #ff4b2b)"
+            }}
+          >
+            My Products
+          </a>
         </div>
-      ) : (
-        <div className="orders-list">
-          {filteredOrders.map((order) => {
-            const statusConfig = getStatusConfig(order.order_status);
-            
-            return (
-              <div 
-                key={order.id} 
-                className={`order-row ${selectedOrder === order.id ? 'expanded' : ''}`}
+      </div>
+    </div>
+      <div
+        className={`flex  flex-col lg:flex-row h-full min-h-screen ${
+          darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-800"
+        }`}
+        style={{
+          width: "90%",
+          margin: "auto",
+          gap: "10px",
+          background: "none",
+        }}
+      >
+        {/* Left panel - Orders list */}
+        <div
+          className={`w-full lg:w-1/3 border-r ${
+            darkMode
+              ? "border-gray-700 bg-gray-800"
+              : "border-gray-200 bg-white"
+          } overflow-auto`}
+          style={{
+            border: "1.5px solid black",
+            borderRadius: "20px",
+            maxHeight: "800px",
+            overflow: "scroll",
+          }}
+        >
+          <div className="p-4 sticky top-0 z-10 border-b shadow-sm flex justify-between items-center bg-inherit">
+            <h1 className="text-xl font-bold">My Orders</h1>
+            <div className="flex items-center space-x-3">
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className={`text-sm rounded-md border ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600"
+                    : "bg-white border-gray-300"
+                } py-1 px-2`}
               >
-                <div className="order-row-header" onClick={() => toggleOrderDetails(order.id)}>
-                  <div className="order-primary-info">
-                    <div className="order-id">
-                      <span className="order-number">#invoice &nbsp;{order.invoice_number}</span>
-                    </div>
-                    <div className="order-id">
-                      <span className="order-number">Order ID &nbsp;{order.payment_order_id}</span>
-                    </div>
-                    <div className="order-date-container">
-                      <span className="order-date">{formatDate(order.created_at)}</span>
-                    </div>
-                    <div className="order-amount">
-                      <span className="amount">RS.{order.total_price || order.total_tax}</span>
-                    </div>
-                    <div className="order-amount">
-                      <span className={`status-pill status-${order.order_status.toLowerCase()}`}>
-                        {order.order_status}
-                      </span>
-                    </div>
-                  </div>
-                  {
-                    order.items[0]?.image ? (
-                      <div className="order-image">
-                        <img
-                          alt={order.items[0].product_name}
-                          src={order.items[0].image}
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = order.items[0].product_image;
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div className="order-image-placeholder">
-                        <span>No Image</span>
-                      </div>
-                    )
-                  }
-                  <div className="order-summary" style={{
-                    backgroundImage: darkMode 
-                      ? 'linear-gradient(rgba(30, 30, 30, 0.8), rgba(20, 20, 20, 0.9))' 
-                      : `url(${order.items[0]?.product_image || ''})`,
-                    backgroundSize: 'cover'
-                  }}>
-                    <div 
-                      className="order-status-badge"
-                      style={{
-                        backgroundColor: statusConfig.bgColor,
-                        color: statusConfig.color
-                      }}
-                    >
-                      <span className="status-icon">{statusConfig.icon}</span>
-                      <span className="status-text">{order.order_status}</span>
-                    </div>
-                    <div className="view-toggle">
-                      <button 
-                        className="toggle-button"
-                        aria-expanded={selectedOrder === order.id}
-                        aria-label={selectedOrder === order.id ? "Hide order details" : "Show order details"}
+                <option value="all">All Orders</option>
+                <option value="delivered">Delivered</option>
+                <option value="shipped">Shipped</option>
+                <option value="processing">Processing</option>
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="canceled">Canceled</option>
+              </select>
+              <button
+                onClick={toggleDarkMode}
+                className={`p-2 rounded-full ${
+                  darkMode
+                    ? "bg-gray-700 text-yellow-400"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+                aria-label={
+                  darkMode ? "Switch to light mode" : "Switch to dark mode"
+                }
+              >
+                {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <div className="divide-y divide-gray-200">
+            {filteredOrders.length === 0 ? (
+              <div
+                className={`p-6 text-center ${
+                  darkMode ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                <p>No orders match the selected filter.</p>
+                <button
+                  onClick={() => setFilterStatus("all")}
+                  className="mt-2 text-pink-600 hover:text-pink-700"
+                >
+                  Show All Orders
+                </button>
+              </div>
+            ) : (
+              filteredOrders.map((order) => {
+                const statusConfig = getStatusConfig(order.order_status);
+                const isSelected = selectedOrder === order.id;
+
+                return (
+                  <div
+                    key={order.id}
+                    onClick={() => setSelectedOrder(order.id)}
+                    className={`p-4 cursor-pointer transition-colors flex items-center justify-between 
+                    ${
+                      isSelected
+                        ? darkMode
+                          ? "bg-blue-900/30"
+                          : "bg-blue-50"
+                        : darkMode
+                        ? "hover:bg-gray-700"
+                        : "hover:bg-gray-50"
+                    }
+                    ${darkMode ? "border-gray-700" : "border-gray-200"}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${statusConfig.bgColor} ${statusConfig.color}`}
                       >
-                        <span className="toggle-icon">{selectedOrder === order.id ? '−' : '+'}</span>
-                      </button>
+                        {statusConfig.icon}
+                      </div>
+                      <div>
+                        <div className="font-medium">
+                          #{order.invoice_number}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {formatDate(order.created_at)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="text-right mr-3">
+                        <div className="font-medium">
+                          Rs. {order.total_price}
+                        </div>
+                        <div
+                          className={`text-sm ${statusConfig.color} font-medium`}
+                        >
+                          {order.order_status}
+                        </div>
+                      </div>
+                      <ChevronRight
+                        size={16}
+                        className={`${
+                          isSelected ? "opacity-100" : "opacity-0"
+                        } ${darkMode ? "text-white" : "text-gray-800"}`}
+                      />
                     </div>
                   </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Right panel - Order details */}
+        {currentOrder && (
+          <div
+            className="w-full lg:w-2/3 overflow-auto"
+            style={{ border: "1.5px solid black", borderRadius: "20px" }}
+          >
+            <div
+              className={`sticky top-0 z-10 ${
+                darkMode ? "bg-gray-900" : "bg-white"
+              } shadow-sm p-6 border-b ${
+                darkMode ? "border-gray-700" : "border-gray-200"
+              }`}
+            >
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">
+                  Order #{currentOrder.invoice_number}
+                </h2>
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    getStatusConfig(currentOrder.order_status).bgColor
+                  } ${getStatusConfig(currentOrder.order_status).color}`}
+                >
+                  {currentOrder.order_status}
                 </div>
-                
-                {selectedOrder === order.id && (
-                  <div className="order-details-section">
-                    <div className="order-progress">
-                      <div className="order-timeline">
-                        {['processing', 'shipped', 'delivered'].map((status, index) => {
-                          const isCompleted = getOrderStatusRank(order.order_status) >= index;
-                          const isCurrent = getOrderStatusRank(order.order_status) === index;
-                          return (
-                            <div key={status} className={`timeline-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
-                              <div className="timeline-indicator"></div>
-                              <div className="timeline-label">{status.charAt(0).toUpperCase() + status.slice(1)}</div>
-                            </div>
-                          );
-                        })}
+              </div>
+              <div className="text-sm mt-1">
+                <span className={darkMode ? "text-gray-400" : "text-gray-500"}>
+                  Order ID:{" "}
+                </span>
+                <span>{currentOrder.payment_order_id}</span>
+                <span className="mx-2 text-gray-300">•</span>
+                <span className={darkMode ? "text-gray-400" : "text-gray-500"}>
+                  Placed on:{" "}
+                </span>
+                <span>{formatDate(currentOrder.created_at)}</span>
+              </div>
+            </div>
+
+            {/* Order Tracking Status */}
+            <div
+              className={`p-6 ${
+                darkMode ? "bg-gray-800" : "bg-white"
+              } mb-4 shadow-sm`}
+            >
+              <h3 className="font-medium mb-6">Order Status</h3>
+              <div className="relative">
+                {/* Progress line */}
+                <div className="absolute left-6 top-0 w-0.5 h-full bg-gray-200 -ml-px"></div>
+
+                {/* Status steps */}
+                <div className="space-y-8">
+                  {[
+                    {
+                      key: "placed",
+                      label: "Order Placed",
+                      description: "Order Ready for Shipping",
+                      completed:
+                        getStatusConfig(currentOrder.order_status)
+                          .stepCompleted >= 0,
+                    },
+                    {
+                      key: "processing",
+                      label: "Order Processing",
+                      description: "Order is being processed",
+                      completed:
+                        getStatusConfig(currentOrder.order_status)
+                          .stepCompleted >= 1,
+                    },
+                    {
+                      key: "shipped",
+                      label: "Order Shipped",
+                      description: "In Transit to Destination",
+                      completed:
+                        getStatusConfig(currentOrder.order_status)
+                          .stepCompleted >= 2,
+                    },
+                    {
+                      key: "outForDelivery",
+                      label: "Out for Delivery",
+                      description: "Order out for final delivery",
+                      completed:
+                        getStatusConfig(currentOrder.order_status)
+                          .stepCompleted >= 3,
+                    },
+                    {
+                      key: "delivered",
+                      label: "Order Delivered",
+                      description: "Successfully delivered",
+                      completed:
+                        getStatusConfig(currentOrder.order_status)
+                          .stepCompleted >= 4,
+                    },
+                  ].map((step, index) => (
+                    <div key={step.key} className="flex items-start">
+                      <div
+                        className={`relative flex items-center justify-center w-12 h-12 rounded-full shrink-0
+                      ${
+                        step.completed
+                          ? "bg-pink-600 text-white border-2 border-pink-600"
+                          : `${
+                              darkMode ? "bg-gray-700" : "bg-gray-100"
+                            } text-gray-400`
+                      }`}
+                      >
+                        {index === 0 && <ShoppingBag size={18} />}
+                        {index === 1 && <Package size={18} />}
+                        {index === 2 && <Truck size={18} />}
+                        {index === 3 && <Map size={18} />}
+                        {index === 4 && <Check size={18} />}
+                      </div>
+                      <div className="ml-4">
+                        <h4 className="font-medium">{step.label}</h4>
+                        <p
+                          className={`text-sm ${
+                            darkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        >
+                          {step.description}
+                        </p>
+                        {currentOrder.id && step.key === "placed" && (
+                          <p className="text-sm text-gray-500 mt-1">
+                            Order ID: {currentOrder.payment_order_id}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    
-                    <div className="order-items-list">
-                      <h3 className="section-title">Order Items</h3>
-                      {order.items.map((item) => (
-                        <div key={`${order.id}-${item.id}`} className="order-item-row">
-                          <div className="item-image">
-                          {item.image ? (
-                            <img
-                              src={item.image}
-                              alt={item.name || item.product_name}
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = item.product_image;
-                              }}
-                            />
-                          ) : (
-                            <div className="image-placeholder">
-                              <span>No Image</span>
-                            </div>
-                          )}
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Order Items */}
+            <div
+              className={`p-6 ${
+                darkMode ? "bg-gray-800" : "bg-white"
+              } mb-4 shadow-sm`}
+            >
+              <h3 className="font-medium mb-4">Items in Your Order</h3>
+              <div className="space-y-4">
+                {currentOrder.items && currentOrder.items.length > 0 ? (
+                  currentOrder.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`flex items-center p-4 rounded-lg ${
+                        darkMode ? "bg-gray-700" : "bg-gray-50"
+                      }`}
+                    >
+                      <div className="w-16 h-16 rounded bg-white flex-shrink-0 overflow-hidden">
+                        {item.product_image ? (
+                          <img
+                            src={item.product_image}
+                            alt={item.product_name}
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/placeholder-image.png";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                            <Package size={24} />
                           </div>
-                          
-                          <div className="item-details">
-                            <h3 className="item-name">{item.product_name}</h3>
-                            
-                            {item.description && (
-                              <p className="item-description">{item.description}</p>
-                            )}
-                            
-                            <div className="item-attributes">
-                              {item.sku && (
-                                <span className="attribute">Price: {item.total_price}</span>
-                              )}
-                              
-                              {item.brand && (
-                                <span className="attribute">Qty: {item.quantity}</span>
-                              )}
-                              
-                              {item.size && (
-                                <span className="attribute">Tax Amount: {item.total_tax}</span>
-                              )}
-                              
-                              {item.color && (
-                                <span className="attribute">
-                                  <span className="color-dot" style={{ backgroundColor: item.color }}></span>
-                                  {item.color_name || item.color}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="item-price-qty">
-                            <div className="item-quantity">Qty: {item.quantity}</div>
-                            <div className="item-price">RS.{item.price || order.price_before_tax}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="order-info-grid">
-                      <div className="shipping-info">
-                        <h3>Shipping Details</h3>
-                        <div className="info-card">
-                          <div className="info-item">
-                            <span className="info-label">Recipient:</span>
-                            <span className="info-value">{order.delivery_address_details?.delivery_person_name || order.customer_name || 'Not specified'}</span>
-                          </div>
-                          <div className="info-item">
-                            <span className="info-label">Address:</span>
-                            <span className="info-value">{order.delivery_address_details?.address || 'Not specified'}</span>
-                          </div>
-                          <div className="info-item">
-                            <span className="info-label">City:</span>
-                            <span className="info-value">{order.delivery_address_details?.district || 'Not specified'}</span>
-                          </div>
-                          {order.delivery_address_details?.state && (
-                            <div className="info-item">
-                              <span className="info-label">State:</span>
-                              <span className="info-value">{order.delivery_address_details.state}</span>
-                            </div>
-                          )}
-                          {order.delivery_address_details?.postal_code && (
-                            <div className="info-item">
-                              <span className="info-label">Postal Code:</span>
-                              <span className="info-value">{order.delivery_address_details.postal_code}</span>
-                            </div>
-                          )}
-                          {order.delivery_address_details?.phone_number && (
-                            <div className="info-item">
-                              <span className="info-label">Phone:</span>
-                              <span className="info-value">{order.delivery_address_details.phone_number}</span>
-                            </div>
-                          )}
+                        )}
+                      </div>
+                      <div className="ml-4 flex-grow">
+                        <div className="font-medium">{item.product_name}</div>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          <span
+                            className={`text-sm ${
+                              darkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            Price: Rs. {item.price}
+                          </span>
+                          <span
+                            className={`text-sm ${
+                              darkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            Qty: {item.quantity}
+                          </span>
                         </div>
                       </div>
-                      
-                      <div className="payment-info">
-                        <h3>Payment Information</h3>
-                        <div className="info-card">
-                          <div className="info-item">
-                            <span className="info-label">Method:</span>
-                            <span className="info-value">{order.payment_method || 'Not specified'}</span>
-                          </div>
-                          <div className="info-item">
-                            <span className="info-label">Status:</span>
-                            <span className="info-value status-pill" style={{
-                              backgroundColor: statusConfig.bgColor,
-                              color: statusConfig.color
-                            }}>
-                              {order.payment_status}
-                            </span>
-                          </div>
-                          {order.tracking_number && (
-                            <div className="info-item">
-                              <span className="info-label">Tracking:</span>
-                              <span className="info-value">{order.payment_order_id}</span>
-                            </div>
-                          )}
+                      <div className="text-right">
+                        <div className="font-medium">
+                          Rs. {item.total_price}
                         </div>
-                        
-                        <div className="order-summary-card">
-                          <h3>Order Summary</h3>
-                          <div className="summary-row">
-                            <span className="summary-label">Subtotal:</span>
-                            <span className="summary-value">RS.{order.price_before_tax || order.subtotal || '0.00'}</span>
-                          </div>
-                          {order.shipping_cost !== undefined && (
-                            <div className="summary-row">
-                              <span className="summary-label">Shipping:</span>
-                              <span className="summary-value">RS.{order.shipping_cost}</span>
+                        {item.product_discount &&
+                          parseFloat(item.product_discount) > 0 && (
+                            <div className="text-sm text-green-600">
+                              Discount: Rs. {item.product_discount}
                             </div>
                           )}
-                          {order.tax !== undefined && (
-                            <div className="summary-row">
-                              <span className="summary-label">Tax:</span>
-                              <span className="summary-value">RS.{order.tax}</span>
-                            </div>
-                          )}
-                          {order.discount !== undefined && order.discount > 0 && (
-                            <div className="summary-row discount">
-                              <span className="summary-label">Discount:</span>
-                              <span className="summary-value">-RS.{order.discount}</span>
-                            </div>
-                          )}
-                          <div className="summary-row total">
-                            <span className="summary-label">Total:</span>
-                            <span className="summary-value">RS.{order.total_amount || order.price_before_tax}</span>
-                          </div>
-                        </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div
+                    className={`text-center p-4 ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    No items available for this order.
                   </div>
                 )}
               </div>
-            );
-          })}
-        </div>
-      )}
+            </div>
+
+            {/* Order Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
+              {/* Shipping Details */}
+              <div
+                className={`p-4 rounded-lg shadow-sm ${
+                  darkMode ? "bg-gray-800" : "bg-white"
+                }`}
+              >
+                <h3 className="font-medium mb-3 flex items-center">
+                  <Truck size={18} className="mr-2" />
+                  Shipping Details
+                </h3>
+                {currentOrder.delivery_address_details ? (
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-3 gap-1">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        Recipient:
+                      </span>
+                      <span className="text-sm col-span-2">
+                        {currentOrder.delivery_address_details
+                          .delivery_person_name || "Not specified"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        Address:
+                      </span>
+                      <span className="text-sm col-span-2">
+                        {currentOrder.delivery_address_details.address ||
+                          "Not specified"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        City:
+                      </span>
+                      <span className="text-sm col-span-2">
+                        {currentOrder.delivery_address_details.district ||
+                          "Not specified"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        State:
+                      </span>
+                      <span className="text-sm col-span-2">
+                        {currentOrder.delivery_address_details.state ||
+                          "Not specified"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        Postal Code:
+                      </span>
+                      <span className="text-sm col-span-2">
+                        {currentOrder.delivery_address_details.postal_code ||
+                          "Not specified"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span
+                        className={`text-sm ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        Phone:
+                      </span>
+                      <span className="text-sm col-span-2">
+                        {currentOrder.delivery_address_details.phone_number ||
+                          "Not specified"}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    No shipping details available.
+                  </div>
+                )}
+              </div>
+
+              {/* Payment Information */}
+              <div
+                className={`p-4 rounded-lg shadow-sm ${
+                  darkMode ? "bg-gray-800" : "bg-white"
+                }`}
+              >
+                <h3 className="font-medium mb-3 flex items-center">
+                  <CreditCard size={18} className="mr-2" />
+                  Payment Information
+                </h3>
+                <div className="space-y-2 mb-6">
+                  <div className="grid grid-cols-3 gap-1">
+                    <span
+                      className={`text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Method:
+                    </span>
+                    <span className="text-sm col-span-2">
+                      {currentOrder.payment_method || "Not specified"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1">
+                    <span
+                      className={`text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Status:
+                    </span>
+                    <span
+                      className={`text-sm font-medium px-2 py-0.5 rounded-full col-span-2 inline-block w-fit
+                    ${
+                      currentOrder.payment_status === "SUCCESS"
+                        ? "bg-green-100 text-green-800"
+                        : currentOrder.payment_status === "FAILED"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                    >
+                      {currentOrder.payment_status}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1">
+                    <span
+                      className={`text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Order ID:
+                    </span>
+                    <span className="text-sm col-span-2">
+                      {currentOrder.payment_order_id || "Not available"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Order Summary */}
+                <h4 className="font-medium mb-2">Order Summary</h4>
+                <div
+                  className={`p-3 rounded-md ${
+                    darkMode ? "bg-gray-700" : "bg-gray-50"
+                  }`}
+                >
+                  <div className="flex justify-between py-1">
+                    <span
+                      className={`text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Subtotal:
+                    </span>
+                    <span className="text-sm">
+                      Rs. {currentOrder.price_before_tax || "0.00"}
+                    </span>
+                  </div>
+                  {currentOrder.total_discount &&
+                    parseFloat(currentOrder.total_discount) !== 0 && (
+                      <div className="flex justify-between py-1">
+                        <span
+                          className={`text-sm ${
+                            darkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        >
+                          Discount:
+                        </span>
+                        <span className="text-sm text-green-600">
+                          Rs.{" "}
+                          {Math.abs(
+                            parseFloat(currentOrder.total_discount)
+                          ).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                  <div className="flex justify-between py-1">
+                    <span
+                      className={`text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Tax:
+                    </span>
+                    <span className="text-sm">
+                      Rs. {currentOrder.total_tax || "0.00"}
+                    </span>
+                  </div>
+                  <div className="border-t mt-1 pt-1 flex justify-between">
+                    <span className="font-medium">Total:</span>
+                    <span className="font-medium">
+                      Rs. {currentOrder.total_price || "0.00"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
-
-// Helper function to rank order statuses for the timeline
-function getOrderStatusRank(status) {
-  const statusRank = {
-    'processing': 0,
-    'shipped': 1,
-    'delivered': 2,
-    'canceled': -1
-  };
-  return statusRank[status?.toLowerCase()] ?? -1;
 }
