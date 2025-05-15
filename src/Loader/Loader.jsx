@@ -1,17 +1,23 @@
 import React from 'react';
+import neoTokyoLogo from '../Images/LoginWith/neo_tokyo-logo.png';
+
 
 export default function SimpleSpinner() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-transparent">
+    <div className="flex justify-center items-center h-64">
       <div className="relative">
-        {/* Outer spinner */}
-        <div className="w-16 h-16 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        {/* Spinning border */}
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-red-500" />
         
-        {/* Inner spinner (rotating in opposite direction) */}
-        <div className="absolute top-2 left-2 w-12 h-12 border-4 border-gray-200 border-b-blue-400 rounded-full animate-spin"></div>
-        
-        {/* Loading text */}
-        <div className="mt-4 text-center text-gray-700 font-semibold">Loading...</div>
+        {/* Non-spinning logo */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          {/* Using an imported image reference */}
+          <img 
+            src={neoTokyoLogo}
+            alt="Neo Tokyo Logo" 
+            className="h-16 w-16 object-contain"
+          />
+        </div>
       </div>
     </div>
   );

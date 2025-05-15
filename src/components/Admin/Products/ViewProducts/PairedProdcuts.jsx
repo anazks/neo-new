@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getPairedProduct, deletePairedProduct } from '../../../../Services/Products';
+import Loader from '../../../../Loader/Loader';
 
 function PairedProducts({ product }) {
   const [pairedProducts, setPairedProducts] = useState([]);
@@ -43,12 +44,9 @@ function PairedProducts({ product }) {
 
   if (loading) {
     return (
-      <div className="p-4 bg-gray-800 rounded-lg">
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      </div>
-    );
+
+    <Loader/>
+    )
   }
 
   if (error) {

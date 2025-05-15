@@ -20,6 +20,7 @@ import {
   FiInfo
 } from "react-icons/fi";
 import Axios from '../../../Axios/Axios';
+import Loader from '../../../Loader/Loader'
 
 
 const allFeaturedProducts = async () => {
@@ -541,11 +542,9 @@ function FeaturedProductList() {
   };
 
   if (loading && featuredProducts.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    
+         return <Loader/>
+    
   }
 
   return (

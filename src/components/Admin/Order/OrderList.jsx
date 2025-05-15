@@ -16,6 +16,7 @@ import {
   FiRefreshCw,
 } from "react-icons/fi";
 import { AllOrders } from "../../../Services/Order";
+import Loader from '../../../Loader/Loader';
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -266,11 +267,7 @@ const OrderList = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+     return <Loader/>
   }
 
   if (error) {

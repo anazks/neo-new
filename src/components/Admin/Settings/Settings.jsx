@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Tax from '../Tax/Tax';
 import {updateCategory, getBrand, deleteBrand, addBrand, getCategory, addCategory, deleteCategory, getTax ,updateBrand} from '../../../Services/Settings';
-
+import  Loader  from '../../../Loader/Loader'
 function Settings() {
   const [showBrandPopup, setShowBrandPopup] = useState(false);
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
@@ -204,11 +204,7 @@ function Settings() {
   };
 
   if (isLoading && (!brands || !brands.length) && (!categories || !categories.length)) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <Loader/>
   }
 
   return (
