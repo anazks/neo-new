@@ -41,7 +41,7 @@ function DetailedView() {
       <Inside product={product}/>
       <BestPairedWith product={product} />
       <Rating product={product}/>
-      <ProductCard/>
+      <ProductCard product={product}/>
       <ProductFooter/>
     </div>
   );

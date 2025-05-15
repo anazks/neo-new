@@ -369,7 +369,7 @@ export default function Orders() {
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${statusConfig.bgColor} ${statusConfig.color}`}
                       >
-                        {statusConfig.icon}
+                       ₹
                       </div>
                       <div>
                         <div className="font-medium">
@@ -383,7 +383,7 @@ export default function Orders() {
                     <div className="flex items-center">
                       <div className="text-right mr-3">
                         <div className="font-medium">
-                          Rs. {order.total_price}
+                          ₹. {order.total_price}
                         </div>
                         <div
                           className={`text-sm ${statusConfig.color} font-medium`}
@@ -577,7 +577,7 @@ export default function Orders() {
                               darkMode ? "text-gray-400" : "text-gray-500"
                             }`}
                           >
-                            Price: Rs. {item.price}
+                            Price: ₹. {item.price}
                           </span>
                           <span
                             className={`text-sm ${
@@ -590,7 +590,7 @@ export default function Orders() {
                       </div>
                       <div className="text-right">
                         <div className="font-medium">
-                          Rs. {item.total_price}
+                          ₹. {item.total_price}
                         </div>
                         {item.product_discount &&
                           parseFloat(item.product_discount) > 0 && (

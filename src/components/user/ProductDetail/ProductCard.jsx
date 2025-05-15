@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { recomendation } from '../../../Services/Products';
 
-export default function ProductCard() {
+export default function ProductCard({product}) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +13,10 @@ export default function ProductCard() {
   const fetchRecommendations = useCallback(async () => {
     try {
       setIsLoading(true);
+      let data = {}
+      data.product_id = product.id;
       const response = await recomendation();
+      console.log(response,"respoonse recomendation...")
       setProducts(response.data || []);
     } catch (err) {
       console.error('Error fetching recommendations:', err);
@@ -139,8 +142,8 @@ export default function ProductCard() {
           >
             <div className="relative h-48 md:h-56 overflow-hidden bg-gray-50">
               <img
-                src={product.image || '/placeholder-product.jpg'}
-                alt={product.name}
+                src={product.recommended_product_details?.images[0].image || '/placeholder-product.jpg'}
+                alt={product.recommended_product_details.name}
                 className="w-full h-full object-contain transition-transform duration-500 ease-in-out hover:scale-105"
                 loading="lazy"
               />
@@ -161,7 +164,7 @@ export default function ProductCard() {
                     className="py-2 px-3 bg-white/20 hover:bg-white/30 text-white rounded font-medium text-sm transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log('Quick view:', product.id);
+                      console.log('Quick view:', product.recommended_product_details.id);
                     }}
                   >
                     Quick View
@@ -170,7 +173,7 @@ export default function ProductCard() {
                     className="py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium text-sm transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log('Add to cart:', product.id);
+                      console.log('Add to cart:', product.recommended_product_details.id);
                     }}
                   >
                     Add to Cart
@@ -180,9 +183,9 @@ export default function ProductCard() {
             </div>
             
             <div className="p-2 text-center">
-              <h3 className="text-gray-800 font-medium truncate">{product.name}</h3>
+              <h3 className="text-gray-800 font-medium truncate">{product.recommended_product_details.name}</h3>
               <p className="text-green-600 font-semibold text-lg" style={{fontFamily: 'Rajdhani, sans-serif'}}>
-                {product.price || '$0.00'}
+                {product.recommended_product_details.price || '$0.00'}
               </p>
             </div>
           </div>
