@@ -12,7 +12,7 @@ import Register from "././components//user/Registraion/Register";
 // import Login from "./components/user/Login/Login";
 import AboutUs from "./Pages/user/AboutUs";
 import AuthProvider from "./Context/UserContext";
-import Store from "./Pages/user/Store";
+// import Store from "./Pages/user/Store";
 import AdminRoutes from "./Routes/AdminRoutes";
 import Myorders from "./Pages/user/Myorders";
 import GoogleLoginComponent from "./components/user/Google/GoogleLoginComponent";
@@ -27,6 +27,7 @@ import ProfilePage from "./Pages/user/ProfilePage";
 import Payed from './components/user/RazorPay/Payed';
 import Nvidia from "./components/user/Nvidia/Nvidia";
 import Failed from './components/user/RazorPay/Failed'
+import Store from './components/user/Store/Store'
 
 function App() {
   return (
@@ -53,6 +54,8 @@ function App() {
             <Route path="/payed" element={<Payed/>} />
             <Route path="/nvidia" element={<Nvidia/>} />
             <Route path="/failed" element={<Failed/>} />
+            
+
           {/* 
             <Route path="/admin/login" element={<AdminLogin/>}/>
             <Route path="/admin/Home" element={<AdminHome/>}/> */}
