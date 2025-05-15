@@ -91,10 +91,10 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
       console.log("Payment Failed:", response.error);
        window.location.href = "/failed";
       paymentId.current = response.error.metadata?.payment_id || null;
-      await handlePayment("failed", {
-        ...response.error,
-        raz_order_id: orderDetails.raz_order_id,
-      });
+      // await handlePayment("failed", {
+      //   ...response.error,
+      //   raz_order_id: orderDetails.raz_order_id,
+      // });
       rzpInstance.current.close();
       setDisplayRazorpay(false);
     });
@@ -105,19 +105,14 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
   const handlePayment = async (status, paymentDetails) => {
     try {
       console.log(paymentDetails,"paymentDetails from function")
-      const data = {
-        orderId: paymentDetails.razorpay_order_id,
-        paymentId: paymentId.current,
-        paymentMethod: paymentMethod.current,
-        razorpay_signature:paymentDetails.razorpay_signature,
-        status: status,
-      };
+      let data = paymentDetails
+      data.status = status
+      data.paymentMethod = paymentMethod.current
 
-      console.log("Sending payment result to server:", paymentDetails);
-      const response = await payemntCallBack(paymentDetails);
-      console.log("Server response:", response);
+      console.log("Sending payment result to server:", data);
+      const response = await payemntCallBack(data);
+      console.log("Response from server:", response);
 
-      console.log("Server response data:", response);
       if (response.data.payment === true) {
         window.location.href = "/payed";
         localStorage.setItem("payed", true);

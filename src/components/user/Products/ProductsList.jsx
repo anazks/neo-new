@@ -38,7 +38,7 @@ function ProductsList() {
       document.body.classList.add('light');
       document.body.classList.remove('dark');
     }
-    
+
     return () => {
       document.body.classList.remove('dark');
       document.body.classList.remove('light');
@@ -65,9 +65,9 @@ function ProductsList() {
     if (alertTimeoutRef.current) {
       clearTimeout(alertTimeoutRef.current);
     }
-    
+
     setAlertData(data);
-    
+
     alertTimeoutRef.current = setTimeout(() => {
       setAlertData(null);
     }, 3000);
@@ -80,7 +80,7 @@ function ProductsList() {
       }
     };
   }, []);
-  
+
   const addTocart = async (id, event) => {
     event.stopPropagation();
     try {
@@ -89,13 +89,13 @@ function ProductsList() {
           type: "warning",
           message: "Please log in to add items to cart"
         });
-        
+
         setTimeout(() => {
           navigate("/login");
         }, 1000);
         return;
       }
-      
+
       setAddingToCart(id);
       let addToCart = await addToCartService(id);
       if (addToCart) {
@@ -104,7 +104,6 @@ function ProductsList() {
           message: "Item successfully added to cart",
           productId: id
         });
-        // navigate("/cart")
       }
     } catch (error) {
       console.log(error);
@@ -119,8 +118,6 @@ function ProductsList() {
 
   const handleBuyNow = (product, event) => {
     console.log(product, "buy now product");
-    // event.stopPropagation();
-    // navigate(`/checkout/${product.id}`);
   };
 
   const navigateToDetails = (id) => {
@@ -131,7 +128,7 @@ function ProductsList() {
     setDarkMode(!darkMode);
   };
 
-  const filteredProducts = products.filter(product => 
+  const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -155,7 +152,7 @@ function ProductsList() {
               Our Products
               <span className="absolute bottom-0 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-red-600 to-red-500 rounded-full transform translate-y-1"></span>
             </h1>
-            
+
             <div className="flex flex-col md:flex-row gap-4 md:items-center w-full md:w-auto">
               {/* Search Bar */}
               <div className="relative w-full md:w-64 lg:w-80">
@@ -168,7 +165,7 @@ function ProductsList() {
                 />
                 <FaSearch className={`absolute right-4 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-red-400' : 'text-red-500'}`} />
               </div>
-              
+
               {/* Control Buttons */}
               <div className="flex items-center justify-center gap-3">
                 <button 
@@ -186,7 +183,7 @@ function ProductsList() {
                   <FaFilter className={`${filter ? 'text-white' : darkMode ? 'text-red-400' : 'text-red-500'}`} />
                   <span>FILTER</span>
                 </button>
-                
+
                 <button 
                   className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-full ${sort 
                     ? 'bg-gradient-to-r from-red-600 to-red-500 text-white' 
@@ -206,14 +203,14 @@ function ProductsList() {
             </div>
           </div>
         </div>
-        
+
         {/* Filter Section */}
         {filter && (
           <div className={`mb-6 p-6 rounded-xl shadow-md ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} transition-all duration-300 animate-slideDown`}>
             <Filter products={products} setProducts={setProducts} />
           </div>
         )}
-        
+
         {/* Sort Section */}
         {sort && (
           <div className={`mb-6 p-6 rounded-xl shadow-md ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'} transition-all duration-300 animate-slideDown`}>
@@ -236,10 +233,10 @@ function ProductsList() {
               <div 
                 key={product.id}
                 onClick={() => navigateToDetails(product.id)}
-                className="group rounded-xl overflow-hidden shadow-md hover:shadow-xl bg-[#393939] transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.01] cursor-pointer"
+                className="group rounded-xl overflow-hidden shadow-md transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.01] cursor-pointer bg-[#f0f0f0] hover:bg-[#393939]"
               >
                 {/* Image Container */}
-                <div className="relative h-56 p-4 flex items-center justify-center bg-[#393939] overflow-hidden">
+                <div className="relative h-56 p-4 flex items-center justify-center overflow-hidden">
                   <img 
                     src={product.images?.[0]?.image 
                       ? baseUrl + product.images[0].image 
@@ -249,17 +246,17 @@ function ProductsList() {
                     className="max-h-48 max-w-[85%] object-contain transition-all duration-700 filter drop-shadow-md group-hover:drop-shadow-xl group-hover:scale-110 group-hover:-translate-y-2"
                   />
                 </div>
-                
+
                 {/* Product Content */}
-                <div className="p-5 flex flex-col h-64">
-                  <h2 className="font-[Rajdhani] text-xl font-semibold mb-4 line-clamp-2 h-14 text-white group-hover:text-red-400 transition-colors duration-300">
+                <div className="p-5 flex flex-col h-64 transition-colors duration-300 group-hover:text-white text-gray-800">
+                  <h2 className="font-[Rajdhani] text-xl font-semibold mb-4 line-clamp-2 h-14 group-hover:text-red-400">
                     {product.name}
                   </h2>
-                  
-                  <span className="text-2xl font-bold mb-5 font-[Rajdhani] text-[#CECECE]">
+
+                  <span className="text-2xl font-bold mb-5 font-[Rajdhani] group-hover:text-gray-300">
                     ₹ {product.price?.toLocaleString()}
                   </span>
-                  
+
                   <div className="mt-auto flex flex-col gap-3">
                     <button 
                       onClick={(e) => addTocart(product.id, e)}
@@ -267,7 +264,7 @@ function ProductsList() {
                       className={`w-full py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm font-[Rajdhani] font-semibold tracking-wide transition-all duration-300 ${
                         addingToCart === product.id
                           ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                          : 'text-[#CECECE] hover:text-white'
+                          : 'text-gray-700 group-hover:text-white'
                       }`}
                     >
                       {addingToCart === product.id ? (
@@ -282,7 +279,7 @@ function ProductsList() {
                         </>
                       )}
                     </button>
-                    
+
                     <button 
                       onClick={(e) => handleBuyNow(product, e)}
                       className="w-full py-2.5 rounded-lg text-sm font-[Rajdhani] font-bold tracking-wider text-gray-900 bg-[#D9D9D9] hover:bg-gray-200 flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-md"
