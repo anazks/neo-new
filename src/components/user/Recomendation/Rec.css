@@ -2,8 +2,9 @@
   width: 90%;
   height: 100vh;
   margin: auto;
-  margin-top: 1%;
+  /* margin-top: 70px; */
   position: relative;
+  border-radius: 20px;
 }
 .recomends img{
     width: 100%;

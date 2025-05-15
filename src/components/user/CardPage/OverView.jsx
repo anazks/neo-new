@@ -257,15 +257,15 @@ function Overview() {
                     {/* Left Column */}
                     <div className="flex-1 space-y-6">
                         {/* Address Section */}
-                        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                        <div className="bg-white rounded-lg p-6 border border-black-200 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center">
-                                    <MapPin className="text-blue-600 mr-2" size={20} />
+                                    <MapPin className="text-red-600 mr-2" size={20} />
                                     <h2 className="text-lg font-bold text-gray-800 uppercase tracking-wider">Shipping Address</h2>
                                 </div>
                                 <button 
                                     onClick={() => setShowAddressModal(true)}
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center transition-colors uppercase"
+                                    className="text-green-600 hover:text-blue-800 text-sm font-bold flex items-center transition-colors uppercase"
                                     disabled={loading}
                                 >
                                     <PlusCircle size={16} className="mr-1" /> Add New
@@ -277,7 +277,7 @@ function Overview() {
                                     <p className="text-gray-500 mb-4">No addresses found</p>
                                     <button
                                         onClick={() => setShowAddressModal(true)}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 uppercase font-medium"
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-green-700 uppercase font-medium"
                                     >
                                         Add Address
                                     </button>
@@ -289,8 +289,8 @@ function Overview() {
                                             key={address.id} 
                                             className={`border rounded-lg p-4 cursor-pointer transition-all ${
                                                 selectedAddressId === address.id 
-                                                    ? 'border-blue-500 bg-blue-50 shadow-md' 
-                                                    : 'border-gray-200 hover:border-blue-300'
+                                                    ? 'border-green-500 bg-green-50 shadow-md' 
+                                                    : 'border-green-200 hover:border-green-300'
                                             }`}
                                             onClick={() => handleAddressSelect(address.id)}
                                         >
@@ -325,7 +325,7 @@ function Overview() {
                         {/* Orders Section */}
                         <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                             <div className="flex items-center mb-4">
-                                <ShoppingBag className="text-blue-600 mr-2" size={20} />
+                                <ShoppingBag className="text-red-600 mr-2" size={20} />
                                 <h2 className="text-lg font-bold text-gray-800 uppercase tracking-wider">Selected Items</h2>
                             </div>
                             
@@ -387,7 +387,7 @@ function Overview() {
                                     <div className="border-t border-gray-200 pt-3 mt-3">
                                         <div className="flex justify-between text-base font-bold">
                                             <span className="text-gray-900 uppercase">Total</span>
-                                            <span className="text-blue-600">₹{total.toFixed(2)}</span>
+                                            <span className="text-green-600">₹{total.toFixed(2)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -396,8 +396,8 @@ function Overview() {
                             {/* Payment Button */}
                             <button 
                                 onClick={handleCreateOrder}
-                                className={`w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-bold uppercase tracking-wider flex items-center justify-center transition-colors shadow-md ${
-                                    !selectedAddressId || orders.items?.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700 hover:shadow-lg'
+                                className={`w-full bg-red-600 text-white py-3 px-6 rounded-lg font-bold uppercase tracking-wider flex items-center justify-center transition-colors shadow-md ${
+                                    !selectedAddressId || orders.items?.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700 hover:shadow-lg'
                                 }`}
                                 disabled={!selectedAddressId || orders.items?.length === 0 || loading || isProcessingPayment}
                             >
@@ -423,7 +423,7 @@ function Overview() {
                                         <React.Fragment key={step}>
                                             <div className="flex flex-col items-center flex-1">
                                                 <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                                                    index < 3 ? 'bg-blue-600' : 'bg-gray-200'
+                                                    index < 3 ? 'bg-black' : 'bg-gray-200'
                                                 }`}>
                                                     {index < 3 ? (
                                                         <Check size={16} className="text-white" />
@@ -432,7 +432,7 @@ function Overview() {
                                                     )}
                                                 </div>
                                                 <span className={`text-xs mt-1 ${
-                                                    index < 3 ? 'text-blue-600 font-bold' : 'text-gray-600'
+                                                    index < 3 ? 'text-dark font-bold' : 'text-gray-600'
                                                 } uppercase`}>{step}</span>
                                             </div>
                                             {index < 3 && <div className="h-1 w-4 bg-blue-200"></div>}

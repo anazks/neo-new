@@ -193,14 +193,14 @@ function Filter({ products, setProducts }) {
                 key={index}
                 className={`flex justify-between items-center px-4 py-3 mb-2 rounded cursor-pointer border-l-[3px] transition-all duration-200 ${
                   activeCategory === index
-                    ? 'bg-gray-100 border-l-blue-500 shadow-sm'
+                    ? 'bg-gray-100 border-l-red-500 shadow-sm'
                     : 'bg-white border-l-transparent hover:bg-gray-50 hover:border-l-gray-300'
                 }`}
                 onClick={() => toggleCategory(index)}
               >
                 <h3
                   className={`text-xs uppercase font-medium tracking-wide ${
-                    activeCategory === index ? 'text-blue-600' : 'text-gray-700'
+                    activeCategory === index ? 'text-red-600' : 'text-gray-700'
                   }`}
                 >
                   {category}
@@ -208,13 +208,13 @@ function Filter({ products, setProducts }) {
                 <span className="relative w-3 h-3">
                   <span
                     className={`absolute top-1/2 left-0 w-3 h-0.5 -mt-px ${
-                      activeCategory === index ? 'bg-blue-500' : 'bg-gray-500'
+                      activeCategory === index ? 'bg-red-500' : 'bg-gray-500'
                     }`}
                   ></span>
                   <span
                     className={`absolute top-0 left-1/2 h-3 w-0.5 -ml-px transition-transform duration-200 ${
                       activeCategory === index
-                        ? 'bg-blue-500 rotate-90'
+                        ? 'bg-red-500 rotate-90'
                         : 'bg-gray-500'
                     }`}
                   ></span>
@@ -243,7 +243,7 @@ function Filter({ products, setProducts }) {
                                   type="checkbox"
                                   checked={selectedCategories.includes(cat.id)}
                                   onChange={() => handleCategoryChange(cat.id)}
-                                  className="rounded text-blue-500 focus:ring-blue-500"
+                                  className="rounded text-red-500 focus:ring-red-500"
                                 />
                                 <span className="text-sm">{cat.name}</span>
                               </label>
@@ -264,7 +264,7 @@ function Filter({ products, setProducts }) {
                                   type="checkbox"
                                   checked={selectedBrands.includes(brand.id)}
                                   onChange={() => handleBrandChange(brand.id)}
-                                  className="rounded text-blue-500 focus:ring-blue-500"
+                                  className="rounded text-red-500 focus:ring-red-500"
                                 />
                                 <span className="text-sm">{brand.name}</span>
                               </label>
@@ -453,13 +453,13 @@ function Filter({ products, setProducts }) {
                     {/* Filter Actions */}
                     <div className="flex flex-wrap gap-3 mt-4">
                       <button
-                        className="px-5 py-2 bg-indigo-600 text-white font-medium rounded-full text-xs uppercase tracking-wide hover:bg-indigo-700 transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="px-5 py-2 bg-red-600 text-white font-medium rounded-full text-xs uppercase tracking-wide hover:bg-red-700 transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         onClick={handleFilter}
                       >
                         Apply Filter
                       </button>
                       <button
-                        className="px-5 py-2 bg-white text-gray-700 border border-gray-300 font-medium rounded-full text-xs uppercase tracking-wide hover:bg-gray-50 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                        className="px-5 py-2 bg-white text-gray-700 border border-gray-300 font-medium rounded-full text-xs uppercase tracking-wide hover:bg-gray-50 hover:text-red-600 hover:border-red-300 transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
                         onClick={handleReset}
                       >
                         Reset All

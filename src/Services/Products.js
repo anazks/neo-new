@@ -373,11 +373,12 @@ const getVarient = async(id)=>{
 }
 const payemntCallBack = async(data)=>{
     try {
+        console.log(data,"data to call back")
         let response = await Axios.post('/orders/payment/callback/',data)
-        console.log(response)
+        console.log(response,"response from service after payemnt..")
         return response
     } catch (error) {
-        
+        console.log(error)
     }
 }
 const deleteVarient = async(id)=>{

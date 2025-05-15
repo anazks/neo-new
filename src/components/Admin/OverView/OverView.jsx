@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AddOverViewCategory, viewOverView, addoverViewCate } from '../../../Services/Products';
+import  Loader  from '../../../Loader/Loader'
 
 function OverView() {
   const [categories, setCategories] = useState([]);
@@ -149,12 +150,7 @@ function OverView() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white font-rajdhani">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        <p className="ml-4">Loading categories...</p>
-      </div>
-    );
+    return <Loader/>
   }
 
   if (error) {

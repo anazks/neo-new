@@ -97,8 +97,8 @@ export default function SolutionsPage() {
   return (
     <>
     <ModernNavbar/>
-    <br /><b><b><br /></b></b>
-        <div className="w-full min-h-screen bg-white overflow-hidden shadow-md flex flex-col" style={{width:"95%",margin:"auto",borderRadius:"30px"}}>
+    {/* <br /><b><b><br /></b></b> */}
+        <div className="w-full min-h-screen bg-white overflow-hidden shadow-md flex flex-col" style={{width:"95%",margin:"auto",marginTop:"70px",borderRadius:"30px"}}>
       {/* Header with Logo and Menu */}
       <div className="flex justify-between items-center p-2 sm:p-4">
         <div className="flex items-center">

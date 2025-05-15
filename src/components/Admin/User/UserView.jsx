@@ -4,6 +4,7 @@ import {
   FiTrash2, FiCheckCircle, FiXCircle, FiToggleLeft, FiToggleRight
 } from 'react-icons/fi';
 import { getAllUsers, deleteUser, ToggleUsers } from '../../../Services/userApi';
+import Loader from '../../../Loader/Loader'
 
 function UserView() {
   const [users, setUsers] = useState([]);
@@ -99,9 +100,9 @@ function UserView() {
     );
   }, []);
 
-  if (loading) {
-    return <div className="min-h-screen bg-gray-900 text-gray-100 p-6 flex items-center justify-center">Loading users...</div>;
-  }
+   if (loading) {
+       return <Loader/>
+    }
 
   if (error) {
     return <div className="min-h-screen bg-gray-900 text-red-400 p-6 flex items-center justify-center">{error}</div>;

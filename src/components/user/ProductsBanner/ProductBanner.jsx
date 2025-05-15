@@ -7,6 +7,8 @@ import "@fontsource/rajdhani/700.css";
 import "@fontsource/raleway";
 import { featuredProduct } from "../../../Services/Products";
 import SingeProductOverview from '../CardPage/SingleProductOverView'
+// import { Loader } from "lucide-react";
+import Loader from '../Loader/Loader';
 
 function ProductBanner() {
   const [darkMode, setDarkMode] = useState(false);
@@ -136,11 +138,7 @@ function ProductBanner() {
   };
 
   if (products.length === 0) {
-    return (
-      <div className="w-full max-w-6xl mx-auto mt-10 md:mt-16 flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
-      </div>
-    );
+    return <Loader/>
   }
 
   const currentProduct = products[currentIndex];

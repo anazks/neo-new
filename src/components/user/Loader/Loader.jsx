@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import neoTokyoLogo from '../../../Images/LoginWith/neo_tokyo-logo.png';
 
 export default function SimpleLoader() {
   const [dots, setDots] = useState('');
@@ -16,14 +17,21 @@ export default function SimpleLoader() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center p-4">
-      {/* Single spinner circle */}
-      <div className="w-6 h-6 mr-3 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-      
-      {/* Simple loading text */}
-      <span className="text-gray-700 font-medium">
-        Loading{dots}
-      </span>
+    <div className="flex justify-center items-center h-64">
+      <div className="relative">
+        {/* Spinning border */}
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-red-500" />
+        
+        {/* Non-spinning logo */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          {/* Using an imported image reference */}
+          <img 
+            src={neoTokyoLogo}
+            alt="Neo Tokyo Logo" 
+            className="h-16 w-16 object-contain"
+          />
+        </div>
+      </div>
     </div>
   );
 }
