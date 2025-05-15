@@ -68,7 +68,7 @@ const ModernNavbar = () => {
   return (
     <>
      {/* Fixed Logo that stays visible when navbar is hidden */}
-     <div className="fixed-logo">
+     <div className="fixed-logo" style={{fontFamily: "'Rajdhani', sans-serif"}}>
         <a href="/">
           <img src={logo} className="logo-img" alt="Logo" />
         </a>
