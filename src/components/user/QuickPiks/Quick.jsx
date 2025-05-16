@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowRight, Shield, ArrowRightCircle, Flame } from "lucide-react";
-
+import Top from './Tob'
 export default function GamingPCShowcase() {
   // Add CSS for custom animation and font
   useEffect(() => {
@@ -21,13 +21,69 @@ export default function GamingPCShowcase() {
         font-family: 'Rajdhani', sans-serif;
       }
       
-      .auto-scroll {
-        animation: autoScroll 20s linear infinite;
+      .product-scroll-container {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .product-scroll-container::-webkit-scrollbar {
+        display: none;
       }
       
-      @keyframes autoScroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-100%); }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+      }
+      
+      .product-card {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+      }
+      
+      .parallelogram {
+        transform: skew(-15deg);
+        overflow: hidden;
+      }
+      
+      .parallelogram-content {
+        transform: skew(15deg);
+      }
+      
+      .product-image-container {
+        transition: all 0.5s ease;
+      }
+      
+      .product-info {
+        transition: all 0.5s ease;
+      }
+      
+      .product-hover .product-info {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+      }
+      
+      .product-hover .product-image-container {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      
+      .buy-now-btn {
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      
+      .product-hover .buy-now-btn {
+        opacity: 1;
+        transform: translateY(0);
       }
     `;
     document.head.appendChild(style);
@@ -36,51 +92,45 @@ export default function GamingPCShowcase() {
     };
   }, []);
   
-  // State to track which product is being hovered
   const [hoveredProduct, setHoveredProduct] = useState(null);
-  // Ref for hover timers to avoid race conditions
   const hoverTimerRef = useRef(null);
-  // Ref for intersection observer to trigger entrance animations
   const productRowRef = useRef(null);
+  
   // Auto-scroll functionality
   useEffect(() => {
-    const productContainer = document.querySelector('.product-scroll-container');
-    if (productContainer) {
-      const scrollToBottom = () => {
-        const scrollDistance = productContainer.scrollWidth - productContainer.clientWidth;
-        let currentScroll = 0;
-        
-        const scroll = () => {
-          if (currentScroll < scrollDistance) {
-            currentScroll += 1;
-            productContainer.scrollLeft = currentScroll;
-            setTimeout(scroll, 20);
-          } else {
-            // Reset to beginning after a pause
-            setTimeout(() => {
-              productContainer.scrollLeft = 0;
-              currentScroll = 0;
-              setTimeout(scrollToBottom, 2000);
-            }, 2000);
-          }
-        };
-        
-        scroll();
-      };
+    const productContainer = productRowRef.current;
+    if (!productContainer) return;
+    
+    let animationFrame;
+    let startTime;
+    let scrollDistance = productContainer.scrollWidth - productContainer.clientWidth;
+    let duration = 30000;
+    
+    const scroll = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
       
-      // Start auto-scrolling after initial delay
-      const scrollTimeout = setTimeout(scrollToBottom, 1000);
+      productContainer.scrollLeft = progress * scrollDistance;
       
-      return () => {
-        clearTimeout(scrollTimeout);
-      };
-    }
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(scroll);
+      } else {
+        setTimeout(() => {
+          productContainer.scrollLeft = 0;
+          startTime = null;
+          animationFrame = requestAnimationFrame(scroll);
+        }, 2000);
+      }
+    };
+    
+    animationFrame = requestAnimationFrame(scroll);
+    
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
   }, []);
   
-  // Ref for parallax effect on the banner
-  const bannerRef = useRef(null);
-  
-  // Product data
   const products = [
     { 
       id: 'aspire', 
@@ -88,230 +138,169 @@ export default function GamingPCShowcase() {
       price: '$1,40,000/-', 
       description: 'Performance Minimal, Sleek',
       image: "https://www.pngmart.com/files/4/Gaming-Computer-PNG-Free-Download.png",
-      color: "red"
+      specs: [
+        "Intel Core i9-13900K",
+        "NVIDIA RTX 4090",
+        "32GB DDR5 RAM",
+        "2TB NVMe SSD"
+      ]
     },
     { 
       id: 'ion', 
       name: 'Ion Drive', 
       price: '$95,000/-', 
       description: 'Compact Power',
-      image: "https://www.pngmart.com/files/4/Gaming-Computer-PNG-Free-Download.png",
+      image: "https://static.vecteezy.com/system/resources/previews/038/849/048/original/3d-rendered-gaming-pc-free-png.png",
+      specs: [
+        "AMD Ryzen 7 7800X",
+        "NVIDIA RTX 4070",
+        "16GB DDR5 RAM",
+        "1TB NVMe SSD"
+      ]
     },
     { 
       id: 'e75', 
       name: 'E-75', 
       price: '$1,20,000/-', 
       description: 'Professional Grade',
-      image: "https://www.pngmart.com/files/4/Gaming-Computer-PNG-Free-Download.png",
+      image: "https://www.nicepng.com/png/full/921-9213076_gaming-pcs-personal-computer.png",
+      specs: [
+        "Intel Core i7-13700K",
+        "NVIDIA RTX 4080",
+        "32GB DDR5 RAM",
+        "1TB NVMe SSD + 2TB HDD"
+      ]
     },
     { 
       id: 'phantom', 
       name: 'Phantom', 
       price: '$1,60,000/-', 
       description: 'Ultimate Gaming',
-      image: "https://www.pngmart.com/files/4/Gaming-Computer-PNG-Free-Download.png",
+      image: "https://www.nicepng.com/png/full/921-9213076_gaming-pcs-personal-computer.png",
+      specs: [
+        "AMD Ryzen 9 7950X",
+        "NVIDIA RTX 4090",
+        "64GB DDR5 RAM",
+        "2TB NVMe SSD + 4TB HDD"
+      ]
     },
   ];
 
-  // Set up intersection observer for entrance animations
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && productRowRef.current) {
-          productRowRef.current.classList.add('opacity-100');
-          productRowRef.current.classList.remove('opacity-0', 'translate-y-8');
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in-up');
+          observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1 });
 
     if (productRowRef.current) {
-      observer.observe(productRowRef.current);
+      const items = productRowRef.current.querySelectorAll('.product-item');
+      items.forEach(item => observer.observe(item));
     }
 
     return () => {
       if (productRowRef.current) {
-        observer.unobserve(productRowRef.current);
+        const items = productRowRef.current.querySelectorAll('.product-item');
+        items.forEach(item => observer.unobserve(item));
       }
     };
   }, []);
 
-  // Handle mouseEnter with slight delay to prevent accidental hovers
   const handleMouseEnter = (productId) => {
-    // Clear any existing timers to prevent race conditions
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-    }
-    
-    // Set a slight delay for better user experience
+    clearTimeout(hoverTimerRef.current);
     hoverTimerRef.current = setTimeout(() => {
       setHoveredProduct(productId);
     }, 50);
   };
 
-  // Handle mouseLeave with a slight delay for smoother transitions
   const handleMouseLeave = () => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-    }
-    
-    hoverTimerRef.current = setTimeout(() => {
-      setHoveredProduct(null);
-    }, 100);
+    clearTimeout(hoverTimerRef.current);
+    setHoveredProduct(null);
   };
 
   return (
     <div className="max-w-7xl mx-auto bg-gray-100 rounded-3xl overflow-hidden p-4 md:p-6" 
       style={{
-        width:"97vw", 
-        height:"95vh", 
+        width: "97vw", 
+        height: "95vh", 
         fontFamily: "'Rajdhani', sans-serif"
       }}>
       <div className="w-full h-full bg-white rounded-2xl overflow-hidden p-2 md:p-4 flex flex-col">
         {/* Banner Section */}
         <div 
-          ref={bannerRef}
-          style={{backgroundImage:'url(https://images.prismic.io/aftershock-singapore/ZpXxtR5LeNNTxLMm_DTBanner.png?auto=format,compress)'}}
+          // style={{backgroundImage: 'url(https://images.prismic.io/aftershock-singapore/ZpXxtR5LeNNTxLMm_DTBanner.png?auto=format,compress)'}}
           className="w-full bg-white rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-1 mb-4"
         >
-          <div className="relative h-48 md:h-56 lg:h-64 w-full bg-gray-800 overflow-hidden">
-            {/* Placeholder image with red overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-red-900/40 to-purple-900/30 z-10"></div>
-            <div className="absolute inset-0 bg-black/50"></div>
-          </div>
-          
-          <div className="p-4 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-gray-500 tracking-wider font-rajdhani">INFERNO GAMING</p>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center font-rajdhani">
-                  Gaming Rigs 
-                  <span className="ml-2 text-red-600">
-                    <Flame className="inline-block animate-pulse" size={20} />
-                  </span>
-                </h2>
-                <p className="text-xs text-gray-600 font-rajdhani">Built with cutting-edge components</p>
-              </div>
-              
-              <div className="mt-4 md:mt-0">
-                <div className="text-right mb-2">
-                  <ArrowRight className="ml-auto text-red-600 animate-pulse" size={20} />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-2 text-center font-rajdhani">Unlock exclusive gaming deals & early access</p>
-                  <button className="flex items-center justify-center mx-auto px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out group font-rajdhani">
-                    <span>Subscribe</span>
-                    <ArrowRightCircle className="ml-2 group-hover:translate-x-1 transition-transform duration-300" size={18} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Top/>
         </div>
 
         {/* Products Section */}
-        <div className="w-full overflow-x-auto pb-6 px-1 product-scroll-container" style={{ scrollBehavior: 'smooth' }}>
+        <div className="w-full overflow-x-auto pb-6 px-1 product-scroll-container">
           <div 
             ref={productRowRef}
-            className="flex space-x-6 md:space-x-8 opacity-0 translate-y-8 transition-all duration-700 ease-out"
+            className="flex space-x-6 md:space-x-8"
           >
             {products.map((product) => (
               <div
                 key={product.id}
                 className={`
-                  flex-shrink-0 rounded-lg overflow-hidden 
+                  product-item flex-shrink-0 overflow-hidden 
                   relative transition-all duration-500 ease-in-out 
-                  bg-gradient-to-br
+                  shadow-lg parallelogram
                   ${hoveredProduct === product.id 
-                    ? 'transform scale-110 -translate-y-2 w-72 md:w-80 lg:w-96 h-80 lg:h-96 z-20' 
+                    ? 'product-hover transform scale-105 -translate-y-2 w-72 md:w-80 lg:w-96 h-80 lg:h-96 z-20 shadow-xl' 
                     : 'w-60 md:w-64 lg:w-72 h-80 lg:h-96'
                   }
                 `}
-                style={{
-                  clipPath: hoveredProduct === product.id 
-                    ? "polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%)" 
-                    : "polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)",
-                  backgroundColor:"gray"
-                }}
                 onMouseEnter={() => handleMouseEnter(product.id)}
                 onMouseLeave={handleMouseLeave}
               >
-                {/* Red glow effect */}
-                <div className={`absolute inset-0 bg-red-500/10 opacity-0 transition-opacity duration-300 ${hoveredProduct === product.id ? 'opacity-100' : ''}`}></div>
+                {/* Background Image */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center product-image-container"
+                >
+                  <div className="absolute inset-0 bg-black/40"></div>
+                </div>
                 
-                <div className="relative z-10 h-full w-full p-5 flex flex-col justify-center items-center">
-                  {/* Content visible when hovered */}
-                  <div className={`
-                    transition-all duration-500 ease-in-out w-full text-center
-                    ${hoveredProduct === product.id 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-10 absolute'
-                    }
-                    font-rajdhani
-                  `}>
+                {/* Content overlay */}
+                <div className="relative z-10 h-full w-full p-5 flex flex-col justify-between parallelogram-content">
+                  {/* Product info */}
+                  <div className="product-info">
                     <div className="flex items-center justify-center text-xs text-white/90 mb-2">
                       <Shield className="mr-1 animate-pulse" size={16} />
-                      {/* <span>CUSTOM GAMING PC</span> */}
+                      <span>CUSTOM GAMING PC</span>
                     </div>
                     
-                    <h2 className="text-lg md:text-xl font-bold text-white font-rajdhani">{product.name}</h2>
-                    <p className="text-xs md:text-sm text-white/80 mb-3">{product.description}</p>
+                    <h2 className="text-lg md:text-xl font-bold text-white text-center">{product.name}</h2>
                     
-                    {/* Specs - added for expanded view */}
-               
-                    
-                    {/* Color options */}
-                    {/* <div className="flex justify-center space-x-3 my-2">
-                      <div className="w-4 h-4 rounded-full bg-red-600 cursor-pointer hover:scale-125 transition-transform duration-200"></div>
-                      <div className="w-4 h-4 rounded-full bg-red-800 cursor-pointer hover:scale-125 transition-transform duration-200"></div>
-                      <div className="w-4 h-4 rounded-full bg-gray-900 cursor-pointer hover:scale-125 transition-transform duration-200"></div>
-                      <div className="w-4 h-4 rounded-full bg-gray-600 cursor-pointer hover:scale-125 transition-transform duration-200"></div>
-                    </div> */}
-                    
+                    {/* Specs */}
+                    <div className="mb-4 mt-4">
+                      {product.specs.map((spec, index) => (
+                        <div key={index} className="flex items-center text-xs text-white/80 mb-1">
+                          <span className="w-1 h-1 rounded-full bg-red-500 mr-2"></span>
+                          {spec}
+                          <img src={product.image} alt=""  style={{width:'200px'}}/>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Price */}
+                  <div className="product-info text-center">
                     <p className="text-lg font-bold text-white mb-3">{product.price}</p>
-                    
-                    <button className="flex items-center mx-auto px-4 py-2 bg-red-600 text-white rounded-full text-sm hover:bg-red-700 transition-all duration-300 ease-in-out group font-rajdhani">
+                  </div>
+                  {/* Buy Now Button - only visible on hover */}
+                  <div className="buy-now-btn absolute inset-0 flex items-center justify-center">
+                    <button className="flex items-center mx-auto px-6 py-3 bg-red-600 text-white rounded-full text-sm hover:bg-red-700 transition-all duration-300 ease-in-out group">
                       <span>Buy Now</span>
                       <ArrowRightCircle className="ml-2 group-hover:translate-x-1 transition-transform duration-300" size={16} />
                     </button>
                   </div>
                   
-                  {/* Content visible when not hovered */}
-                  <div className={`
-                    flex flex-col items-center justify-center h-full
-                    transition-all duration-500 ease-in-out
-                    font-rajdhani
-                    ${hoveredProduct === product.id 
-                      ? 'opacity-0 absolute' 
-                      : 'opacity-100'
-                    }
-                  `}>
-                    <div className="w-32 h-32 mb-4">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-full h-full object-contain filter drop-shadow-[0_5px_5px_rgba(255,0,0,0.3)] hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-                    <h3 className="text-white font-bold text-center">{product.name}</h3>
-                    <p className="text-white/80 text-sm mt-1">{product.price}</p>
-                  </div>
-                  
-                  {/* Image that shows on hover */}
-                  <div className={`
-                    absolute bottom-4 right-4 w-1/2 transition-all duration-700 ease-in-out
-                    ${hoveredProduct === product.id 
-                      ? 'opacity-100 translate-y-0 translate-x-0' 
-                      : 'opacity-0 translate-y-16 translate-x-8'
-                    }
-                  `}>
-                    <img 
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-contain filter drop-shadow-[0_8px_8px_rgba(255,0,0,0.4)] animate-floating"
-                    />
-                  </div>
-                  
-                  {/* Red glow effects on hover */}
+                  {/* Glow effects on hover */}
                   <div className={`
                     absolute -right-20 -bottom-20 w-64 h-64 bg-red-600/20 rounded-full blur-3xl
                     transition-opacity duration-700 ease-in-out pointer-events-none
