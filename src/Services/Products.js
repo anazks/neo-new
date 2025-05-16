@@ -11,6 +11,17 @@ const getAllProduct = async () => {
     }
 };
 
+const getAllProductAdmin = async () => {
+    try {
+        const response = await Axios.get('/inventory/product_admin/');
+        console.log(response.data,"------------");
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        return null;
+    }
+};
+
 const getSingleProduct = async (id) => {
     try {
         const response = await Axios.get(`/inventory/Products_view_single/${id}`);
@@ -426,4 +437,4 @@ const featuredProduct = async()=>{
             return error
         }
 }
-export {featuredProduct,getReview,deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {getAllProductAdmin,featuredProduct,getReview,deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };

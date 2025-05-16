@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FiEye, FiEdit2, FiTrash2, FiSearch, FiFilter, FiPlus, FiAlertTriangle, FiSliders } from 'react-icons/fi';
-import { getAllProduct } from '../../../../Services/Products';
+import { getAllProductAdmin } from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../../../Loader/Loader';
@@ -63,7 +63,7 @@ function ProductInventory() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const productData = await getAllProduct();
+      const productData = await getAllProductAdmin();
       setProducts(productData);
     } catch (error) {
       console.log(error, "error while fetching data");
@@ -420,7 +420,7 @@ function ProductInventory() {
                   <tr key={product._id || product.id} className="hover:bg-gray-750">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <img 
-                        src={product.images?.[0]?.image ? BaseURL + product.images[0].image : "/api/placeholder/50/50"} 
+                        src={product.images?.[0]?.image ?  product.images[0].image : "/api/placeholder/50/50"} 
                         alt={product.name} 
                         className="w-12 h-12 rounded-md object-cover bg-gray-700" 
                       />

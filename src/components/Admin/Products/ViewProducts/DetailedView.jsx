@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './DetailedView.css';
 import { getSingleProduct } from '../../../../Services/Products';
 import BaseURL from '../../../../Static/Static';
 import Loader from '../../../../Loader/Loader';
@@ -8,18 +7,21 @@ import PairedProducts from './PairedProdcuts';
 import ViewImages from './ViewImages';
 import Varient from './Varient';
 
-function ProductView() {
+// Main ProductView component with Tailwind styling
+export default function ProductView() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedStorage, setSelectedStorage] = useState(1);
+  const [selectedRam, setSelectedRam] = useState(16);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
         const productData = await getSingleProduct(id);
-        console.log(productData,"--product data")
+        console.log(productData, "--product data");
         setProduct(productData);
         setError(null);
       } catch (err) {
@@ -35,128 +37,144 @@ function ProductView() {
   }, [id]);
 
   if (loading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   if (error) {
-    return <div className="pv-error">{error}</div>;
+    return <div className="py-16 text-center text-red-600 bg-red-50 border-l-4 border-red-500">{error}</div>;
   }
 
   if (!product) {
-    return <div className="pv-missing">Product not found</div>;
+    return <div className="py-16 text-center text-gray-600 bg-gray-50 border-l-4 border-gray-500">Product not found</div>;
   }
 
+  // For demo, using static data from image
+  const demoProduct = {
+    name: "THE SPECTRE SERIES",
+    category: "GAMING PC",
+    price: "2,60,000/-",
+    oldPrice: "3.2L",
+    description: "This is a sample data space to fill how you see fit. This data is just to see how the space will look filled. Well this looks damn good. Am I right? So what do you think. Will this workout for this space. This is a sample data space to fill how you see fit. This data is just to see how the space will look filled. Well this looks damn good. Am I right? So what do you think. Will this workout for this space. This is a sample data space to fill how you see fit. This data is just to see how the space will look filled. Well this looks damn good. Am I right? So what do you think. Will this workout for this space.",
+    storageOptions: [0.5, 1, 2, 3],
+    ramOptions: [8, 16, 32, 64]
+  };
+
+  const handleStorageSelect = (size) => {
+    setSelectedStorage(size);
+  };
+
+  const handleRamSelect = (size) => {
+    setSelectedRam(size);
+  };
+
   return (
-  <>
-      <div className="pv-wrapper">
-      <div className="pv-title-section">
-        <h1>{product.name}</h1>
-        <div className="pv-id">Product Code: {product.product_code}</div>
-      </div>
-
-      <div className="pv-layout">
-        <div className="pv-gallery">
-          {product.images?.length > 0 && (
-            <>
-              <div className="pv-hero-image">
-                <img 
-                  src={BaseURL + product.images[0].image} 
-                  alt={product.name} 
-                />
-              </div>
-              
-              <div className="pv-image-grid">
-                {product.images.slice(1).map((img, index) => (
-                  <div key={index} className="pv-thumbnail">
-                    <img src={BaseURL + img.image} alt={`${product.name} ${index + 2}`} />
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+    <div className="max-w-7xl mx-auto px-4 py-8 font-questrial">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Product Image Section */}
+        <div className="w-full md:w-1/2">
+          <div className="bg-white rounded-lg overflow-hidden mb-4">
+            <img 
+              src="https://via.placeholder.com/600x600" 
+              alt={demoProduct.name}
+              className="w-full h-auto object-cover"
+            />
+          </div>
+          
+          {/* Product thumbnails - shown in a row */}
+          <div className="flex gap-2 justify-center">
+            <button className="w-8 h-8 flex items-center justify-center text-gray-700 border border-gray-300 rounded-full">
+              &lt;
+            </button>
+            <div className="h-1 w-16 bg-red-500 my-auto mx-2 rounded"></div>
+            <button className="w-8 h-8 flex items-center justify-center text-gray-700 border border-gray-300 rounded-full">
+              &gt;
+            </button>
+            <img 
+              src="https://via.placeholder.com/60x60" 
+              alt="Thumbnail" 
+              className="w-12 h-12 border border-gray-200 rounded"
+            />
+          </div>
         </div>
 
-        <div className="pv-info">
-          <div className="pv-pricing">
-            <div className="pv-sale-price">₹{product.price}</div>
-            {product.mrp && parseFloat(product.mrp) > parseFloat(product.price) && (
-              <div className="pv-regular-price">₹{product.mrp}</div>
-            )}
-            {product.discount_price && parseFloat(product.discount_price) > 0 && (
-              <div className="pv-savings">
-                Save ₹{(parseFloat(product.mrp) - parseFloat(product.price)).toFixed(2)}
-              </div>
-            )}
+        {/* Product Information Section */}
+        <div className="w-full md:w-1/2">
+          {/* Category */}
+          <div className="text-gray-600 font-medium mb-1">{demoProduct.category}</div>
+          
+          {/* Product Title */}
+          <h1 className="font-rajadhani text-3xl font-bold mb-4">{demoProduct.name}</h1>
+          
+          {/* Pricing */}
+          <div className="flex items-baseline mb-6">
+            <span className="text-gray-500 line-through mr-2">₹{demoProduct.oldPrice}</span>
+            <span className="text-green-600 text-2xl font-bold">₹{demoProduct.price}</span>
+          </div>
+          
+          {/* Description */}
+          <p className="text-gray-700 mb-8">
+            {demoProduct.description}
+          </p>
+
+          {/* Storage Options */}
+          <div className="mb-6">
+            <h2 className="text-base font-bold mb-2">SELECT STORAGE (ALL DIMENSIONS MENTIONED IN TB)</h2>
+            <div className="flex flex-wrap gap-2">
+              {demoProduct.storageOptions.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => handleStorageSelect(size)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    selectedStorage === size 
+                      ? 'bg-black text-white' 
+                      : 'bg-gray-200 text-black'
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="pv-availability">
-            {product.stock > 0 ? (
-              <span className="pv-available">In Stock ({product.stock} available)</span>
-            ) : (
-              <span className="pv-unavailable">Out of Stock</span>
-            )}
+          {/* RAM Options */}
+          <div className="mb-6">
+            <h2 className="text-base font-bold mb-2">RAM (ALL DIMENSIONS IN GB)</h2>
+            <div className="flex flex-wrap gap-2">
+              {demoProduct.ramOptions.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => handleRamSelect(size)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    selectedRam === size 
+                      ? 'bg-black text-white' 
+                      : 'bg-gray-200 text-black'
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="pv-summary">
-            <h3>Description</h3>
-            <p>{product.description}</p>
+          {/* Action Buttons */}
+          <div className="mt-8 space-y-4">
+            <button className="flex items-center text-gray-700">
+              <svg className="w-5 h-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
+              </svg>
+              Add to Cart
+            </button>
+            <button className="w-full py-3 bg-black text-white font-bold rounded-full hover:bg-gray-800 transition duration-300">
+              BUY NOW
+            </button>
           </div>
-
-          {product.whats_inside && (
-            <div className="pv-contents">
-              <h3>What's Inside</h3>
-              <p>{product.whats_inside}</p>
-            </div>
-          )}
-
-          {product.more_info && (
-            <div className="pv-additional-info">
-              <a href={product.more_info} target="_blank" rel="noopener noreferrer">
-                More Information
-              </a>
-            </div>
-          )}
-
-          {product.broacher && (
-            <div className="pv-document">
-              <a href={BaseURL + product.broacher} download target="_blank" rel="noopener noreferrer">
-                Download Brochure
-              </a>
-            </div>
-          )}
-
-          {product.attributes?.length > 0 && (
-            <div className="pv-specs">
-              {/* <h3>Specifications</h3> */}
-              <table className="pv-spec-table">
-                <tbody>
-                  {product.attributes.map((attr) => (
-                    <tr key={attr.id}>
-                      <th>{attr.attribute.category.name}</th>
-                      <td>
-                        {attr.details.map((detail, idx) => (
-                          <span key={idx}>
-                            {detail.value}
-                            {idx < attr.details.length ? ', ' : ''}
-                          </span>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* These components would need to be implemented separately */}
+      {/* <PairedProducts product={product}/>
+      <ViewImages product={product}/>
+      <Varient product={product}/> */}
     </div>
-    <PairedProducts product={product}/>
-    <br/>
-    <ViewImages product={product}/>
-    <br />
-  <Varient product={product}/>
-  </>
   );
 }
-
-export default ProductView;

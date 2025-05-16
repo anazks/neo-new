@@ -1,91 +1,179 @@
 import React, { useEffect, useState } from 'react';
-import './inside.css';
+import PropTypes from 'prop-types';
 
-function Inside({ product }) {
+const ProductSpecifications = ({ product }) => {
   const [isAnimated, setIsAnimated] = useState(false);
+  const [attributes, setAttributes] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsAnimated(true);
     }, 100);
-    
+    if (product) {
+      setAttributes(product.attributes || []);
+    }
     return () => clearTimeout(timer);
-  }, []);
+  }, [product]);
 
   if (!product) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <h2>Loading specifications...</h2>
+      <div className="w-full bg-white font-rajdhani flex justify-center items-center h-64">
+        <div className="animate-pulse text-gray-500">Loading specifications...</div>
       </div>
     );
   }
 
-  const warrantyInfo = "1 Year Onsite Warranty";
-  const insideBox = product.whats_inside || "No information available";
-
-  const groupAttributesByCategory = () => {
-    if (!product.attributes || !product.attributes.length) return {};
-    
-    const grouped = {};
-    product.attributes.forEach(attr => {
-      const categoryName = attr.attribute.category.name;
-      if (!grouped[categoryName]) {
-        grouped[categoryName] = [];
-      }
-      grouped[categoryName].push(attr);
-    });
-    
-    return grouped;
+  const defaultSpecs = {
+    warranty: {
+      info: "1 Year Onsite Warranty",
+      options: ["1", "2", "3"]
+    },
+    specifications: {
+      processor: "INTEL Core - i7 14700K 4.3GHz Unlocked",
+      graphics: "NVIDIA RTX 4070 Ti Super 16GB",
+      motherboard: "Asus PRIME Z790 Creator WiFi 6E",
+      ram: "64KILL Dual Channel Memory",
+      storage: "SAMSUNG 980 Pro",
+      cooling: "AIR COOLED NOCTUA D14X",
+      case: "GOOD ESPORTS ZR069",
+      psu: "CORSAIR RM 1000e - 80+ GOLD",
+      os: "MICROSOFT Windows 11 Home"
+    },
+    connectivity: {
+      motherboard: [
+        "2x DisplayPort input for Thunderbolt 4",
+        "1x HDMI",
+        "2x Thunderbolt 4 Compatible USB 4 Compliant",
+        "10Gb and 2.5Gb Ethernet",
+        "6x USB 3.2 Gen 2",
+        "WiFi 6E",
+        "1x BIOS Flashback Button",
+        "5x Audio Jacks"
+      ],
+      graphics: ["1x HDMI 2.1a", "3x DisplayPort 1.4a"],
+      case: ["1x USB 3.0", "2x USB 2.0", "2x Audio Jacks"]
+    },
+    dimensions: {
+      case: "335x216x455mm",
+      weight: "7.0KG",
+      powerConsumption: ["400W Nominal", "800W PEAK"],
+      audio: "REALTEK (R) Audio"
+    }
   };
 
-  const groupedAttributes = groupAttributesByCategory();
+  const specs = {
+    warranty: {
+      info: product.warrantyInfo || defaultSpecs.warranty.info,
+      options: product.warrantyOptions || defaultSpecs.warranty.options
+    },
+    specifications: {
+      processor: product.processor || defaultSpecs.specifications.processor,
+      graphics: product.graphics || defaultSpecs.specifications.graphics,
+      motherboard: product.motherboard || defaultSpecs.specifications.motherboard,
+      ram: product.ram || defaultSpecs.specifications.ram,
+      storage: product.storage || defaultSpecs.specifications.storage,
+      cooling: product.cooling || defaultSpecs.specifications.cooling,
+      case: product.case || defaultSpecs.specifications.case,
+      psu: product.psu || defaultSpecs.specifications.psu,
+      os: product.os || defaultSpecs.specifications.os
+    },
+    connectivity: product.connectivity || defaultSpecs.connectivity,
+    dimensions: product.dimensions || defaultSpecs.dimensions
+  };
 
   return (
-    <div className={`container ${isAnimated ? 'fade-in' : ''}`}>
-      <div className="header">
-        <h1>WHAT'S INSIDE</h1>
-        <p className="package-content">{insideBox}</p>
-      </div>
+    <div className={`w-full bg-white font-rajdhani ${isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'} transition-all duration-500 ease-in-out`}>
+      <div className="w-full max-w-4xl mx-auto px-4 py-8">
+        {/* OVERVIEW SECTION */}
+        <h1 className="text-2xl font-bold uppercase mb-6">OVERVIEW</h1>
 
-      {Object.keys(groupedAttributes).length > 0 ? (
-        Object.entries(groupedAttributes).map(([categoryName, attributes]) => (
-          <div key={categoryName} className="specs-section">
-            <h3 className="specs-category-title">{categoryName.toUpperCase()}</h3>
-            <div className="specs-table-container">
-              <table className="specs-table">
-                <thead>
-                  <tr>
-                    <th>Specification</th>
-                    <th>Details</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {attributes.map((attr) => (
-                    <tr key={attr.id} className="specs-row">
-                      <td className="specs-label">{attr.attribute.name}</td>
-                      <td className="specs-value">
-                        {attr.details.map((detail, idx) => (
-                          <span key={detail.id} className="specs-detail-chip">
-                            {detail.value}
-                          </span>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* WARRANTY INFO */}
+        {/* <div className="mb-8">
+          <h2 className="text-lg font-bold uppercase mb-2">WARRANTY INFO</h2>
+          <p className="mb-1">{specs.warranty.info}</p>
+          <p className="mb-2">AMC Bundles Available at Checkout (Years)</p>
+          <div className="flex gap-2">
+            {specs.warranty.options.map((option, index) => (
+              <div key={index} className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">
+                {option}
+              </div>
+            ))}
           </div>
-        ))
-      ) : (
-        <div className="specs-section">
-          {/* <h2>SPECIFICATIONS</h2> */}
-          <p>No specifications available.</p>
+        </div> */}
+
+        <div className="h-px bg-gray-200 my-6"></div>
+
+        {/* SPECIFICATIONS */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold uppercase mb-4">SPECIFICATIONS</h2>
+          <div className="space-y-4">
+            {attributes.map((attribute, index) => (
+              <div key={index} className="flex mb-2 items-start">
+                {/* Category */}
+                <div className="w-1/3 font-bold uppercase">{attribute.attribute.category.name}</div>
+
+                {/* Attribute Name and Values */}
+                <div className="w-2/3 flex gap-x-5 items-center flex-wrap">
+                  <div className="text-base font-medium">{attribute?.attribute?.name}</div>
+                  {attribute.details?.map((detail, detailIndex) => (
+                    <div key={detailIndex} className="text-sm text-gray-600">{detail.value}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      )}
+
+        <div className="h-px bg-gray-200 my-6"></div>
+      </div>
     </div>
   );
-}
+};
 
-export default Inside;
+ProductSpecifications.propTypes = {
+  product: PropTypes.shape({
+    warrantyInfo: PropTypes.string,
+    warrantyOptions: PropTypes.arrayOf(PropTypes.string),
+    processor: PropTypes.string,
+    graphics: PropTypes.string,
+    motherboard: PropTypes.string,
+    ram: PropTypes.string,
+    storage: PropTypes.string,
+    cooling: PropTypes.string,
+    case: PropTypes.string,
+    psu: PropTypes.string,
+    os: PropTypes.string,
+    connectivity: PropTypes.shape({
+      motherboard: PropTypes.arrayOf(PropTypes.string),
+      graphics: PropTypes.arrayOf(PropTypes.string),
+      case: PropTypes.arrayOf(PropTypes.string)
+    }),
+    dimensions: PropTypes.shape({
+      case: PropTypes.string,
+      weight: PropTypes.string,
+      powerConsumption: PropTypes.arrayOf(PropTypes.string),
+      audio: PropTypes.string
+    }),
+    attributes: PropTypes.arrayOf(
+      PropTypes.shape({
+        attribute: PropTypes.shape({
+          name: PropTypes.string,
+          category: PropTypes.shape({
+            name: PropTypes.string
+          })
+        }),
+        details: PropTypes.arrayOf(
+          PropTypes.shape({
+            value: PropTypes.string
+          })
+        )
+      })
+    )
+  })
+};
+
+ProductSpecifications.defaultProps = {
+  product: null
+};
+
+export default ProductSpecifications;
