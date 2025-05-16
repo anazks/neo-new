@@ -178,7 +178,19 @@ function Details({ product }) {
           />
         </div>
       )}
-      {overView && <SingeProductOverview product={product}/>}
+     {overView && (
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <div className="relative max-w-4xl w-full bg-white rounded-xl overflow-hidden animate-pop-in">
+      <button 
+        className="absolute top-4 right-4 z-50 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-300 transition-colors"
+        onClick={() => setOverView(false)}
+      >
+        ×
+      </button>
+      <SingeProductOverview product={product} onClose={() => setOverView(false)} />
+    </div>
+  </div>
+)}
       
       <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 to-white text-gray-800">
         {/* Video Popup */}

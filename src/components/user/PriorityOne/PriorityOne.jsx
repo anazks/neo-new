@@ -44,9 +44,9 @@ function PriorityOne() {
 
   return (
     <div className="priority-one-container" style={{
+        fontFamily: "'Rajdhani', sans-serif",
         width:"97vw", 
-        height:"90vh", 
-        fontFamily: "'Rajdhani', sans-serif"
+        height:"95vh", 
       }}>
       <div className="content-wrappers" >
         <header className="header">

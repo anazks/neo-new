@@ -87,7 +87,8 @@ export default function ProductCard({ product }) {
     products.map((product, index) => {
       const productDetails = product.recommended_product_details || {};
       const mainImage = productDetails.images?.[0]?.image || '/placeholder-product.jpg';
-      const price = productDetails.price ? `$${parseFloat(productDetails.price).toFixed(2)}` : '$0.00';
+      const price = productDetails.price ? `₹
+${parseFloat(productDetails.price).toFixed(2)}` : '₹0.00';
 
       return (
         <div 

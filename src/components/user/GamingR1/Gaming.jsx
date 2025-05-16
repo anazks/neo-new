@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import Image1 from '../../../Images/Recoments.png';
+import Image2 from '../../../Images/gane4.png';
+import Image3 from '../../../Images/subscribeImge.jpg';
+import Image4 from '../../../Images/TokyoCity.jpg';
+import Image5 from '../../../Images/tokyo.jpg';
+import Image6 from '../../../Images/game3.png';
 
 export default function GamingSingleView() {
   const [displayText, setDisplayText] = useState("GAMING R1");
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const phrases = ["GAMING R1", "PRO SYSTEM", "ENTERPRISE"];
   const [activeTriangle, setActiveTriangle] = useState(0);
+  
+  const triangleImages = [
+    Image6,  // Gaming image
+    Image2,  // Car/Pro image
+    Image4,  // City/Enterprise image
+    Image3,  // Purple theme
+    Image5,  // Tokyo city
+    Image1   // Cyberpunk
+  ];
   
   const edenContent = [
     {
@@ -70,15 +85,10 @@ export default function GamingSingleView() {
   };
   
   return (
-    <div className="w-full h-screen bg-white overflow-hidden flex flex-col" style={{maxWidth:"1200px", height:'97vh', borderRadius:"30px"}}>
-      {/* Logo in top-left corner */}
-      <div className="absolute top-4 left-4 z-10">
-        
-      </div>
-
-      {/* Main container with reduced padding to fit everything */}
+    <div className="w-full h-screen bg-white overflow-hidden flex flex-col" style={{ width:"97vw", height:'97vh', borderRadius:"30px"}}>
+      {/* Main container */}
       <div className="flex flex-col h-full p-4">
-        {/* Header section with quote - taking less space */}
+        {/* Header section */}
         <div className="text-center mb-2 pt-8 md:pt-10">
           <div className="flex items-center justify-center">
             <span className="text-pink-600 text-2xl md:text-3xl font-bold mr-1">"</span>
@@ -101,7 +111,7 @@ export default function GamingSingleView() {
           <div className="w-full max-w-2xl mx-auto h-px bg-pink-600 mt-2" style={{height: "3px"}}></div>
         </div>
 
-        {/* Middle content section - matching the image layout */}
+        {/* Middle content section */}
         <div className="flex flex-col md:flex-row gap-4 mb-4 flex-grow p-4">
           {/* Left side text */}
           <div className="md:w-1/3 border-r border-pink-600 pr-6" style={{borderRightWidth: "3px"}}>
@@ -115,205 +125,155 @@ export default function GamingSingleView() {
             </div>
           </div>
           
-          {/* Right side triangles - Improved to match the image */}
+          {/* Right side triangles with images */}
           <div className="md:w-2/3 px-2">
             <div className="flex justify-center items-center h-full">
               <div className="relative w-full">
                 <svg viewBox="0 0 600 200" className="w-full">
                   <defs>
-                    {/* Improved gradients */}
-                    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3B82F6" />
-                      <stop offset="50%" stopColor="#8B5CF6" />
-                      <stop offset="100%" stopColor="#EC4899" />
-                    </linearGradient>
+                    {/* Clip paths for each triangle */}
+                    <clipPath id="triangle1">
+                      <polygon points="45,40 100,140 -10,140" />
+                    </clipPath>
+                    <clipPath id="triangle2">
+                      <polygon points="130,40 185,140 75,140" />
+                    </clipPath>
+                    <clipPath id="triangle3">
+                      <polygon points="215,40 270,140 160,140" />
+                    </clipPath>
+                    <clipPath id="triangle4">
+                      <polygon points="300,40 355,140 245,140" />
+                    </clipPath>
+                    <clipPath id="triangle5">
+                      <polygon points="385,40 440,140 330,140" />
+                    </clipPath>
+                    <clipPath id="triangle6">
+                      <polygon points="470,40 525,140 415,140" />
+                    </clipPath>
                     
-                    <linearGradient id="darkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#1F2937" />
-                      <stop offset="100%" stopColor="#111827" />
-                    </linearGradient>
-                    
-                    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#06B6D4" />
-                      <stop offset="50%" stopColor="#8B5CF6" />
-                      <stop offset="100%" stopColor="#EC4899" />
-                    </linearGradient>
-                    
-                    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#7C3AED" />
-                      <stop offset="100%" stopColor="#4C1D95" />
-                    </linearGradient>
-                    
-                    <linearGradient id="cityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#6366F1" />
-                      <stop offset="100%" stopColor="#2563EB" />
-                    </linearGradient>
-                    
-                    <linearGradient id="cyberpunkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#EC4899" />
-                      <stop offset="50%" stopColor="#8B5CF6" />
-                      <stop offset="100%" stopColor="#2563EB" />
-                    </linearGradient>
-                    
-                    {/* Filter to create a reflective/glossy effect */}
-                    <filter id="glossy" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
-                      <feOffset in="blur" dx="0" dy="0" result="offsetBlur" />
-                      <feSpecularLighting in="blur" surfaceScale="5" specularConstant="0.75" 
-                                        specularExponent="20" lightingColor="white" result="specOut">
-                        <fePointLight x="250" y="20" z="50" />
-                      </feSpecularLighting>
-                      <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut" />
-                      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" 
-                                k1="0" k2="1" k3="1" k4="0" result="litPaint" />
+                    {/* Glow effect for active triangle */}
+                    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="3" result="blur" />
+                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
                     </filter>
                   </defs>
                   
-                  {/* Triangles with better styling, no tilting and overlapping */}
+                  {/* Background images for each triangle */}
+                  <image 
+                    href={triangleImages[0]} 
+                    clipPath="url(#triangle1)" 
+                    x="-10" y="40" 
+                    width="110" height="100"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                  <image 
+                    href={triangleImages[1]} 
+                    clipPath="url(#triangle2)" 
+                    x="75" y="40" 
+                    width="110" height="100"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                  <image 
+                    href={triangleImages[2]} 
+                    clipPath="url(#triangle3)" 
+                    x="160" y="40" 
+                    width="110" height="100"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                  <image 
+                    href={triangleImages[3]} 
+                    clipPath="url(#triangle4)" 
+                    x="245" y="40" 
+                    width="110" height="100"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                  <image 
+                    href={triangleImages[4]} 
+                    clipPath="url(#triangle5)" 
+                    x="330" y="40" 
+                    width="110" height="100"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                  <image 
+                    href={triangleImages[5]} 
+                    clipPath="url(#triangle6)" 
+                    x="415" y="40" 
+                    width="110" height="100"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
+                  
+                  {/* Transparent clickable triangles with hover effects */}
                   <g>
-                    {/* First triangle - blue/pink gradient */}
                     <polygon 
                       points="45,40 100,140 -10,140" 
-                      fill="url(#blueGradient)" 
-                      stroke={activeTriangle === 0 ? "white" : "transparent"}
-                      strokeWidth="2"
-                      filter="url(#glossy)"
+                      fill="transparent" 
+                      stroke={activeTriangle === 0 ? "white" : "rgba(255,255,255,0.3)"}
+                      strokeWidth={activeTriangle === 0 ? "3" : "1"}
+                      filter={activeTriangle === 0 ? "url(#glow)" : ""}
                       onClick={() => handleTriangleClick(0)} 
                       style={{cursor: 'pointer'}}
+                      className="transition-all duration-300"
                     />
-                    
-                    {/* Second triangle - dark car theme - overlapping first */}
                     <polygon 
                       points="130,40 185,140 75,140" 
-                      fill="url(#darkGradient)" 
-                      stroke={activeTriangle === 1 ? "white" : "transparent"}
-                      strokeWidth="2"
-                      filter="url(#glossy)"
+                      fill="transparent" 
+                      stroke={activeTriangle === 1 ? "white" : "rgba(255,255,255,0.3)"}
+                      strokeWidth={activeTriangle === 1 ? "3" : "1"}
+                      filter={activeTriangle === 1 ? "url(#glow)" : ""}
                       onClick={() => handleTriangleClick(1)} 
                       style={{cursor: 'pointer'}}
+                      className="transition-all duration-300"
                     />
-                    
-                    {/* Third triangle - neon cityscape - overlapping second */}
                     <polygon 
                       points="215,40 270,140 160,140" 
-                      fill="url(#neonGradient)" 
-                      stroke={activeTriangle === 2 ? "white" : "transparent"}
-                      strokeWidth="2"
-                      filter="url(#glossy)"
+                      fill="transparent" 
+                      stroke={activeTriangle === 2 ? "white" : "rgba(255,255,255,0.3)"}
+                      strokeWidth={activeTriangle === 2 ? "3" : "1"}
+                      filter={activeTriangle === 2 ? "url(#glow)" : ""}
                       onClick={() => handleTriangleClick(2)} 
                       style={{cursor: 'pointer'}}
+                      className="transition-all duration-300"
                     />
-                    
-                    {/* Fourth triangle - purple theme - overlapping third */}
                     <polygon 
                       points="300,40 355,140 245,140" 
-                      fill="url(#purpleGradient)" 
-                      stroke={activeTriangle === 3 ? "white" : "transparent"}
-                      strokeWidth="2"
-                      filter="url(#glossy)"
+                      fill="transparent" 
+                      stroke={activeTriangle === 3 ? "white" : "rgba(255,255,255,0.3)"}
+                      strokeWidth={activeTriangle === 3 ? "3" : "1"}
+                      filter={activeTriangle === 3 ? "url(#glow)" : ""}
                       onClick={() => handleTriangleClick(3)} 
                       style={{cursor: 'pointer'}}
+                      className="transition-all duration-300"
                     />
-                    
-                    {/* Fifth triangle - city blue - overlapping fourth */}
                     <polygon 
                       points="385,40 440,140 330,140" 
-                      fill="url(#cityGradient)" 
-                      stroke={activeTriangle === 4 ? "white" : "transparent"}
-                      strokeWidth="2"
-                      filter="url(#glossy)"
+                      fill="transparent" 
+                      stroke={activeTriangle === 4 ? "white" : "rgba(255,255,255,0.3)"}
+                      strokeWidth={activeTriangle === 4 ? "3" : "1"}
+                      filter={activeTriangle === 4 ? "url(#glow)" : ""}
                       onClick={() => handleTriangleClick(4)} 
                       style={{cursor: 'pointer'}}
+                      className="transition-all duration-300"
                     />
-                    
-                    {/* Sixth triangle - cyberpunk city - overlapping fifth */}
                     <polygon 
                       points="470,40 525,140 415,140" 
-                      fill="url(#cyberpunkGradient)" 
-                      stroke={activeTriangle === 5 ? "white" : "transparent"}
-                      strokeWidth="2"
-                      filter="url(#glossy)"
+                      fill="transparent" 
+                      stroke={activeTriangle === 5 ? "white" : "rgba(255,255,255,0.3)"}
+                      strokeWidth={activeTriangle === 5 ? "3" : "1"}
+                      filter={activeTriangle === 5 ? "url(#glow)" : ""}
                       onClick={() => handleTriangleClick(5)} 
                       style={{cursor: 'pointer'}}
+                      className="transition-all duration-300"
                     />
-                    
-                    {/* Overlay effects to simulate the image textures */}
-                    <g opacity="0.4">
-                      {/* First triangle pattern */}
-                      <polygon 
-                        points="45,40 100,140 -10,140" 
-                        fill="url(#blueGradient)" 
-                        opacity="0.6"
-                      >
-                        <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3s" repeatCount="indefinite" />
-                      </polygon>
-                      
-                      {/* Second triangle car pattern */}
-                      <polygon 
-                        points="130,40 185,140 75,140" 
-                        opacity="0.7"
-                      >
-                        <animate attributeName="opacity" values="0.7;0.9;0.7" dur="4s" repeatCount="indefinite" />
-                      </polygon>
-                      
-                      {/* Third triangle city pattern */}
-                      <polygon 
-                        points="215,40 270,140 160,140" 
-                        fill="url(#neonGradient)" 
-                        opacity="0.5"
-                      >
-                        <animate attributeName="opacity" values="0.5;0.7;0.5" dur="2.5s" repeatCount="indefinite" />
-                      </polygon>
-                      
-                      {/* Fourth triangle pattern */}
-                      <polygon 
-                        points="300,40 355,140 245,140" 
-                        fill="url(#purpleGradient)" 
-                        opacity="0.6"
-                      >
-                        <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3.5s" repeatCount="indefinite" />
-                      </polygon>
-                      
-                      {/* Fifth triangle pattern */}
-                      <polygon 
-                        points="385,40 440,140 330,140" 
-                        fill="url(#cityGradient)" 
-                        opacity="0.7"
-                      >
-                        <animate attributeName="opacity" values="0.7;0.9;0.7" dur="4s" repeatCount="indefinite" />
-                      </polygon>
-                      
-                      {/* Sixth triangle pattern */}
-                      <polygon 
-                        points="470,40 525,140 415,140" 
-                        fill="url(#cyberpunkGradient)" 
-                        opacity="0.6"
-                      >
-                        <animate attributeName="opacity" values="0.6;0.8;0.6" dur="3s" repeatCount="indefinite" />
-                      </polygon>
-                    </g>
-                    
-                    {/* Light reflections and gleam effects */}
-                    <g opacity="0.3">
-                      <polygon points="45,40 55,60 35,60" fill="white">
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite" />
-                      </polygon>
-                      <polygon points="130,40 140,60 120,60" fill="white">
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.5s" repeatCount="indefinite" />
-                      </polygon>
-                      <polygon points="215,40 225,60 205,60" fill="white">
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite" />
-                      </polygon>
-                      <polygon points="300,40 310,60 290,60" fill="white">
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.8s" repeatCount="indefinite" />
-                      </polygon>
-                      <polygon points="385,40 395,60 375,60" fill="white">
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3.2s" repeatCount="indefinite" />
-                      </polygon>
-                      <polygon points="470,40 480,60 460,60" fill="white">
-                        <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.7s" repeatCount="indefinite" />
-                      </polygon>
-                    </g>
+                  </g>
+                  
+                  {/* Labels for each triangle */}
+                  <g className="font-bold" fontSize="10" fill="white" textAnchor="middle">
+                    <text x="45" y="80" filter="url(#glow)">GAMING</text>
+                    <text x="130" y="80">PRO</text>
+                    <text x="215" y="80">ENTERPRISE</text>
+                    <text x="300" y="80">SMART</text>
+                    <text x="385" y="80">CREATIVE</text>
+                    <text x="470" y="80">EDUCATION</text>
                   </g>
                 </svg>
               </div>
@@ -321,7 +281,7 @@ export default function GamingSingleView() {
           </div>
         </div>
 
-        {/* Project Eden section - moved up */}
+        {/* Project Eden section */}
         <div className="bg-gray-100 rounded-lg flex flex-col md:flex-row shadow-md mt-1 mb-6">
           <div className="md:w-1/4 bg-gray-200 p-3 md:p-4 flex items-center justify-center">
             <div className="text-center">
@@ -339,6 +299,17 @@ export default function GamingSingleView() {
           </div>
         </div>
       </div>
+      
+      {/* Animation styles */}
+      <style jsx>{`
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .animate-blink {
+          animation: blink 1s step-end infinite;
+        }
+      `}</style>
     </div>
   );
 }

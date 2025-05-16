@@ -1,8 +1,7 @@
   /* Neo Footer Styles - Using neo- prefix to avoid conflicts */
   .neo-main-footer {
-    width: 100%;
-    max-width: 1200px;
-    border-radius: 30px;
+    width: 98vw;
+    border-radius: 50px;
     margin: 0 auto;
     padding: 40px 20px;
     background-color: #ffffff;

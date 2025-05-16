@@ -139,8 +139,7 @@ export default function FeedbackComponent() {
         
         .feedback-wrapper {
           width: 100%;
-          max-width: 1200px;
-        height: 98vh;
+          height: 98vh;
           padding: 40px;
           background-color: white;
           border-radius: 20px;
