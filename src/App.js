@@ -28,6 +28,7 @@ import Payed from './components/user/RazorPay/Payed';
 import Nvidia from "./components/user/Nvidia/Nvidia";
 import Failed from './components/user/RazorPay/Failed'
 import Store from './components/user/Store/Store'
+import PurchasedProducts from "./components/user/PurchasedProducts/PurchasedProducts";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
             <Route path="/payed" element={<Payed/>} />
             <Route path="/nvidia" element={<Nvidia/>} />
             <Route path="/failed" element={<Failed/>} />
+            <Route path="/my-products" element={<PurchasedProducts/>}/>
             
 
           {/* 

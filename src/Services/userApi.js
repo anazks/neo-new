@@ -463,3 +463,15 @@ export const ToggleUsers = async(id)=>{
     return error
   }
 }
+
+
+export const getPurchasedProducts = async () => {
+  try {
+    let response = await Axios.get('/inventory/customer/purchased-products/');
+    
+    console.log(response.data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

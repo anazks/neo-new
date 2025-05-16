@@ -9,7 +9,8 @@ import {
   FaCogs, 
   FaSignOutAlt, 
   FaBullseye,
-  FaStar
+  FaStar,
+  FaSync
  
 } from 'react-icons/fa';
 
@@ -57,6 +58,17 @@ function Sidebar({ isExpanded, toggleSidebar }) {
             {isExpanded && <span className="ml-3 font-medium">Featured Products</span>}
           </a>
         </li>
+        <li>
+          <a 
+            href="/admin/driver/update" 
+            className="flex items-center p-4 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors"
+          >
+            {/* <FaBoxOpen className="text-xl" /> */}
+            <FaSync className="text-xl" />
+            {isExpanded && <span className="ml-3 font-medium">Driver Update</span>}
+          </a>
+        </li>
+        
         <li>
           <a 
             href="/admin/order-list" 
