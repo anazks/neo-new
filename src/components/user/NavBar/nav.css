@@ -76,6 +76,9 @@
   flex: 0 0 auto;
   margin: 0 2rem;
 }
+.shadow-img {
+  filter: drop-shadow(1px 1px 1.5px #33333394);
+}
 
 .logo-img {
   height: 40px;

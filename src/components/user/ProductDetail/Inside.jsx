@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 const ProductSpecifications = ({ product }) => {
   const [isAnimated, setIsAnimated] = useState(false);
@@ -18,7 +18,9 @@ const ProductSpecifications = ({ product }) => {
   if (!product) {
     return (
       <div className="w-full bg-white font-rajdhani flex justify-center items-center h-64">
-        <div className="animate-pulse text-gray-500">Loading specifications...</div>
+        <div className="animate-pulse text-gray-500">
+          Loading specifications...
+        </div>
       </div>
     );
   }
@@ -26,7 +28,7 @@ const ProductSpecifications = ({ product }) => {
   const defaultSpecs = {
     warranty: {
       info: "1 Year Onsite Warranty",
-      options: ["1", "2", "3"]
+      options: ["1", "2", "3"],
     },
     specifications: {
       processor: "INTEL Core - i7 14700K 4.3GHz Unlocked",
@@ -37,7 +39,7 @@ const ProductSpecifications = ({ product }) => {
       cooling: "AIR COOLED NOCTUA D14X",
       case: "GOOD ESPORTS ZR069",
       psu: "CORSAIR RM 1000e - 80+ GOLD",
-      os: "MICROSOFT Windows 11 Home"
+      os: "MICROSOFT Windows 11 Home",
     },
     connectivity: {
       motherboard: [
@@ -48,41 +50,46 @@ const ProductSpecifications = ({ product }) => {
         "6x USB 3.2 Gen 2",
         "WiFi 6E",
         "1x BIOS Flashback Button",
-        "5x Audio Jacks"
+        "5x Audio Jacks",
       ],
       graphics: ["1x HDMI 2.1a", "3x DisplayPort 1.4a"],
-      case: ["1x USB 3.0", "2x USB 2.0", "2x Audio Jacks"]
+      case: ["1x USB 3.0", "2x USB 2.0", "2x Audio Jacks"],
     },
     dimensions: {
       case: "335x216x455mm",
       weight: "7.0KG",
       powerConsumption: ["400W Nominal", "800W PEAK"],
-      audio: "REALTEK (R) Audio"
-    }
+      audio: "REALTEK (R) Audio",
+    },
   };
 
   const specs = {
     warranty: {
       info: product.warrantyInfo || defaultSpecs.warranty.info,
-      options: product.warrantyOptions || defaultSpecs.warranty.options
+      options: product.warrantyOptions || defaultSpecs.warranty.options,
     },
     specifications: {
       processor: product.processor || defaultSpecs.specifications.processor,
       graphics: product.graphics || defaultSpecs.specifications.graphics,
-      motherboard: product.motherboard || defaultSpecs.specifications.motherboard,
+      motherboard:
+        product.motherboard || defaultSpecs.specifications.motherboard,
       ram: product.ram || defaultSpecs.specifications.ram,
       storage: product.storage || defaultSpecs.specifications.storage,
       cooling: product.cooling || defaultSpecs.specifications.cooling,
       case: product.case || defaultSpecs.specifications.case,
       psu: product.psu || defaultSpecs.specifications.psu,
-      os: product.os || defaultSpecs.specifications.os
+      os: product.os || defaultSpecs.specifications.os,
     },
     connectivity: product.connectivity || defaultSpecs.connectivity,
-    dimensions: product.dimensions || defaultSpecs.dimensions
+    dimensions: product.dimensions || defaultSpecs.dimensions,
   };
 
   return (
-    <div className={`w-full bg-white font-rajdhani ${isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'} transition-all duration-500 ease-in-out`}>
+    <div
+      className={`w-full bg-white font-rajdhani ${
+        isAnimated ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+      } transition-all duration-500 ease-in-out`}
+    >
       <div className="w-full max-w-4xl mx-auto px-4 py-8">
         {/* OVERVIEW SECTION */}
         <h1 className="text-2xl font-bold uppercase mb-6">OVERVIEW</h1>
@@ -105,22 +112,51 @@ const ProductSpecifications = ({ product }) => {
 
         {/* SPECIFICATIONS */}
         <div className="mb-8">
-          <h2 className="text-lg font-bold uppercase mb-4">SPECIFICATIONS</h2>
-          <div className="space-y-4">
-            {attributes.map((attribute, index) => (
-              <div key={index} className="flex mb-2 items-start">
-                {/* Category */}
-                <div className="w-1/3 font-bold uppercase">{attribute.attribute.category.name}</div>
+          
 
-                {/* Attribute Name and Values */}
-                <div className="w-2/3 flex gap-x-5 items-center flex-wrap">
-                  <div className="text-base font-medium">{attribute?.attribute?.name}</div>
-                  {attribute.details?.map((detail, detailIndex) => (
-                    <div key={detailIndex} className="text-sm text-gray-600">{detail.value}</div>
-                  ))}
-                </div>
-              </div>
-            ))}
+          <div className="space-y-2 text-sm">
+            {(() => {
+              const sortedAttributes = [...attributes].sort((a, b) =>
+                a.attribute.category.name.localeCompare(
+                  b.attribute.category.name
+                )
+              );
+
+              let previousCategory = "";
+
+              return sortedAttributes.map((attr, index) => {
+                const currentCategory = attr.attribute.category.name;
+                const showCategory = currentCategory !== previousCategory;
+                previousCategory = currentCategory;
+
+                return (
+                  <div key={index} className="grid grid-cols-3 gap-4">
+                    {/* Category */}
+                    <div className="font-medium text-gray-700 font-semibold">
+                      {showCategory ? currentCategory : ""}
+                    </div>
+
+                    {/* Attribute Name */}
+                    <div className="text-gray-800">
+                      {attr.attribute.name}
+                    </div>
+
+                    {/* Attribute Values */}
+                    <div className="text-gray-600">
+                      {attr.details?.length === 1 ? (
+                        <span>{attr.details[0].value}</span>
+                      ) : (
+                        <div className="flex flex-col space-y-1">
+                          {attr.details.map((detail, detailIndex) => (
+                            <span key={detailIndex}>{detail.value}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
 
@@ -146,34 +182,34 @@ ProductSpecifications.propTypes = {
     connectivity: PropTypes.shape({
       motherboard: PropTypes.arrayOf(PropTypes.string),
       graphics: PropTypes.arrayOf(PropTypes.string),
-      case: PropTypes.arrayOf(PropTypes.string)
+      case: PropTypes.arrayOf(PropTypes.string),
     }),
     dimensions: PropTypes.shape({
       case: PropTypes.string,
       weight: PropTypes.string,
       powerConsumption: PropTypes.arrayOf(PropTypes.string),
-      audio: PropTypes.string
+      audio: PropTypes.string,
     }),
     attributes: PropTypes.arrayOf(
       PropTypes.shape({
         attribute: PropTypes.shape({
           name: PropTypes.string,
           category: PropTypes.shape({
-            name: PropTypes.string
-          })
+            name: PropTypes.string,
+          }),
         }),
         details: PropTypes.arrayOf(
           PropTypes.shape({
-            value: PropTypes.string
+            value: PropTypes.string,
           })
-        )
+        ),
       })
-    )
-  })
+    ),
+  }),
 };
 
 ProductSpecifications.defaultProps = {
-  product: null
+  product: null,
 };
 
 export default ProductSpecifications;
