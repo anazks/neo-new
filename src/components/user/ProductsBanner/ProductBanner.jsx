@@ -6,11 +6,12 @@ import "@fontsource/rajdhani";
 import "@fontsource/rajdhani/700.css";
 import "@fontsource/raleway";
 import { featuredProduct } from "../../../Services/Products";
-import SingeProductOverview from '../CardPage/SingleProductOverView'
-// import { Loader } from "lucide-react";
+import SingeProductOverview from '../CardPage/SingleProductOverView';
 import Loader from '../Loader/Loader';
-
+import {useAuth} from '../../../Context/UserContext'
 function ProductBanner() {
+    const { token, setToken, user } = useAuth();
+  
   const [darkMode, setDarkMode] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: "50%", y: "50%" });
   const [products, setProducts] = useState([]);
@@ -18,23 +19,40 @@ function ProductBanner() {
   const overlayRef = useRef(null);
   const carouselRef = useRef(null);
   const intervalRef = useRef(null);
-  const [overView, setOverView] = useState(false)
+  const [showOverview, setShowOverview] = useState(false);
+  const modalRef = useRef(null);
 
-  const handleBuyNow = async () => {
-    try {
-      console.log("buy now")
-      setOverView(true)
-    } catch (error) {
-      console.error("Error in buy now:", error);
-      alert("Error in buy now:", error);
+  const handleBuyNow = () => {
+    setShowOverview(true);
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+  };
+
+  const closeOverview = () => {
+    setShowOverview(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  };
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeOverview();
+      }
+    };
+
+    if (showOverview) {
+      document.addEventListener('mousedown', handleClickOutside);
     }
-  }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showOverview]);
 
   // Fetch featured products
   const getFeaturedProduct = async () => {
     try {
       const response = await featuredProduct();
-      console.log(response, "featuredProduct")
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching featured products:", error);
@@ -80,13 +98,9 @@ function ProductBanner() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       if (intervalRef.current) clearInterval(intervalRef.current);
+      document.body.style.overflow = 'auto'; // Cleanup
     };
   }, [products.length]);
-
-  // Toggle dark mode function
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
 
   // Carousel navigation functions
   const goToPrevious = () => {
@@ -138,7 +152,7 @@ function ProductBanner() {
   };
 
   if (products.length === 0) {
-    return <Loader/>
+    return <Loader/>;
   }
 
   const currentProduct = products[currentIndex];
@@ -146,9 +160,26 @@ function ProductBanner() {
 
   return (
     <>
-      {overView && (
-        <SingeProductOverview product={currentProduct} />
+      {/* Modal/Popup for Product Overview */}
+      {showOverview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 animate-fadeIn">
+          <div 
+            ref={modalRef}
+            className="relative bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
+          >
+            <button 
+              onClick={closeOverview}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-50 bg-white rounded-full p-1 shadow-md"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <SingeProductOverview product={currentProduct} onClose={closeOverview} />
+          </div>
+        </div>
       )}
+
       <div
         ref={overlayRef}
         className="fixed inset-0 bg-transparent pointer-events-none z-50 scale-0 rounded-full transition-transform duration-500 ease-in-out"
@@ -244,16 +275,26 @@ function ProductBanner() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full">
-            <button onClick={handleBuyNow} className="buy-now group flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gradient-to-r hover:from-gray-800 hover:to-gray-600 hover:border-cyan-400 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
+            {
+              user ?  <button 
+              onClick={handleBuyNow} 
+              className="buy-now group flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gradient-to-r hover:from-gray-800 hover:to-gray-600 hover:border-cyan-400 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md"
+            >
               <IoArrowForwardCircleSharp className="text-xl md:text-2xl text-cyan-400 transition-transform duration-300 group-hover:translate-x-1" />
               <span className="font-bold text-white group-hover:text-cyan-400">
                 BUY NOW
               </span>
+            </button> :  <button 
+               
+              className="buy-now group flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-gray-700 text-white border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gradient-to-r hover:from-gray-800 hover:to-gray-600 hover:border-cyan-400 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md"
+            >
+              <IoArrowForwardCircleSharp className="text-xl md:text-2xl text-cyan-400 transition-transform duration-300 group-hover:translate-x-1" />
+              <span className="font-bold text-white group-hover:text-cyan-400">
+               LOGIN NOW
+              </span>
             </button>
-
-            {/* <button className="flex items-center justify-center gap-3 bg-transparent border-2 border-gray-700 rounded-lg py-3 px-4 w-full sm:w-48 my-2 font-rajdhani font-semibold text-base uppercase tracking-wide cursor-pointer transition-all duration-300 relative overflow-hidden shadow-lg hover:bg-gray-100 hover:border-purple-600 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5 active:shadow-md">
-              <span className="font-bold">View</span>
-            </button> */}
+            }
+           
           </div>
         </div>
 
@@ -388,6 +429,26 @@ function ProductBanner() {
           }
         }
 
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
         .animate-glitch {
           animation: glitch 5s infinite alternate;
         }
@@ -402,6 +463,14 @@ function ProductBanner() {
 
         .animate-spin-slow {
           animation: spin 20s linear infinite;
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.3s ease-out forwards;
         }
 
         .animate-fadeIn {
