@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getRatings, addRatings } from '../../../Services/userApi';
-import {useAuth} from '../../../Context/UserContext'
+import { useAuth } from '../../../Context/UserContext';
+
 export default function Rating({ product }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +13,7 @@ export default function Rating({ product }) {
   const [alertMessage, setAlertMessage] = useState('');
   const [reviews, setReviews] = useState([]);
   const [visibleReviews, setVisibleReviews] = useState(3);
+  const [expandedReviews, setExpandedReviews] = useState({});
 
   const prevProductId = useRef(null);
   const { token, setToken, user } = useAuth();
@@ -19,6 +21,7 @@ export default function Rating({ product }) {
   const fetchReviews = async (productId) => {
     try {
       const response = await getRatings(productId);
+      console.log(response, "from rating");
       setReviews(response.data.reviews || []);
     } catch (error) {
       console.error("Error fetching ratings:", error);
@@ -38,11 +41,12 @@ export default function Rating({ product }) {
 
     const newReview = {
       id: reviews.length + 1,
-      author: "You",
+      author: user?.name || "You",
       date: dateStr,
       title,
       content: comment,
       rating,
+      profile_image: user?.profile_image || "",
     };
 
     try {
@@ -96,6 +100,23 @@ export default function Rating({ product }) {
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
     : 0;
 
+  const getInitials = (name) => {
+    if (!name) return "U";
+    const names = name.split(' ');
+    let initials = names[0].substring(0, 1).toUpperCase();
+    if (names.length > 1) {
+      initials += names[names.length - 1].substring(0, 1).toUpperCase();
+    }
+    return initials;
+  };
+
+  const toggleExpandReview = (reviewId) => {
+    setExpandedReviews(prev => ({
+      ...prev,
+      [reviewId]: !prev[reviewId]
+    }));
+  };
+
   return (
     <div className="bg-white text-black w-full py-6 font-sans">
       {alert && (
@@ -108,24 +129,21 @@ export default function Rating({ product }) {
         <div className="flex justify-between items-center mb-3">
           <h1 className="text-2xl font-bold">REVIEWS</h1>
 
-          {
-            token ? (<>
-               <button
-            onClick={() => {
-              setIsModalOpen(true);
-              setRating(5);
-              setTitle('');
-              setComment('');
-              setSubmitted(false);
-              setAlert(false);
-            }}
-            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors text-sm"
-          >
-            Write a Review
-          </button>
-            </>):""
-          }
-         
+          {token ? (
+            <button
+              onClick={() => {
+                setIsModalOpen(true);
+                setRating(5);
+                setTitle('');
+                setComment('');
+                setSubmitted(false);
+                setAlert(false);
+              }}
+              className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors text-sm"
+            >
+              Write a Review
+            </button>
+          ) : ""}
         </div>
 
         <div className="flex items-center gap-3 mb-4">
@@ -140,17 +158,45 @@ export default function Rating({ product }) {
         {/* Review Cards in Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
           {reviews.slice(0, visibleReviews).map((review) => (
-            <div key={review.id} className="bg-gray-50 border border-gray-200 rounded-lg p-3 shadow-sm h-48 flex flex-col">
-              <div className="flex justify-between items-start">
-                <div className="font-medium">{review.author}</div>
-                <div className="text-xs text-gray-500">{review.date}</div>
+            <div 
+              key={review.id} 
+              className={`bg-gray-50 border border-gray-200 rounded-lg p-3 shadow-sm ${expandedReviews[review.id] ? 'h-auto' : 'h-64'} flex flex-col`}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                {review.profile_image || review.profile_image_url ? (
+                  <img 
+                    src={review.profile_image || review.profile_image_url} 
+                    alt={review.author} 
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">
+                    {getInitials(review.user)}
+                  </div>
+                )}
+                <div>
+                  <div className="font-medium text-sm">{review.user}</div>
+                  <div className="text-xs text-gray-500">{review.date}</div>
+                </div>
               </div>
               <div className="flex text-sm text-red-500 mb-1">
                 {renderStars(review.rating)}
                 {renderEmptyStars(5 - review.rating)}
               </div>
-              <h3 className="text-base font-medium mb-1 line-clamp-1">{review.title}</h3>
-              <p className="text-xs text-gray-700 overflow-hidden line-clamp-5 flex-grow">{review.comment}</p>
+              <h3 className="text-base font-medium mb-1">{review.title}</h3>
+              <div className="flex-grow">
+                <p className={`text-xs text-gray-700 ${expandedReviews[review.id] ? '' : 'line-clamp-5'}`}>
+                  {review.content || review.comment}
+                </p>
+                {(review.content || review.comment)?.length > 150 && (
+                  <button
+                    onClick={() => toggleExpandReview(review.id)}
+                    className="text-red-600 text-xs mt-1 underline"
+                  >
+                    {expandedReviews[review.id] ? 'See Less' : 'See More'}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -189,6 +235,21 @@ export default function Rating({ product }) {
                   <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700">✕</button>
                 </div>
 
+                <div className="flex items-center gap-3 mb-4">
+                  {user?.profile_image ? (
+                    <img 
+                      src={user.profile_image} 
+                      alt={user.user} 
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">
+                      {getInitials(user?.user)}
+                    </div>
+                  )}
+                  <div className="font-medium">{user?.user || "You"}</div>
+                </div>
+                  
                 <div>
                   <div className="mb-3">
                     <label className="block text-gray-700 text-sm mb-1">Rating</label>

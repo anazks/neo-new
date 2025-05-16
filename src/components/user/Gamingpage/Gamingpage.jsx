@@ -99,7 +99,11 @@ export default function GamingPage() {
   const currentSpecs = isGaming ? gamingSpecs : proSpecs;
 
   return (
-    <div className={`w-full max-w-6xl mx-auto p-3 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} rounded-lg shadow-xl flex flex-col font-sans relative overflow-hidden transition-all duration-300`} style={{height: '97vh', width: "100%", maxWidth: "1200px",borderRadius:"30px"}}>
+    <div className={`w-full mx-auto p-3 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} rounded-lg shadow-xl flex flex-col font-sans relative overflow-hidden transition-all duration-300`} 
+        style={{
+        width: "98vw", 
+        height: "95vh",
+        borderRadius: "30px"}}>
       
       {/* System Toggle - Fixed at top */}
       <div className="flex justify-center gap-2 mb-3 w-full z-10 flex-wrap">
@@ -115,6 +119,14 @@ export default function GamingPage() {
         >
           <span className="text-sm">💻</span> Professional Systems
         </button>
+        
+        {/* Theme Toggle */}
+        <button 
+          className={`ml-2 py-2 px-4 border-none rounded-full text-sm ${isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-200 text-gray-800'} font-semibold cursor-pointer transition-all duration-300 flex items-center gap-1 hover:bg-gray-800 hover:text-white`}
+          onClick={toggleTheme}
+        >
+          <span className="text-sm">{isDarkMode ? '☀️' : '🌙'}</span> {isDarkMode ? 'Light' : 'Dark'}
+        </button>
       </div>
 
       {/* Main Content Area - Takes remaining space */}
@@ -124,16 +136,16 @@ export default function GamingPage() {
           className={`w-full rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-gray-900'} flex flex-col justify-between items-center p-3 relative overflow-hidden mb-3`}
           style={{
             backgroundImage: "linear-gradient(45deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
-            height: '45%', // Increased height
-            minHeight: '250px' // Minimum height
+            height: '48%',
+            minHeight: '250px'
           }}
         >
           {/* Heading */}
           <div className="w-full flex flex-col justify-center items-center relative z-2 p-2">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight mb-2 text-center">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight mb-2 text-center">
               {isGaming ? "GAMING SYSTEMS" : "PROFESSIONAL SYSTEMS"}
             </h1>
-            <p className="text-xs md:text-sm text-gray-300 mb-3 text-center">
+            <p className="text-xs md:text-sm lg:text-base text-gray-300 mb-3 text-center">
               {isGaming 
                 ? "Built for ultimate gaming performance"
                 : "Designed for professional workloads"
@@ -192,8 +204,19 @@ export default function GamingPage() {
           ))}
         </div>
 
+        {/* Featured Banner */}
+        <div className={`w-full rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} p-3 mb-3 flex items-center justify-between`}>
+          <div className="flex items-center">
+            <span className="text-lg mr-2">{isGaming ? '🏆' : '⭐'}</span>
+            <span className="text-sm font-medium">{isGaming ? 'Featured Gaming Build' : 'Featured Workstation'}</span>
+          </div>
+          <button className={`text-xs py-1 px-3 rounded-full ${isGaming ? 'bg-blue-500 hover:bg-blue-600' : 'bg-orange-500 hover:bg-orange-600'} text-white`}>
+            View Details
+          </button>
+        </div>
+
         {/* Mobile Scrollable Specs Row */}
-        <div className={`w-full relative ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg mb-3 p-2 flex-1 min-h-[120px]`}>
+        <div className={`w-full relative ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg mb-3 p-2 flex-1`}>
           {/* Scroll Controls for Mobile - Only visible on small screens */}
           <div className="flex justify-between absolute top-1/2 -translate-y-1/2 left-0 right-0 z-10 sm:hidden">
             <button 
@@ -249,6 +272,24 @@ export default function GamingPage() {
                 <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed transition-colors duration-300`}>{spec.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Footer Navigation */}
+        <div className="flex justify-between items-center mt-auto pt-2">
+          <button className={`text-xs py-1 px-3 rounded-full ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors duration-300`}>
+            Support
+          </button>
+          <div className="flex gap-2">
+            <button className={`w-8 h-8 flex items-center justify-center rounded-full ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors duration-300`}>
+              📱
+            </button>
+            <button className={`w-8 h-8 flex items-center justify-center rounded-full ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors duration-300`}>
+              📧
+            </button>
+            <button className={`w-8 h-8 flex items-center justify-center rounded-full ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors duration-300`}>
+              ⚙️
+            </button>
           </div>
         </div>
       </div>

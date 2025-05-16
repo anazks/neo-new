@@ -38,8 +38,8 @@ function DetailedView() {
   return (
     <div>
       <Details product={product} /> {/* ✅ Pass product as prop */}
-      <Inside product={product}/>
       <BestPairedWith product={product} />
+      <Inside product={product}/>
       <Rating product={product}/>
       <ProductCard product={product}/>
       <ProductFooter/>

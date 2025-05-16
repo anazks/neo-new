@@ -51,7 +51,8 @@ function NeoFooter() {
           <div className="neo-box-inside-main-footer">
             <TestFooter/>
           </div>
-        ) :   <div className="neo-main-footer">
+        ) :   
+        <div className="neo-main-footer">
         <div className="neo-box-inside-main-footer">
           <div className="neo-about-footer">
             <div className="neo-forabout-footer">

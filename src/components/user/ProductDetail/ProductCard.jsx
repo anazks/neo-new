@@ -1,22 +1,23 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { recomendation } from '../../../Services/Products';
+import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
-export default function ProductCard({product}) {
+export default function ProductCard({ product }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const carouselRef = useRef(null);
   const scrollInterval = useRef(null);
+  const navigate = useNavigate();
 
-  // Memoized fetch function
+  // Memoized fetch function with proper dependencies
   const fetchRecommendations = useCallback(async () => {
     try {
       setIsLoading(true);
-      let data = {}
-      data.product_id = product.id;
-      const response = await recomendation();
-      console.log(response,"respoonse recomendation...")
+      setError(null);
+      const response = await recomendation({ product_id: product.id });
       setProducts(response.data || []);
     } catch (err) {
       console.error('Error fetching recommendations:', err);
@@ -24,17 +25,29 @@ export default function ProductCard({product}) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [product.id]);
 
-  // Auto-scroll carousel effect
+  // Memoized product click handler
+  const handleProductClick = useCallback((productId) => {
+    navigate(`/Details/${productId}`);
+  }, [navigate]);
+
+  // Memoized quick view handler to prevent unnecessary re-renders
+  const handleQuickView = useCallback((e, productId) => {
+    e.stopPropagation();
+    handleProductClick(productId);
+  }, [handleProductClick]);
+
+  // Auto-scroll carousel effect with cleanup
   useEffect(() => {
+    if (!products.length) return;
+
     const scrollCarousel = () => {
       if (!carouselRef.current) return;
       
       const container = carouselRef.current;
-      const scrollAmount = 1; // Pixels to scroll per interval
+      const scrollAmount = 1;
 
-      // Reset to beginning if at the end
       if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
         container.scrollLeft = 0;
       } else {
@@ -42,10 +55,8 @@ export default function ProductCard({product}) {
       }
     };
 
-    // Set up the interval for scrolling
     scrollInterval.current = setInterval(scrollCarousel, 30);
 
-    // Event handlers for pausing on hover
     const carousel = carouselRef.current;
     const handleMouseEnter = () => clearInterval(scrollInterval.current);
     const handleMouseLeave = () => {
@@ -57,10 +68,6 @@ export default function ProductCard({product}) {
       carousel.addEventListener('mouseleave', handleMouseLeave);
     }
 
-    // Initial data fetch
-    fetchRecommendations();
-
-    // Cleanup
     return () => {
       clearInterval(scrollInterval.current);
       if (carousel) {
@@ -68,13 +75,72 @@ export default function ProductCard({product}) {
         carousel.removeEventListener('mouseleave', handleMouseLeave);
       }
     };
+  }, [products.length]);
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchRecommendations();
   }, [fetchRecommendations]);
 
-  // Handle product click navigation
-  const handleProductClick = useCallback((productId) => {
-    // Navigate to product detail page
-    console.log('Navigating to product:', productId);
-  }, []);
+  // Memoized product cards to prevent unnecessary re-renders
+  const productCards = useMemo(() => (
+    products.map((product, index) => {
+      const productDetails = product.recommended_product_details || {};
+      const mainImage = productDetails.images?.[0]?.image || '/placeholder-product.jpg';
+      const price = productDetails.price ? `₹
+${parseFloat(productDetails.price).toFixed(2)}` : '₹0.00';
+
+      return (
+        <div 
+          className="flex-none w-60 sm:w-64 md:w-72 snap-start bg-white transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+          key={`${product.id}-${index}`}
+          onClick={() => handleProductClick(productDetails.id)}
+          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseLeave={() => setHoveredIndex(null)}
+          aria-label={`View ${productDetails.name}`}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="relative h-48 md:h-56 overflow-hidden bg-gray-50">
+            <img
+              src={mainImage}
+              alt={productDetails.name || 'Product image'}
+              className="w-full h-full object-contain transition-transform duration-500 ease-in-out hover:scale-105"
+              loading="lazy"
+            />
+            
+            {product.tag && (
+              <span className={`absolute top-3 left-3 px-2 py-1 rounded text-xs font-semibold uppercase text-white
+                ${product.tag === 'Popular' ? 'bg-blue-500' : 
+                  product.tag === 'Sale' ? 'bg-red-500' : 
+                  'bg-green-500'}`}
+              >
+                {product.tag}
+              </span>
+            )}
+            
+            {hoveredIndex === index && (
+              <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-2 p-3 bg-gradient-to-t from-black/80 to-transparent">
+                <button 
+                  className="py-2 px-3 bg-white/20 hover:bg-white/30 text-white rounded font-medium text-sm transition-colors"
+                  onClick={(e) => handleQuickView(e, productDetails.id)}
+                >
+                  Quick View
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <div className="p-2 text-center">
+            <h3 className="text-gray-800 font-medium truncate">{productDetails.name}</h3>
+            <p className="text-green-600 font-semibold text-lg" style={{fontFamily: 'Rajdhani, sans-serif'}}>
+              {price}
+            </p>
+          </div>
+        </div>
+      );
+    })
+  ), [products, hoveredIndex, handleProductClick, handleQuickView]);
 
   // Render loading state
   if (isLoading) {
@@ -131,68 +197,9 @@ export default function ProductCard({product}) {
         className="flex overflow-x-auto pb-6 gap-8 md:gap-10 snap-x scrollbar-hide" 
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {products.map((product, index) => (
-          <div 
-            className="flex-none w-60 sm:w-64 md:w-72 snap-start bg-white transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-            key={`${product.id}-${index}`}
-            onClick={() => handleProductClick(product.id)}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            aria-label={`View ${product.name}`}
-          >
-            <div className="relative h-48 md:h-56 overflow-hidden bg-gray-50">
-              <img
-                src={product.recommended_product_details?.images[0].image || '/placeholder-product.jpg'}
-                alt={product.recommended_product_details.name}
-                className="w-full h-full object-contain transition-transform duration-500 ease-in-out hover:scale-105"
-                loading="lazy"
-              />
-              
-              {product.tag && (
-                <span className={`absolute top-3 left-3 px-2 py-1 rounded text-xs font-semibold uppercase text-white
-                  ${product.tag === 'Popular' ? 'bg-blue-500' : 
-                    product.tag === 'Sale' ? 'bg-red-500' : 
-                    'bg-green-500'}`}
-                >
-                  {product.tag}
-                </span>
-              )}
-              
-              {hoveredIndex === index && (
-                <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-2 p-3 bg-gradient-to-t from-black/80 to-transparent">
-                  <button 
-                    className="py-2 px-3 bg-white/20 hover:bg-white/30 text-white rounded font-medium text-sm transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log('Quick view:', product.recommended_product_details.id);
-                    }}
-                  >
-                    Quick View
-                  </button>
-                  <button 
-                    className="py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium text-sm transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log('Add to cart:', product.recommended_product_details.id);
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              )}
-            </div>
-            
-            <div className="p-2 text-center">
-              <h3 className="text-gray-800 font-medium truncate">{product.recommended_product_details.name}</h3>
-              <p className="text-green-600 font-semibold text-lg" style={{fontFamily: 'Rajdhani, sans-serif'}}>
-                {product.recommended_product_details.price || '$0.00'}
-              </p>
-            </div>
-          </div>
-        ))}
+        {productCards}
       </div>
       
-      {/* Scroll indicator dots - only show if more than one page */}
       {products.length > 4 && (
         <div className="flex justify-center mt-4 gap-1">
           {[...Array(Math.ceil(products.length / 4))].map((_, i) => (
@@ -215,3 +222,9 @@ export default function ProductCard({product}) {
     </div>
   );
 }
+
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }).isRequired,
+};

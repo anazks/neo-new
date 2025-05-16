@@ -162,7 +162,7 @@ export default function GamingPCShowcase() {
   return (
     <div className="max-w-7xl mx-auto bg-gray-100 rounded-3xl overflow-hidden p-4 md:p-6" 
       style={{
-        width:"96%", 
+        width:"97vw", 
         height:"95vh", 
         fontFamily: "'Rajdhani', sans-serif"
       }}>
