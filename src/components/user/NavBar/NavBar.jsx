@@ -70,14 +70,14 @@ const ModernNavbar = () => {
      {/* Fixed Logo that stays visible when navbar is hidden */}
      <div className="fixed-logo" style={{fontFamily: "'Rajdhani', sans-serif"}}>
         <a href="/">
-          <img src={logo} className="logo-img" alt="Logo" />
+          <img src={logo} className="logo-img shadow-img" alt="Logo" />
         </a>
       </div>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           {/* Mobile Logo */}
           <div className="logo-container mobile-only">
-            <a href="/"><img src={logo} className="logo-img" alt="Logo" /></a>
+            <a href="/"><img src={logo} className="logo-img shadow-img" alt="Logo" /></a>
           </div>
 
           {/* Desktop Navigation Links - Hidden on laptop screens */}
@@ -87,7 +87,7 @@ const ModernNavbar = () => {
             
             {/* Center Logo - Desktop Only */}
             <a href="/" className="center-logo desktop-only">
-              <img src={logo} className="logo-img" alt="Logo" />
+              <img src={logo} className="logo-img shadow-img" alt="Logo" />
             </a>
             
             <a href="/store" className="nav-link">Store</a>
