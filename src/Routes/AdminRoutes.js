@@ -15,6 +15,7 @@ import UpdateProduct from '../components/Admin/Products/UpdateProducts/UpdatePro
 import Tickets from '../components/Admin/Tickets/Tickets'
 import OrderList from '../components/Admin/Order/OrderList';
 import FeaturedProduct from '../components/Admin/FeaturedProduct/FeaturedProduct';
+import Drivers from '../components/Admin/Drivers/Drivers';
 function AdminRoutes() {
   return (
     <Routes>
@@ -32,6 +33,7 @@ function AdminRoutes() {
         <Route path="/admin/Updateproducts/:id" element={<Home><UpdateProduct/></Home>} />
         <Route path="/admin/products/:id" element={<Home><DetailedViewAdmin/></Home>} />
         <Route path='/admin/tickets'  element={<Home><Tickets/></Home>}/>
+        <Route path='/admin/driver/update'  element={<Home><Drivers/></Home>}/>
     </Routes>
   );
 }

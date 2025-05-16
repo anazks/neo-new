@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { User, MapPin, Edit, Plus, Save, X, Camera, Check, Loader } from 'lucide-react';
+import { User, MapPin, Edit, Plus, Save, X, Camera, Check } from 'lucide-react';
 import { useAuth } from '../../../Context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { getMyDeliveryAddress, profileUpdate, getUserInfo, deleteMyAccount } from '../../../Services/userApi';
 import AddressPopup from './AddNewAddress';
 import BaseURL from '../../../Static/Static';
+import Loader from '../../../Loader/Loader'
 
 function UserProfile() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -202,7 +203,7 @@ function UserProfile() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{paddingTop:"50px", paddingBottom:"50px", marginTop:"50px",background: "linear-gradient(to right, #FFFFFF 24%, #63A375 100%)"}}>
-        <Loader size={40} className="animate-spin text-red-500" />
+        <Loader/>
       </div>
     );
   }
