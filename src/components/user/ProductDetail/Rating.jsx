@@ -16,6 +16,7 @@ export default function Rating({ product }) {
   const [expandedReviews, setExpandedReviews] = useState({});
 
   const prevProductId = useRef(null);
+  const reviewsContainerRef = useRef(null);
   const { token, setToken, user } = useAuth();
 
   const fetchReviews = async (productId) => {
@@ -155,8 +156,59 @@ export default function Rating({ product }) {
           <div className="text-gray-700 text-sm">{reviews.length} Reviews</div>
         </div>
 
-        {/* Review Cards in Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
+        {/* Mobile horizontal scrolling view */}
+        <div className="md:hidden">
+          <div 
+            ref={reviewsContainerRef}
+            className="flex overflow-x-auto pb-4 -mx-4 px-4 space-x-4 scrollbar-hide"
+            style={{ scrollSnapType: 'x mandatory' }}
+          >
+            {reviews.slice(0, visibleReviews).map((review) => (
+              <div 
+                key={review.id} 
+                className="flex-shrink-0 w-64 bg-gray-50 border border-gray-200 rounded-lg p-3 shadow-sm"
+                style={{ scrollSnapAlign: 'start' }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  {review.profile_image || review.profile_image_url ? (
+                    <img 
+                      src={review.profile_image || review.profile_image_url} 
+                      alt={review.author} 
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">
+                      {getInitials(review.user)}
+                    </div>
+                  )}
+                  <div>
+                    <div className="font-medium text-sm">{review.user}</div>
+                    <div className="text-xs text-gray-500">{review.date}</div>
+                  </div>
+                </div>
+                <div className="flex text-sm text-red-500 mb-1">
+                  {renderStars(review.rating)}
+                  {renderEmptyStars(5 - review.rating)}
+                </div>
+                <h3 className="text-base font-medium mb-1">{review.title}</h3>
+                <p className="text-xs text-gray-700 line-clamp-4">
+                  {review.content || review.comment}
+                </p>
+                {(review.content || review.comment)?.length > 150 && (
+                  <button
+                    onClick={() => toggleExpandReview(review.id)}
+                    className="text-red-600 text-xs mt-1 underline"
+                  >
+                    See More
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop grid layout */}
+        <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
           {reviews.slice(0, visibleReviews).map((review) => (
             <div 
               key={review.id} 
