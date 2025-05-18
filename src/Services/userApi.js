@@ -475,3 +475,15 @@ export const getPurchasedProducts = async () => {
     return error;
   }
 };
+
+
+export const getDrivers = async () =>{
+   try {
+    let response = await Axios.get('/inventory/customer/purchased-products/');
+    
+    console.log(response.data);
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
