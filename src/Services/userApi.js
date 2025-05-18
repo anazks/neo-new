@@ -477,9 +477,10 @@ export const getPurchasedProducts = async () => {
 };
 
 
-export const getDrivers = async () =>{
+export const getDrivers = async (product_id) =>{
    try {
-    let response = await Axios.get('/inventory/customer/purchased-products/');
+    console.log(product_id,"this is the product id form driver check")
+    let response = await Axios.get(`/inventory/products/${product_id}/updates/`);
     
     console.log(response.data);
     return response;

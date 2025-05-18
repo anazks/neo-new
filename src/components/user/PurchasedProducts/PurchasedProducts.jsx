@@ -19,7 +19,7 @@ function PurchasedProducts() {
   const [driverModalData, setDriverModalData] = useState({
     title: "",
     drivers: [],
-    loading: false
+    loading: false,
   });
 
   // Toggle accordion open/closed state
@@ -54,31 +54,40 @@ function PurchasedProducts() {
     fetchPurchasedProducts();
   }, []);
 
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+    return () => document.head.removeChild(link);
+  }, []);
+
   // Function to get driver details from API
   const handleDriverClick = async (product, driverType) => {
     try {
       setDriverModalData({
         title: `${driverType} for ${product.name}`,
         drivers: [],
-        loading: true
+        loading: true,
       });
       setShowDriverModal(true);
-      
+
       // Make API call to get drivers
       const response = await getDrivers(product.id, driverType);
-      
+
       // Assume response.data contains drivers array
-      setDriverModalData(prev => ({
+      setDriverModalData((prev) => ({
         ...prev,
         drivers: response.data || [],
-        loading: false
+        loading: false,
       }));
     } catch (error) {
-      setDriverModalData(prev => ({
+      setDriverModalData((prev) => ({
         ...prev,
         drivers: [],
         error: "Failed to load drivers. Please try again.",
-        loading: false
+        loading: false,
       }));
     }
   };
@@ -105,16 +114,18 @@ function PurchasedProducts() {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         {/* Backdrop */}
-        <div 
+        <div
           className="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300"
           onClick={() => setShowDriverModal(false)}
         ></div>
-        
+
         {/* Modal Content */}
         <div className="bg-white rounded-lg w-11/12 max-w-2xl p-6 shadow-xl relative z-10 transform transition-all duration-300 scale-100">
           {/* Header */}
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-gray-800">{driverModalData.title}</h3>
+            <h3 className="text-xl font-semibold text-gray-800">
+              {driverModalData.title}
+            </h3>
             <button
               onClick={() => setShowDriverModal(false)}
               className="text-gray-400 hover:text-gray-600 focus:outline-none"
@@ -122,7 +133,7 @@ function PurchasedProducts() {
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           {/* Body */}
           <div className="max-h-96 overflow-y-auto">
             {driverModalData.loading ? (
@@ -131,7 +142,9 @@ function PurchasedProducts() {
                 <p className="mt-2 text-gray-600">Loading drivers...</p>
               </div>
             ) : driverModalData.error ? (
-              <div className="text-center py-8 text-red-500">{driverModalData.error}</div>
+              <div className="text-center py-8 text-red-500">
+                {driverModalData.error}
+              </div>
             ) : driverModalData.drivers.length === 0 ? (
               <div className="text-center py-8 text-gray-600">
                 No drivers available for this product.
@@ -139,23 +152,44 @@ function PurchasedProducts() {
             ) : (
               <div className="space-y-4">
                 {driverModalData.drivers.map((driver, index) => (
-                  <div key={index} className="border border-gray-200 rounded-md p-4 hover:bg-gray-50">
+                  <div
+                    key={index}
+                    className="border border-gray-200 rounded-md p-4 hover:bg-gray-50"
+                  >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="font-medium text-gray-800">{driver.name}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{driver.description}</p>
-                        <span className="text-xs text-gray-500 block mt-2">Version: {driver.version}</span>
+                        {driver.is_critical ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900 text-red-200">
+                            Critical
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-200">
+                            Standard
+                          </span>
+                        )}
+                        <h4 className="font-medium text-gray-800">
+                          {driver.name}
+                        </h4>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {driver.description}
+                        </p>
+                        <span className="text-xs text-gray-500 block mt-2">
+                          Version: {driver.version} Released on: {driver.days_ago}
+                        </span>
                       </div>
+
                       <button className="bg-pink-500 hover:bg-pink-600 text-white text-sm px-4 py-2 rounded flex items-center">
                         <Download className="w-4 h-4 mr-1" /> Download
                       </button>
+                      
+                      
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-          
+
           {/* Footer */}
           <div className="mt-6 flex justify-end">
             <button
@@ -171,7 +205,7 @@ function PurchasedProducts() {
   };
 
   return (
-    <div>
+    <div style={{ fontFamily: "'Rajdhani', sans-serif" }}>
       <ModernNavbar />
       <div>
         <div className="main-container">
@@ -188,7 +222,7 @@ function PurchasedProducts() {
                 Error loading products
               </h3>
               <p className="text-gray-600 max-w-md mb-6">{error}</p>
-              <button 
+              <button
                 onClick={fetchPurchasedProducts}
                 className="flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-md transition-all duration-200 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
@@ -268,8 +302,8 @@ function PurchasedProducts() {
                     {/* Accordion Content with Animation */}
                     <div
                       className={`transition-all duration-500 ease-in-out overflow-hidden ${
-                        openAccordions[product.id] 
-                          ? "max-h-[2000px] opacity-100" 
+                        openAccordions[product.id]
+                          ? "max-h-[2000px] opacity-100"
                           : "max-h-0 opacity-0"
                       }`}
                     >
@@ -278,8 +312,10 @@ function PurchasedProducts() {
                         style={{
                           backgroundImage: `url(${neoImage})`,
                           backgroundSize: "cover",
-                          transform: openAccordions[product.id] ? "translateY(0)" : "translateY(-10px)",
-                          transition: "transform 0.5s ease-in-out"
+                          transform: openAccordions[product.id]
+                            ? "translateY(0)"
+                            : "translateY(-10px)",
+                          transition: "transform 0.5s ease-in-out",
                         }}
                       >
                         {/* Blurred card overlay */}
@@ -289,34 +325,38 @@ function PurchasedProducts() {
                           </h4>
 
                           {/* Group attributes by category */}
-                          {product.attributes && Object.entries(
-                            groupAttributesByCategory(product.attributes)
-                          ).map(([category, attrs]) => (
-                            <div key={category} className="mb-2">
-                              <h5 className="font-medium text-gray-800 mb-1">
-                                {category}
-                              </h5>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {attrs.map((attr) => (
-                                  <div
-                                    key={attr.id}
-                                    className="bg-white bg-opacity-80 p-1 rounded"
-                                  >
-                                    <span className="block text-sm font-medium">
-                                      {attr.attribute.name}
-                                    </span>
-                                    <div className="text-xs text-gray-700 mt-1">
-                                      {attr.details.map((detail, idx) => (
-                                        <span key={detail.id} className="block">
-                                          {detail.value}
-                                        </span>
-                                      ))}
+                          {product.attributes &&
+                            Object.entries(
+                              groupAttributesByCategory(product.attributes)
+                            ).map(([category, attrs]) => (
+                              <div key={category} className="mb-2">
+                                <h5 className="font-medium text-gray-800 mb-1">
+                                  {category}
+                                </h5>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  {attrs.map((attr) => (
+                                    <div
+                                      key={attr.id}
+                                      className="bg-white bg-opacity-80 p-1 rounded"
+                                    >
+                                      <span className="block text-sm font-medium">
+                                        {attr.attribute.name}
+                                      </span>
+                                      <div className="text-xs text-gray-700 mt-1">
+                                        {attr.details.map((detail, idx) => (
+                                          <span
+                                            key={detail.id}
+                                            className="block"
+                                          >
+                                            {detail.value}
+                                          </span>
+                                        ))}
+                                      </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
 
                           {/* Driver Downloads Section */}
                           <div className="mt-4 border-t border-gray-300 pt-4">
@@ -324,23 +364,29 @@ function PurchasedProducts() {
                               Downloads & Drivers
                             </h5>
                             <div className="flex flex-wrap gap-2">
-                              <button 
+                              <button
                                 className="flex items-center text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition-colors duration-200 transform hover:-translate-y-0.5 hover:shadow-md"
-                                onClick={() => handleDriverClick(product, "User Manual")}
+                                onClick={() =>
+                                  handleDriverClick(product, "User Manual")
+                                }
                               >
                                 <Download className="w-3 h-3 mr-1" /> User
                                 Manual
                               </button>
-                              <button 
+                              <button
                                 className="flex items-center text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition-colors duration-200 transform hover:-translate-y-0.5 hover:shadow-md"
-                                onClick={() => handleDriverClick(product, "Driver Package")}
+                                onClick={() =>
+                                  handleDriverClick(product, "Driver Package")
+                                }
                               >
                                 <Download className="w-3 h-3 mr-1" /> Driver
                                 Package
                               </button>
-                              <button 
+                              <button
                                 className="flex items-center text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition-colors duration-200 transform hover:-translate-y-0.5 hover:shadow-md"
-                                onClick={() => handleDriverClick(product, "Warranty Info")}
+                                onClick={() =>
+                                  handleDriverClick(product, "Warranty Info")
+                                }
                               >
                                 <Download className="w-3 h-3 mr-1" /> Warranty
                                 Info
@@ -378,10 +424,10 @@ function PurchasedProducts() {
           )}
         </div>
       </div>
-      
+
       {/* Driver Modal */}
       <DriversModal />
-      
+
       <ProductFooter />
     </div>
   );
