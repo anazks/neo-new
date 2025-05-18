@@ -124,7 +124,7 @@
     return (
       <div>
         {showAddressModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" style={{zIndex:"1020"}}> 
             <div className="bg-white rounded-lg shadow-lg w-full max-w-md max-h-screen overflow-y-auto">
               <div className="flex justify-between items-center p-6 border-b">
                 <h3 className="text-lg font-medium text-gray-900">Add New Address</h3>
