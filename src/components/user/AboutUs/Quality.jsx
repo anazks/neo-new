@@ -3,7 +3,7 @@ import quality_img from "../../../Images/Quality.png";
 
 export default function QualityStandards() {
   return (
-    <div className="flex flex-col md:flex-row p-4 gap-6 max-w-6xl mx-auto" style={{fontFamily:"Raleway , sans-serif ",}}>
+    <div className="flex flex-col md:flex-row p-4 gap-6 max-w-6xl mx-auto" >
       {/* Left section with image */}
       <div className="flex-1">
         <div className="relative h-full w-full rounded-3xl overflow-hidden border border-gray-200">

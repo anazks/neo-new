@@ -109,6 +109,14 @@ function UserProfile() {
   }, [fetchUserData, getAddress]);
 
 
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => document.head.removeChild(link);
+  }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem('userProfile');
@@ -223,9 +231,9 @@ function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen text-black" style={{marginTop:"100px"}}>
+    <div className="min-h-screen text-black" style={{marginTop:"100px", fontFamily: "'Rajdhani', sans-serif"}}>
       <div 
-      className="hidden md:block fixed top-[50px] w-[30%] h-[600px] border border-solid rounded-[10px] overflow-hidden -z-10 right-[100px] bg-gray-100 bg-opacity-10 backdrop-blur-[2px]"
+      className="hidden md:block fixed top-[50px] w-[30%] h-[600px]  rounded-[10px] overflow-hidden -z-10 right-[100px] bg-gray-100 bg-opacity-10 backdrop-blur-[2px]"
     >
       <img 
         src={image_on_tokyo} 

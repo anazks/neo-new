@@ -34,7 +34,7 @@ const StackedCard = ({ children, index = 0, total = 1 }) => {
 
   return (
     <motion.div
-      className="w-full rounded-2xl shadow-xl overflow-hidden bg-white"
+      className="w-full rounded-2xl overflow-hidden"
       style={{ 
         zIndex,
         position: index === 0 ? "relative" : "absolute",
@@ -70,7 +70,7 @@ const SupportContentCard = () => {
       
       {/* Main content card */}
       <StackedCard index={0} total={3}>
-        <div className="flex flex-col md:flex-row " style={{gap:"30px",fontFamily:"Raleway , sans-serif "}}>
+        <div className="flex flex-col md:flex-row " style={{gap:"30px"}}>
           {/* Left Section */}
           <div className="w-full md:w-7/12 p-8 bg-white" style={{border:"1.5px solid black",borderRadius:"20px",padding:"30px"}}>
             <h2 className="text-2xl font-semibold mb-6">Hi {
@@ -215,7 +215,7 @@ const FAQsCard = () => {
       
       {/* Main content card */}
       <StackedCard index={0} total={3}>
-        <div className="p-8">
+        <div className="p-8 bg-white">
           <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
           
           <div className="space-y-6">
@@ -284,7 +284,7 @@ const QualityCard = () => {
 
 const ContactCard = () => {
   return (
-    <div className="relative w-full max-w-6xl mx-auto mb-16 pb-12">
+    <div className="relative w-full max-w-6xl mx-auto mb-16 pb-12 bg-white">
       {/* Stack effect - creating shadow cards underneath */}
       <StackedCard index={2} total={3}>
         <div className="h-full w-full"></div>

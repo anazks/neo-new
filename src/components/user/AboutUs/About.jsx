@@ -5,7 +5,7 @@ import coffyWith from "../../../Images/coffyWith.png";
 
 export default function About() {
   return (
-    <div className="flex flex-col md:flex-row p-4 gap-6 max-w-6xl mx-auto" style={{fontFamily:"Raleway , sans-serif ",}}>
+    <div className="flex flex-col md:flex-row p-4 gap-6 max-w-6xl mx-auto">
       {/* Left section with text content */}
       <div className="flex-1 space-y-10">
         <div>
@@ -44,11 +44,11 @@ export default function About() {
       <div className="flex-1">
         <div className="relative h-full w-full rounded-3xl overflow-hidden border border-gray-200">
           <div className="absolute inset-0 "></div>
-          <div className="relative h-full rounded-3xl overflow-hidden" style={{padding:"20px",border:"1.5px solid", background:"transparent"}}>
+          <div className="relative rounded-3xl overflow-hidden" style={{padding:"20px",border:"1.5px solid", background:"transparent"}}>
             <img 
                 src={coffyWith} 
                 alt="Person working on computer code" 
-                className="object-cover w-full h-full"
+                className="object-cover w-full"
             />
             
           </div>
