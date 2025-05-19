@@ -358,7 +358,7 @@ export default function Orders() {
                     <div
                       key={order.id}
                       onClick={() => setSelectedOrder(order.id)}
-                      className={`p-4 cursor-pointer transition-colors flex items-center justify-between 
+                      className={`p-4 cursor-pointer transition-colors flex  justify-between 
                     ${
                       isSelected
                         ? darkMode
@@ -370,14 +370,15 @@ export default function Orders() {
                     }
                     ${darkMode ? "border-gray-700" : "border-gray-200"}`}
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex  space-x-3">
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center ${statusConfig.bgColor} ${statusConfig.color}`}
                         >
                           ₹
                         </div>
                         <div>
-                          <div className="font-medium">
+                          <span className="text-sm text-pink-700">Order Id</span>
+                          <div className="font-medium text-dark text-semibold">
                             #{order.invoice_number}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -385,8 +386,38 @@ export default function Orders() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center">
+                      <div className="text-right text-sm md:block sm:hidden" >
+                        <span className="text-sm text-pink-700">Delivery address</span>
+                        <div className="">
+
+                          <span className="text-lg font-semibold text-gray-900">
+                            {
+                              order.delivery_address_details
+                                .delivery_person_name
+                            }
+                          </span>
+                          <br />
+                          <span className="text-xs text-gray-500">
+                            {order.delivery_address_details.address}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {order.delivery_address_details.district},{" "}
+                            {order.delivery_address_details.state},{" "}
+                            {order.delivery_address_details.postal_code}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {order.delivery_address_details.country}
+                          </span>
+                          <br />
+                          <span className="text-xs text-gray-500">
+                            {order.delivery_address_details.phone_number}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex ">
                         <div className="text-right mr-3">
+                        <span className="text-sm text-pink-700">Payment Overline</span>
+
                           <div className="font-medium">
                             ₹. {order.total_price}
                           </div>
@@ -396,6 +427,7 @@ export default function Orders() {
                             {order.order_status}
                           </div>
                         </div>
+
                         <ChevronRight
                           size={16}
                           className={`${
