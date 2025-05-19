@@ -179,7 +179,7 @@ export default function Orders() {
     setTimeout(() => {
       setModalLoading(false);
       setShowModal(true);
-    }, 2000);
+    }, 1000);
   };
 
   const closeModal = () => {
