@@ -537,7 +537,7 @@ const EditProfileForm = ({
     <form
       onSubmit={handleSubmit}
       className="bg-gray-100 bg-opacity-10 backdrop-blur-sm rounded-lg p-6"
-      style={{ border: "1.5px solid black" }}
+      style={{ border: "1px solid black" }}
     >
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold">Edit Profile</h3>
@@ -746,7 +746,7 @@ const ViewProfile = ({
   <div className="space-y-6">
     <div
       className="bg-gray-100 bg-opacity-10 backdrop-blur-sm rounded-lg p-6"
-      style={{ border: "1.5px solid black" }}
+      style={{ border: "1px solid black" }}
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold text-black">
@@ -812,7 +812,7 @@ const ViewProfile = ({
 
     <div
       className="bg-gray-100 bg-opacity-10 backdrop-blur-sm rounded-lg p-6"
-      style={{ border: "1.5px solid black" }}
+      style={{ border: "1px solid black" }}
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold">Delivery Addresses</h3>
