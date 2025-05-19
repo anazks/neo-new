@@ -116,15 +116,16 @@ function SideBar({ isOpen, onClose }) {
           {/* Rest of the content */}
           <div className="flex-1 overflow-y-auto">
             {/* Menu */}
+            <ul className="flex flex-col gap-1 p-0 m-0">
+
              {token && (
-                <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }}>
+                <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.2s' : 'none' }} >
                   <Link to="/profile" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                     <FiUser className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 
                     <span>Profile</span>
                   </Link>
                 </li>
               )}
-            <ul className="flex flex-col gap-1 p-0 m-0">
               <li className="opacity-0 transform translate-x-5" style={{ animation: isOpen ? 'slideInRight 0.4s ease forwards 0.1s' : 'none' }}>
                 <Link to="/nvidia" onClick={onClose} className="flex items-center py-3 px-4 rounded-lg text-white font-medium hover:bg-white/20 transition-all duration-300 hover:translate-x-1">
                   <FiHome className="mr-3 text-lg min-w-5 transition-transform duration-300 group-hover:scale-110 group-hover:text-blue-300" /> 

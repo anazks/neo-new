@@ -4,7 +4,7 @@ import directional2 from "../../../Images/Diractional2.png"
 
 export default function DirectionalSection() {
   return (
-    <div className="max-w-6xl mx-auto p-4" style={{fontFamily:"Raleway , sans-serif ",}}>
+    <div className="max-w-6xl mx-auto p-4" >
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left column - Text content and small image */}
         <div className="flex-1 space-y-10">

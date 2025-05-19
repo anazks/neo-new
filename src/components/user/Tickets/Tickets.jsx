@@ -161,7 +161,7 @@ const Tickets = () => {
           message={alertMessage}
         />
       )}
-      <div className="w-full bg-black p-3 md:p-5 rounded-xl">
+      <div className="w-full bg-black p-3 md:p-5 rounded-xl" style={{marginTop:"70px"}}>
         <div className="flex flex-col md:flex-row justify-between gap-5 p-3 md:p-5" ref={containerRef}>
           {/* Left Column */}
           <div className="w-full md:w-1/2 transition-all duration-300">
@@ -192,7 +192,7 @@ const Tickets = () => {
 
                 <button
                   onClick={handleTicketResolution}
-                  className="w-full p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-mono transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  className="w-full p-2 rounded-lg bg-pink-600 text-white hover:bg-pink-700 text-white font-mono transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   View Resolved Tickets
                 </button>
@@ -316,7 +316,7 @@ const Tickets = () => {
                       <button
                         type="button"
                         onClick={triggerFileInput}
-                        className="w-full p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-mono text-sm transition-colors duration-300"
+                        className="w-full p-2 rounded-lg bg-pink-600 text-white hover:bg-pink-700 text-white font-mono text-sm transition-colors duration-300"
                       >
                         {formData.image ? 'Change Image' : 'Upload Image (optional)'}
                       </button>

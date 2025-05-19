@@ -159,7 +159,7 @@ const TicketManagement = () => {
         </div>
       )}
       
-      <main className="flex-grow w-full p-4 sm:p-6 md:p-8">
+      <main className="flex-grow w-full p-4 sm:p-6 md:p-8" style={{marginTop:"100px"}}>
         <div className="max-w-7xl mx-auto">
           {/* Header with branding */}
           <div className="flex items-center mb-8">

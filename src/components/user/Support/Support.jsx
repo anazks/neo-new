@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import About from '../AboutUs/About';
 
 export default function SupportPage() {
+
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => document.head.removeChild(link);
+  }, []);
+
   return (
     
-    <div  className="min-h-screen bg-gradient-to-r from-white to-emerald-500 flex justify-center items-center p-5 w-full mx-auto mt-8 rounded-3xl box-border">
+    <div  className="min-h-screen bg-gradient-to-r from-white to-emerald-500 flex justify-center items-center p-5 w-full mx-auto mt-8 rounded-3xl box-border" style={{ fontFamily: "'Rajdhani', sans-serif"}}>
       <div className="w-full max-w-4xl flex flex-col gap-5">
         <div className="w-full rounded-lg overflow-hidden">
           {/* Heading Section */}

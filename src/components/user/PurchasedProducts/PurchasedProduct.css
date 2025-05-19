@@ -2,3 +2,25 @@
 body{
     font-family: "Barlow Condensed", sans-serif;
 }
+
+.main-container{
+    width: 90%;
+    margin: auto;
+    margin-top: 80px;
+    border-radius: 10px;
+    /* border: 1px solid; */
+    margin-bottom: 100px;
+    min-height: 500px;
+
+}
+.page-error{
+    text-align: center;
+
+}
+.page-error h3{
+    font-size: larger;
+    color: rgb(228, 71, 97);
+    padding: 20px;
+
+    
+}
