@@ -65,7 +65,7 @@ const CartPage = () => {
       const response = await getMyDeliveryAddress();
       if (response.data?.length > 0) {
         setAddresses(response.data);
-        const primary = response.data.find(addr => addr.is_primary);
+        const primary = response.data.find((addr) => addr.is_primary);
         setSelectedAddressId(primary?.id || response.data[0]?.id);
       }
     } catch (error) {
@@ -82,19 +82,20 @@ const CartPage = () => {
   const handleQuantityChange = async (productId, action) => {
     try {
       // Optimistic UI update
-      setCartItems(prev => ({
+      setCartItems((prev) => ({
         ...prev,
-        items: prev.items.map(item => {
+        items: prev.items.map((item) => {
           if (item.product === productId) {
             return {
               ...item,
-              quantity: action === "increase" 
-                ? item.quantity + 1 
-                : Math.max(1, item.quantity - 1)
+              quantity:
+                action === "increase"
+                  ? item.quantity + 1
+                  : Math.max(1, item.quantity - 1),
             };
           }
           return item;
-        })
+        }),
       }));
 
       // API call
@@ -114,11 +115,11 @@ const CartPage = () => {
   const handleRemoveItem = async (itemId) => {
     try {
       // Optimistic UI update
-      setCartItems(prev => ({
+      setCartItems((prev) => ({
         ...prev,
-        items: prev.items.filter(item => item.id !== itemId)
+        items: prev.items.filter((item) => item.id !== itemId),
       }));
-      
+
       await RemoveFromCart(itemId);
     } catch (error) {
       setError("Failed to remove item");
@@ -152,14 +153,14 @@ const CartPage = () => {
     try {
       const order = await CreateOrder(selectedAddressId);
       const { data } = order;
-      
+
       setOrderDetails({
         razorpayOrderId: data.raz_order_id,
         currency: data.currency,
         amount: data.amount,
         keyId: data.key,
       });
-      
+
       setDisplayRazorpay(true);
       setShowOverview(false);
     } catch (error) {
@@ -174,8 +175,9 @@ const CartPage = () => {
   };
 
   // Calculate totals
-  const subtotal = cartItems.items.reduce((total, item) => 
-    total + item.price * item.quantity, 0
+  const subtotal = cartItems.items.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
   );
   const discount = promoApplied ? 500 : 0;
   const grandTotal = subtotal - discount;
@@ -184,10 +186,10 @@ const CartPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 font-sans relative">
       <NavBar />
-      
+
       {/* Payment Gateway */}
       {displayRazorpay && (
-        <RenderRazorpay 
+        <RenderRazorpay
           orderDetails={orderDetails}
           setDisplayRazorpay={setDisplayRazorpay}
         />
@@ -197,8 +199,8 @@ const CartPage = () => {
       {addressModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <AddNewAddress 
-              onClose={() => setAddressModal(false)} 
+            <AddNewAddress
+              onClose={() => setAddressModal(false)}
               fetchAddresses={handleAddressAdded}
             />
           </div>
@@ -209,7 +211,14 @@ const CartPage = () => {
       <AnimatePresence>
         {showOverview && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <motion.div 
+            <button
+              className="absolute top-4 right-4 z-50 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-800 hover:bg-gray-300 transition-colors"
+              onClick={() => setShowOverview(false)}
+            >
+              ×
+            </button>
+
+            <motion.div
               className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -217,7 +226,7 @@ const CartPage = () => {
             >
               <Overview
                 cartItems={cartItems}
-                address={addresses.find(a => a.id === selectedAddressId)}
+                address={addresses.find((a) => a.id === selectedAddressId)}
                 total={grandTotal}
                 onBack={() => setShowOverview(false)}
                 onConfirm={handlePayment}
@@ -244,7 +253,7 @@ const CartPage = () => {
             {/* Cart Items Section */}
             <div className="lg:w-2/3 bg-white rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-bold text-black mb-6">YOUR CART</h2>
-              
+
               <div className="space-y-6">
                 {cartItems.items.map((item) => (
                   <CartItem
@@ -259,7 +268,9 @@ const CartPage = () => {
 
             {/* Order Summary Section */}
             <div className="lg:w-1/3 bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-black mb-2">ORDER SUMMARY</h2>
+              <h2 className="text-2xl font-bold text-black mb-2">
+                ORDER SUMMARY
+              </h2>
 
               <PromoCodeSection
                 promoCode={promoCode}
@@ -314,7 +325,7 @@ const CartPage = () => {
 // Sub-components
 
 const EmptyCart = () => (
-  <motion.div 
+  <motion.div
     className="text-center py-6 bg-white rounded-lg shadow-md"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -334,7 +345,7 @@ const EmptyCart = () => (
 );
 
 const CartItem = ({ item, onRemove, onQuantityChange }) => (
-  <motion.div 
+  <motion.div
     className="flex flex-col md:flex-row items-center border-b border-gray-200 py-8"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -346,7 +357,7 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => (
         className="w-full h-full object-contain"
       />
     </div>
-    
+
     <div className="flex-grow md:ml-8 w-full">
       <div className="mb-4">
         <h3 className="text-md font-medium text-black uppercase">GAMING PC</h3>
@@ -354,26 +365,26 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => (
           THE {item.product_name}
         </h2>
       </div>
-      
+
       <div className="mb-6 text-left">
         <span className="text-xl font-bold text-green-600">
           ₹ {item.price.toLocaleString("en-IN")}/-
         </span>
       </div>
-      
+
       <div className="mb-8">
         <StockStatus stock={item.product_stock} />
       </div>
-      
+
       <div className="flex flex-wrap items-center space-x-4">
-        <button 
+        <button
           className="flex items-center space-x-2 text-gray-600"
           onClick={() => onRemove(item.id)}
         >
           <TrashIcon />
           <span>REMOVE</span>
         </button>
-        
+
         <QuantityControls
           quantity={item.quantity}
           onIncrease={() => onQuantityChange(item.product, "increase")}
@@ -385,10 +396,11 @@ const CartItem = ({ item, onRemove, onQuantityChange }) => (
 );
 
 const StockStatus = ({ stock }) => (
-  <div 
+  <div
     className="inline-flex items-center px-5 py-2 rounded-md"
     style={{
-      backgroundColor: stock >= 1 ? "rgba(99, 163, 117, 0.1)" : "rgba(255, 0, 0, 0.05)",
+      backgroundColor:
+        stock >= 1 ? "rgba(99, 163, 117, 0.1)" : "rgba(255, 0, 0, 0.05)",
     }}
   >
     <span style={{ color: stock >= 1 ? "#63A375" : "red" }}>
@@ -436,16 +448,22 @@ const TrashIcon = () => (
   </svg>
 );
 
-const PromoCodeSection = ({ promoCode, setPromoCode, promoApplied, setPromoApplied, onApply }) => (
+const PromoCodeSection = ({
+  promoCode,
+  setPromoCode,
+  promoApplied,
+  setPromoApplied,
+  onApply,
+}) => (
   <div className="border-dashed border-2 rounded-lg p-4 mb-6 bg-green-50 border-green-300">
     <p className="text-center font-medium mb-2 text-green-700">
       HAVE A PROMO CODE?
     </p>
-    
+
     {promoApplied ? (
       <div className="bg-white rounded p-2 flex justify-between items-center">
         <span className="text-sm font-medium">GEEKY2023</span>
-        <button 
+        <button
           className="text-xs text-gray-500"
           onClick={() => setPromoApplied(false)}
         >
@@ -473,10 +491,15 @@ const PromoCodeSection = ({ promoCode, setPromoCode, promoApplied, setPromoAppli
   </div>
 );
 
-const AddressSection = ({ addresses, selectedAddressId, onSelect, onAddNew }) => (
+const AddressSection = ({
+  addresses,
+  selectedAddressId,
+  onSelect,
+  onAddNew,
+}) => (
   <div className="mb-4">
     <h3 className="text-lg font-medium mb-2">Delivery Address</h3>
-    
+
     {addresses.length > 0 ? (
       <>
         <div className="space-y-2">
@@ -510,7 +533,9 @@ const AddressSection = ({ addresses, selectedAddressId, onSelect, onAddNew }) =>
 const AddressCard = ({ address, isSelected, onSelect }) => (
   <div
     className={`border p-3 rounded-md cursor-pointer transition-colors ${
-      isSelected ? "border-green-500 bg-green-50" : "border-gray-200 hover:bg-gray-50"
+      isSelected
+        ? "border-green-500 bg-green-50"
+        : "border-gray-200 hover:bg-gray-50"
     }`}
     onClick={onSelect}
   >
@@ -524,7 +549,8 @@ const AddressCard = ({ address, isSelected, onSelect }) => (
     </div>
     <p className="text-sm text-gray-600">{address.phone_number}</p>
     <p className="text-sm text-gray-600">
-      {address.address}, {address.district}, {address.state}, {address.country} - {address.zip_code}
+      {address.address}, {address.district}, {address.state}, {address.country}{" "}
+      - {address.zip_code}
     </p>
   </div>
 );
@@ -535,12 +561,14 @@ const OrderTotals = ({ subtotal, discount, grandTotal }) => (
       <span className="text-gray-700">DISCOUNT</span>
       <span className="text-gray-700">₹ {discount}</span>
     </div>
-    
+
     <div className="flex justify-between">
       <span className="text-gray-700">SUB TOTAL</span>
-      <span className="text-gray-700">₹ {subtotal.toLocaleString("en-IN")}</span>
+      <span className="text-gray-700">
+        ₹ {subtotal.toLocaleString("en-IN")}
+      </span>
     </div>
-    
+
     <div className="flex justify-between pt-3 border-t border-gray-200">
       <span className="font-bold text-black">GRAND TOTAL</span>
       <span className="font-bold text-black">

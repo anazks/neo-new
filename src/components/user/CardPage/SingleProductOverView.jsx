@@ -289,12 +289,12 @@ function Overview({ product }) {
           setDisplayRazorpay={setDisplayRazorpay}
         />
       )}
-      <div className="max-w-6xl mx-auto p-6 bg-white">
+      <div className="max-w-6xl mx-auto p-6 bg-white" style={{zIndex:"1020"}}>
         <div className="mb-8">
           <br />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8" style={{maxHeight:"500px",overflow:"scroll"}}>
           {/* Left Column - Address and Items */}
           <div className="flex-1">
             {/* Address Section */}
