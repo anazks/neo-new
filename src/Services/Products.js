@@ -437,4 +437,12 @@ const featuredProduct = async()=>{
             return error
         }
 }
-export {getAllProductAdmin,featuredProduct,getReview,deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+const dashBoardSummary = async()=>{
+    try {
+        let response = await Axios.get('/analytics/dashboard-summary/')
+        return response
+    } catch (error) {
+        return error
+    }
+}
+export {dashBoardSummary,getAllProductAdmin,featuredProduct,getReview,deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };

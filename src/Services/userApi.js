@@ -488,3 +488,12 @@ export const getDrivers = async (product_id) =>{
     return error;
   }
 }
+
+export const deletAddress = async(id)=>{
+  try {
+    let response = await Axios.delete(`/authentication/delivery-addresses/${id}/`)
+           return response
+  } catch (error) {
+      return error
+  }
+}

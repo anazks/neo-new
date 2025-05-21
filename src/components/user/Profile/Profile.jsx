@@ -17,6 +17,7 @@ import {
   profileUpdate,
   getUserInfo,
   deleteMyAccount,
+  deletAddress
 } from "../../../Services/userApi";
 import AddressPopup from "./AddNewAddress";
 import BaseURL from "../../../Static/Static";
@@ -37,6 +38,18 @@ function UserProfile() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("profile");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+
+const deleteAddress = async(id)=>{
+  try {
+      console.log(id)
+      let response = await deletAddress(id)
+      console.log(response)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
   const { token, setToken } = useAuth();
   const navigate = useNavigate();
@@ -237,6 +250,7 @@ function UserProfile() {
     }
   };
 
+
   const getProfilePicture = () => {
     if (previewImage) return previewImage;
     if (userData?.profile_picture) return userData.profile_picture;
@@ -256,6 +270,7 @@ function UserProfile() {
     navigate("/login");
     return null;
   }
+
 
   return (
     <div
@@ -345,6 +360,7 @@ function UserProfile() {
                 setIsEditing={setIsEditing}
                 getProfilePicture={getProfilePicture}
                 setShowAddressPopup={setShowAddressPopup}
+                deleteAddress={deleteAddress}
               />
             )}
           </div>
@@ -742,6 +758,7 @@ const ViewProfile = ({
   setIsEditing,
   getProfilePicture,
   setShowAddressPopup,
+  deleteAddress
 }) => (
   <div className="space-y-6">
     <div
@@ -878,6 +895,7 @@ const ViewProfile = ({
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
+                    onClick={()=>deleteAddress(address.id)}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
@@ -885,6 +903,7 @@ const ViewProfile = ({
                     ></path>
                   </svg>
                 </button>
+                
               </div>
             </div>
           ))}
@@ -903,171 +922,6 @@ const ViewProfile = ({
       )}
     </div>
 
-    {/* Payment History Section (based on the image provided) */}
-    {/* <div className="bg-gray-100 bg-opacity-10 backdrop-blur-sm rounded-lg p-6">
-      <h3 className="text-xl font-semibold mb-4">Payment History</h3>
-      
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-full">
-          <thead>
-            <tr className="text-left text-gray-400 text-sm border-b border-gray-800">
-              <th className="pb-2">Mode of Payment</th>
-              <th className="pb-2">Order ID</th>
-              <th className="pb-2">Date of Transaction</th>
-              <th className="pb-2">Transaction ID</th>
-              <th className="pb-2">Amount</th>
-              <th className="pb-2">Status</th>
-            </tr>
-          </thead>
-          <tbody className="text-sm">
-            <tr className="border-b border-gray-800">
-              <td className="py-3">Credit Card EMI</td>
-              <td className="py-3">#835185</td>
-              <td className="py-3">02 April 2024</td>
-              <td className="py-3">8523176543</td>
-              <td className="py-3">₹3,59,799/-</td>
-              <td className="py-3 text-green-500">Success</td>
-            </tr>
-            <tr className="border-b border-gray-800">
-              <td className="py-3">GPay - UPI</td>
-              <td className="py-3">#E35365</td>
-              <td className="py-3">02 April 2024</td>
-              <td className="py-3">8523176543</td>
-              <td className="py-3">₹20,000/-</td>
-              <td className="py-3 text-green-500">Success</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div> */}
-
-    {/* Order Details Section (based on the image provided) */}
-    {/* <div className="bg-gray-100 bg-opacity-10 backdrop-blur-sm rounded-lg p-6">
-      <div className="mb-4">
-        <div className="flex border-b border-gray-800 pb-2">
-          <button 
-            className={`px-6 py-2 font-medium  'text-pink-500 border-b-2 border-pink-500' : 'text-gray-400'}`}
-            onClick={() => ('order-details')}
-          >
-            Order Details
-          </button>
-          <button 
-            className={`px-6 py-2 font-medium  'text-pink-500 border-b-2 border-pink-500' : 'text-gray-400'}`}
-            onClick={() => ('favorites')}
-          >
-            Favorites
-          </button>
-          <button 
-            className={`px-6 py-2 font-medium  'text-pink-500 border-b-2 border-pink-500' : 'text-gray-400'}`}
-            onClick={() =>('enquiries')}
-          >
-            Enquiries
-          </button>
-        </div>
-      </div>
-      
-     
-        <div className="space-y-6">
-          <div className="flex items-center gap-6 border-b border-gray-800 pb-6">
-            <p className="text-gray-400 w-24">Ordered Product</p>
-            <div className="flex-grow flex">
-              <div className="w-20 h-20 bg-gray-700 rounded-md overflow-hidden">
-                <img 
-                  src="/api/placeholder/80/80" 
-                  alt="Product" 
-                  className="w-full h-full object-cover" 
-                />
-              </div>
-              <div className="ml-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-gray-400">Order ID</p>
-                    <p className="font-medium">#835185</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Shipping Address</p>
-                    <p className="text-sm">A-13, Ashoka Apartments</p>
-                    <p className="text-sm">Marine Drive Jn, Shannumgham Rd</p>
-                    <p className="text-sm">Ernakulam, Kerala, 682031</p>
-                  </div>
-                </div>
-                <div className="mt-2">
-                  <p className="text-xs text-gray-400">Shipped</p>
-                  <p>02 April 2024</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6 border-b border-gray-800 pb-6">
-            <p className="text-gray-400 w-24">Tracking</p>
-            <div className="flex-grow">
-              <div className="relative">
-                <div className="absolute left-2 top-0 bottom-0 w-0.5 bg-gray-700"></div>
-                
-                <div className="flex items-center mb-6 relative">
-                  <div className="w-4 h-4 rounded-full bg-pink-600 z-10"></div>
-                  <div className="ml-6">
-                    <p className="font-medium">Order Placed</p>
-                    <p className="text-sm text-gray-400">Order made for Shipping</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center mb-6 relative">
-                  <div className="w-4 h-4 rounded-full bg-pink-600 z-10"></div>
-                  <div className="ml-6">
-                    <p className="font-medium">Order Picked Up</p>
-                    <p className="text-sm text-gray-400">Order collected by delivery Partner</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center mb-6 relative">
-                  <div className="w-4 h-4 rounded-full bg-pink-600 z-10"></div>
-                  <div className="ml-6">
-                    <p className="font-medium">In Transit</p>
-                    <p className="text-sm text-gray-400">Last dropped date in Truck Order <span className="text-blue-400">20 min ago</span></p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center mb-6 relative">
-                  <div className="w-4 h-4 rounded-full bg-gray-600 z-10"></div>
-                  <div className="ml-6">
-                    <p className="font-medium text-gray-400">Out for Delivery</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center relative">
-                  <div className="w-4 h-4 rounded-full bg-gray-600 z-10"></div>
-                  <div className="ml-6">
-                    <p className="font-medium text-gray-400">Order Delivered</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex gap-6">
-            <p className="text-gray-400 w-24">Details</p>
-            <div className="flex-grow">
-              <div className="mb-4">  
-                <p className="text-sm text-gray-400">Dispatch</p>
-                <p className="text-sm">Shop no. 5, Smooth Arcade, Vennala High School Rd, opposite to V-Guard</p>
-                <p className="text-sm">Vennala PO, Kochi, Kerala 682028</p>
-              </div>
-              
-              <div>
-                <p className="text-sm text-gray-400">Arrival</p>
-                <p className="text-sm">A-13, Ashoka Apartments, Marine Drive Jn, Shannumgham Rd, Ernakulam,</p>
-                <p className="text-sm">Kerala, 682031</p>
-              </div>
-            </div>
-          </div>
-        </div>
-     
-      
-      
-      
-    </div> */}
   </div>
 );
 

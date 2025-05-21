@@ -59,6 +59,7 @@ export default function Orders() {
       );
     }
   };
+
   useEffect(() => {
     const prefersDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)"
@@ -93,7 +94,12 @@ export default function Orders() {
       if (response && response.data) {
         setOrders(response.data);
         if (response.data.length > 0) {
-          setSelectedOrder(response.data[0].id);
+          const firstOrderWithAddress = response.data.find(
+            (order) => order.delivery_address_details
+          );
+          setSelectedOrder(
+            firstOrderWithAddress ? firstOrderWithAddress.id : response.data[0].id
+          );
         }
       } else {
         throw new Error("Invalid response format");
@@ -172,7 +178,7 @@ export default function Orders() {
             order.order_status?.toLowerCase() === filterStatus.toLowerCase()
         );
 
-  const currentOrder = orders.find((order) => order.id === selectedOrder);
+  const currentOrder = orders.find((order) => order.id === selectedOrder) || {};
 
   const openModal = () => {
     setModalLoading(true);
@@ -239,7 +245,7 @@ export default function Orders() {
       style={{ fontFamily: "'Rajdhani', sans-serif", marginTop: "100px" }}
     >
       <div
-        className={`flex  flex-col lg:flex-row h-full min-h-screen ${
+        className={`flex flex-col lg:flex-row h-full min-h-screen ${
           darkMode ? "bg-gray-200 text-white" : "bg-gray-50 text-gray-800"
         }`}
         style={{
@@ -358,7 +364,7 @@ export default function Orders() {
                     <div
                       key={order.id}
                       onClick={() => setSelectedOrder(order.id)}
-                      className={`p-4 cursor-pointer transition-colors flex  justify-between 
+                      className={`p-4 cursor-pointer transition-colors flex justify-between 
                     ${
                       isSelected
                         ? darkMode
@@ -370,7 +376,7 @@ export default function Orders() {
                     }
                     ${darkMode ? "border-gray-700" : "border-gray-200"}`}
                     >
-                      <div className="flex  space-x-3">
+                      <div className="flex space-x-3">
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center ${statusConfig.bgColor} ${statusConfig.color}`}
                         >
@@ -386,38 +392,39 @@ export default function Orders() {
                           </div>
                         </div>
                       </div>
-                      <div className="text-right text-sm md:block sm:hidden" >
+                      <div className="text-right text-sm md:block sm:hidden">
                         <span className="text-sm text-pink-700">Delivery address</span>
                         <div className="">
-
                           <span className="text-lg font-semibold text-gray-900">
-                            {
-                              order.delivery_address_details
-                                .delivery_person_name
-                            }
+                            {order?.delivery_address_details?.delivery_person_name || "Not specified"}
                           </span>
                           <br />
-                          <span className="text-xs text-gray-500">
-                            {order.delivery_address_details.address}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {order.delivery_address_details.district},{" "}
-                            {order.delivery_address_details.state},{" "}
-                            {order.delivery_address_details.postal_code}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {order.delivery_address_details.country}
-                          </span>
-                          <br />
-                          <span className="text-xs text-gray-500">
-                            {order.delivery_address_details.phone_number}
-                          </span>
+                          {order?.delivery_address_details ? (
+                            <>
+                              <span className="text-xs text-gray-500">
+                                {order.delivery_address_details.address || "Not specified"}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {order.delivery_address_details.district || "Not specified"},{" "}
+                                {order.delivery_address_details.state || "Not specified"},{" "}
+                                {order.delivery_address_details.postal_code || "Not specified"}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {order.delivery_address_details.country || "Not specified"}
+                              </span>
+                              <br />
+                              <span className="text-xs text-gray-500">
+                                {order.delivery_address_details.phone_number || "Not specified"}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-500">No address details available</span>
+                          )}
                         </div>
                       </div>
-                      <div className="flex ">
+                      <div className="flex">
                         <div className="text-right mr-3">
-                        <span className="text-sm text-pink-700">Payment Overline</span>
-
+                          <span className="text-sm text-pink-700">Payment Overline</span>
                           <div className="font-medium">
                             ₹. {order.total_price}
                           </div>
@@ -443,7 +450,7 @@ export default function Orders() {
           </div>
         </div>
 
-        {currentOrder && (
+        {currentOrder && Object.keys(currentOrder).length > 0 && (
           <div
             className="item w-full lg:w-1/3 overflow-auto p-2"
             style={{
@@ -617,7 +624,7 @@ export default function Orders() {
         </div>
       )}
 
-      {showModal && (
+      {showModal && currentOrder && Object.keys(currentOrder).length > 0 && (
         <div
           className="fixed inset-0 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4"
           style={{ zIndex: "1020" }}
