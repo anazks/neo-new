@@ -65,7 +65,7 @@ const ProductSpecifications = ({ product }) => {
 
   const specs = {
     warranty: {
-      info: product.warrantyInfo || defaultSpecs.warranty.info,
+      info: product.warranty_info || defaultSpecs.warranty.info,
       options: product.warrantyOptions || defaultSpecs.warranty.options,
     },
     specifications: {
@@ -82,6 +82,8 @@ const ProductSpecifications = ({ product }) => {
     },
     connectivity: product.connectivity || defaultSpecs.connectivity,
     dimensions: product.dimensions || defaultSpecs.dimensions,
+    whatsinside: product.whats_inside
+
   };
 
   return (
@@ -91,29 +93,50 @@ const ProductSpecifications = ({ product }) => {
       } transition-all duration-500 ease-in-out`}
     >
       <div className="w-full max-w-4xl mx-auto px-4 py-8">
-        {/* OVERVIEW SECTION */}
-        <h1 className="text-2xl font-bold uppercase mb-6">OVERVIEW</h1>
 
-        {/* WARRANTY INFO */}
-        {/* <div className="mb-8">
-          <h2 className="text-lg font-bold uppercase mb-2">WARRANTY INFO</h2>
-          <p className="mb-1">{specs.warranty.info}</p>
-          <p className="mb-2">AMC Bundles Available at Checkout (Years)</p>
-          <div className="flex gap-2">
+        <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="text-xl  uppercase font-semibold">
+            WHAT'S INSIDE
+          </div>
+          <div>
+            <p className="text-gray-800">{specs.whatsinside}</p>
+          </div>
+          <div></div>
+          {/* <p className="mb-2">AMC Bundles Available at Checkout (Years)</p> */}
+          {/* <div className="flex gap-2">
             {specs.warranty.options.map((option, index) => (
               <div key={index} className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">
                 {option}
               </div>
             ))}
+          </div> */}
+        </div>
+        {/* OVERVIEW SECTION */}
+        <h1 className="text-xl font-semibold uppercase mb-6">OVERVIEW</h1>
+
+        {/* WARRANTY INFO */}
+        <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="font-medium text-gray-700 font-semibold">
+            WARRANTY INFO
           </div>
-        </div> */}
+          <div>
+            <p className="text-gray-800">{specs.warranty.info}</p>
+          </div>
+          <div></div>
+          {/* <p className="mb-2">AMC Bundles Available at Checkout (Years)</p> */}
+          {/* <div className="flex gap-2">
+            {specs.warranty.options.map((option, index) => (
+              <div key={index} className="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center text-xs">
+                {option}
+              </div>
+            ))}
+          </div> */}
+        </div>
 
         <div className="h-px bg-gray-200 my-6"></div>
 
         {/* SPECIFICATIONS */}
         <div className="mb-8">
-          
-
           <div className="space-y-2 text-sm">
             {(() => {
               const sortedAttributes = [...attributes].sort((a, b) =>
@@ -137,9 +160,7 @@ const ProductSpecifications = ({ product }) => {
                     </div>
 
                     {/* Attribute Name */}
-                    <div className="text-gray-800">
-                      {attr.attribute.name}
-                    </div>
+                    <div className="text-gray-800">{attr.attribute.name}</div>
 
                     {/* Attribute Values */}
                     <div className="text-gray-600">

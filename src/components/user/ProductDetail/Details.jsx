@@ -268,16 +268,7 @@ function Details({ product }) {
                         : "opacity-0 scale-95"
                     }`}
                   />
-                  {/* {videoId && (
-                    <div
-                      className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-20 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer"
-                      onClick={handlePlayVideo}
-                    >
-                      <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-green-400 text-white transform transition-transform duration-300 hover:scale-105 ">
-                        <FaPlay className="ml-1" />
-                      </div>
-                    </div>
-                  )} */}
+                  
                 </div>
               ) : (
                 <div className="h-72 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500">
@@ -445,7 +436,7 @@ function Details({ product }) {
             {/* Action buttons */}
             <div
               className="flex flex-col sm:flex-row gap-4 mt-6"
-              style={{ fontFamily: "Rajdhani, sans-serif" }}
+              style={{ fontFamily: "Rajdhani, sans-serif", justifyContent:"center", alignItems:"center" }}
             >
               <button
                 onClick={() => handleAddToCart(product.id)}
