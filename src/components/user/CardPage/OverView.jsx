@@ -28,6 +28,8 @@ function Overview() {
   const [displayRazorpay, setDisplayRazorpay] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+   
+  
 
   const [newAddress, setNewAddress] = useState({
     delivery_person_name: "",
@@ -257,6 +259,8 @@ function Overview() {
 
   return (
     <div style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+     
+    
       {displayRazorpay && orderDetails && (
         <RenderRazorpay
           orderDetails={orderDetails}
@@ -281,6 +285,7 @@ function Overview() {
       )}
 
       <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white">
+        
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 uppercase tracking-wide">
             Order Overview
