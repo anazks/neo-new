@@ -689,12 +689,12 @@ function ProductInventory() {
                     <td className="px-4 lg:px-6 py-4 whitespace-nowrap font-medium">Rs. {product.mrp}</td>
                     <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                       <span className="bg-gray-700 text-purple-400 px-2 py-1 rounded text-xs font-medium">
-                        {product.category_id ? getCategoryNameById(product.category_id) : 'N/A'}
+                        {product.category ? product.category : 'N/A'}
                       </span>
                     </td>
                     <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                       <span className="bg-gray-700 text-blue-400 px-2 py-1 rounded text-xs font-medium">
-                        {product.brand_id ? getBrandNameById(product.brand_id) : 'N/A'}
+                        {product.brand ? product.brand : 'N/A'}
                       </span>
                     </td>
                     <td className="px-4 lg:px-6 py-4 whitespace-nowrap">

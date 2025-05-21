@@ -52,10 +52,33 @@ export const addCategory = async (data)=>{
         return error
     }
 }
+
+
+export const addSubCategory = async (data)=>{
+    try {
+        console.log(data,"data category")
+        let categoryAdded = await Axios.post('/inventory/subcategories/',data)
+        return categoryAdded
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
 export const getCategory =  async()=>{
     try {
         let category = await Axios.get('/inventory/categories/')
         return(category)
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+export const getSubCategory =  async()=>{
+    try {
+        let subcategory = await Axios.get('/inventory/subcategories/')
+        return(subcategory)
     } catch (error) {
         console.log(error)
         return error
@@ -81,6 +104,20 @@ export const deleteCategory =  async(id)=>{
         return error
     }
 }
+
+export const deleteSubCategory =  async(id)=>{
+    try {
+        console.log(id,"in api")
+       let deleteCate = await Axios.delete(`/inventory/subcategories/${id}/`) 
+       console.log(deleteCate)
+       return deleteCate
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+
 export const getTax = async()=>{
     try {
       let taxes = await Axios.get('/inventory/taxes/')  
@@ -147,15 +184,17 @@ export const addProduct = async (productDetails) => {
         const data = new FormData();
         
         // Required fields with proper type conversions
-        data.append('product_code', productDetails.get('product_code') || '');
+        // data.append('product_code', productDetails.get('product_code') || '');
         data.append('name', productDetails.get('name'));
         data.append('brand', Number(productDetails.get('brand'))); // Make sure it's a number
         data.append('description', productDetails.get('description'));
         data.append('category', Number(productDetails.get('category'))); // Make sure it's a number
+        data.append('subcategory', Number(productDetails.get('subcategory'))); // Make sure it's a number
         data.append('mrp', Number(productDetails.get('mrp'))); // Convert to number
         data.append('price', Number(productDetails.get('price'))); // Convert to number
         data.append('stock', Number(productDetails.get('stock'))); // Convert to integer
         data.append('whats_inside', productDetails.get('whats_inside'));
+        data.append('warranty_info', productDetails.get('warranty_info'));
         
         // Optional fields (only append if available)
         const discount = productDetails.get('discount_price');
@@ -268,3 +307,19 @@ export const updateCategory = async(data)=>{
         return error
     }
 }
+
+
+export const updateSubCategory = async(data)=>{
+    try {
+        let id = data.id
+        console.log(data,"data in category")
+        const response = await Axios.put(`/inventory/subcategories/${id}/`,data)
+        console.log(response,",.,.,.")
+        return response
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+

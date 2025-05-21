@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBrand, getCategory, getTax, addProduct } from '../../../../Services/Settings';
+import { getBrand, getCategory, getTax, addProduct, getSubCategory } from '../../../../Services/Settings';
 import Alert from '../../../user/Alert/Alert';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,8 @@ function AddProducts() {
     name: '',
     brand: '',  
     description: '',
-    category: '', 
+    category: '',
+    subcategory:'', 
     mrp: '',  
     price: '', 
     discount_price: '',
@@ -23,6 +24,7 @@ function AddProducts() {
     youtube_url: '',
     broacher: null,
     whats_inside: '',
+    warranty_info:'',
     more_info: ''
   });
 
@@ -31,6 +33,7 @@ function AddProducts() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const [taxes, setTaxes] = useState([]);
   const [debugData, setDebugData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,15 +45,18 @@ function AddProducts() {
       try {
         const brandsRes = await getBrand();
         const categoriesRes = await getCategory();
+        const subcategoryRes  = await getSubCategory();
         const taxRes = await getTax();
 
         setBrands(brandsRes?.data || []);
         setCategories(categoriesRes?.data || []);
+        setSubCategories(subcategoryRes?.data || [])
         setTaxes(taxRes?.data || []);
       } catch (error) {
         console.error('Failed fetching settings:', error);
         setBrands([]);
         setCategories([]);
+        setSubCategories([])
         setTaxes([]);
         setAlertData({
           type: 'error',
@@ -87,7 +93,7 @@ function AddProducts() {
         setFormData(prev => ({ ...prev, [name]: null }));
       }
     } 
-    else if (name === 'brand' || name === 'category' || name === 'tax_value') {
+    else if (name === 'brand' || name === 'category' || name === 'tax_value' || name === "subcategory") {
       const numValue = value === '' ? '' : parseInt(value, 10);
       setFormData(prev => ({
         ...prev,
@@ -116,16 +122,17 @@ function AddProducts() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.product_code) newErrors.product_code = 'Product code is required';
     if (!formData.name.trim()) newErrors.name = 'Product name is required';
     if (!formData.brand) newErrors.brand = 'Please select a brand';
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     if (!formData.category) newErrors.category = 'Please select a category';
+    if (!formData.subcategory) newErrors.subcategory = 'Please select a Subcategory';
     if (!formData.mrp) newErrors.mrp = 'MRP is required';
     if (!formData.price) newErrors.price = 'Selling price is required';
     if (!formData.stock) newErrors.stock = 'Stock quantity is required';
     if (!formData.tax_value) newErrors.tax_value = 'Tax value is required';
     if (!formData.whats_inside) newErrors.whats_inside = 'What\'s inside is required';
+    if (!formData.warranty_info) newErrors.warranty_info = 'Warranty information is required';
 
     if (formData.youtube_url && !formData.youtube_url.includes('youtube.com/watch') && !formData.youtube_url.includes('youtu.be')) {
       newErrors.youtube_url = 'Invalid YouTube URL';
@@ -158,11 +165,12 @@ function AddProducts() {
 // Then when adding to formData:
 productFormData.append("tax_amount", numericTaxAmount);
         
-        productFormData.append("product_code", formData.product_code);
+        // productFormData.append("product_code", formData.product_code);
         productFormData.append("name", formData.name);
         productFormData.append("brand", Number(formData.brand));
         productFormData.append("description", formData.description);
         productFormData.append("category", Number(formData.category));
+        productFormData.append("subcategory", Number(formData.subcategory));
         productFormData.append("mrp", Number(formData.mrp));
         productFormData.append("price", Number(formData.price));
         
@@ -187,6 +195,7 @@ productFormData.append("tax_amount", numericTaxAmount);
         
         productFormData.append("youtube_url", formData.youtube_url || "");
         productFormData.append("whats_inside", formData.whats_inside);
+        productFormData.append("warranty_info", formData.warranty_info);
         productFormData.append("more_info", formData.more_info || "");
         
         if (formData.broacher) {
@@ -213,6 +222,7 @@ productFormData.append("tax_amount", numericTaxAmount);
               brand: '',
               description: '',
               category: '',
+              subcategory:'',
               mrp: '',
               price: '',
               discount_price: '',
@@ -224,6 +234,7 @@ productFormData.append("tax_amount", numericTaxAmount);
               youtube_url: '',
               broacher: null,
               whats_inside: '',
+              warranty_info:'',
               more_info: ''
             });
             setIsSubmitting(false);
@@ -292,8 +303,8 @@ productFormData.append("tax_amount", numericTaxAmount);
         <div className="bg-gray-800 rounded-lg p-6">
           <h3 className="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">Basic Information</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6"  >
+            <div className="space-y-2" style={{display:"none"}}>
               <label className="block text-sm font-medium text-gray-300">Product Code</label>
               <input 
                 type="text" 
@@ -302,6 +313,7 @@ productFormData.append("tax_amount", numericTaxAmount);
                 onChange={handleChange} 
                 className={`w-full px-3 py-2 bg-gray-700 border ${errors.product_code ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 maxLength="20" 
+               
               />
               {errors.product_code && <p className="text-red-400 text-sm">{errors.product_code}</p>}
             </div>
@@ -349,6 +361,22 @@ productFormData.append("tax_amount", numericTaxAmount);
                 ))}
               </select>
               {errors.category && <p className="text-red-400 text-sm">{errors.category}</p>}
+            </div>
+
+             <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-300">Subcategory</label>
+              <select 
+                name="subcategory" 
+                value={formData.subcategory} 
+                onChange={handleChange} 
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.category ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                <option value="">Select subcategory</option>
+                {subCategories.map(subcategory => (
+                  <option key={subcategory.id} value={subcategory.id}>{subcategory.name}</option>
+                ))}
+              </select>
+              {errors.subcategory && <p className="text-red-400 text-sm">{errors.subcategory}</p>}
             </div>
 
             <div className="md:col-span-2 space-y-2">
@@ -454,7 +482,7 @@ productFormData.append("tax_amount", numericTaxAmount);
               >
                 <option value="">Select Tax</option>
                 {taxes.map(tax => (
-                  <option key={tax.id} value={tax.id}>{tax.name} ({tax.tax_name})</option>
+                  <option key={tax.id} value={tax.id}>{tax.name} ({tax.tax_name} - {tax.tax_percentage}%)</option>
                 ))}
               </select>
               {errors.tax_value && <p className="text-red-400 text-sm">{errors.tax_value}</p>}
@@ -505,10 +533,22 @@ productFormData.append("tax_amount", numericTaxAmount);
                 name="whats_inside" 
                 value={formData.whats_inside} 
                 onChange={handleChange} 
-                rows="3"
+                rows="2"
                 className={`w-full px-3 py-2 bg-gray-700 border ${errors.whats_inside ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               ></textarea>
               {errors.whats_inside && <p className="text-red-400 text-sm">{errors.whats_inside}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-300">Warranty Info</label>
+              <textarea 
+                name="warranty_info" 
+                value={formData.warranty_info} 
+                onChange={handleChange} 
+                rows="3"
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.warranty_info ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              ></textarea>
+              {errors.warranty_info && <p className="text-red-400 text-sm">{errors.warranty_info}</p>}
             </div>
 
             <div className="space-y-2">
