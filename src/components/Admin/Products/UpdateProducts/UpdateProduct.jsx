@@ -1119,7 +1119,7 @@ function UpdateProduct() {
                     <option value="">Select Overview Content</option>
                     {overViewContents.map((content) => (
                       <option key={content.id} value={content.id}>
-                        {content.category.name} - {content.name}
+                        {content.category?.name} - {content?.category?.name}
                       </option>
                     ))}
                   </select>
