@@ -26,6 +26,7 @@ import ViewImages from "../ViewProducts/ViewImages";
 import Variant from '../ViewProducts/Varient';
 import PairedProducts from '../ViewProducts/PairedProdcuts';
 import ViewVideos from '../ViewProducts/ViewVideos'
+import ProductOverView from "./ProductOverView";
 
 function UpdateProduct() {
   const [videoFile, setVideoFile] = useState(null);
@@ -1165,6 +1166,10 @@ function UpdateProduct() {
           </div>
         </div>
       )}
+
+      {/* {
+        product? <ProductOverView product={product} /> : null
+      } */}
     </div>
   );
 }
