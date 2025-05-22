@@ -2,7 +2,7 @@ import React from 'react'
 import City from '../../../Images/city.png'
 function Tob() {
   return (
-    <div className="flex flex-row w-full rounded-lg overflow-hidden shadow-lg bg-gray-100">
+    <div className="flex flex-row  rounded-lg overflow-hidden shadow-lg bg-gray-100" style={{ height: '200px' }}>
       {/* Left side with gaming setup image */}
       <div className="w-2/3 relative">
         <div className="bg-black h-48 md:h-64 w-full rounded-l-lg overflow-hidden">
