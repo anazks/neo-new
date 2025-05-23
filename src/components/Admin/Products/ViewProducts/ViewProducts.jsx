@@ -309,7 +309,7 @@ function ProductInventory() {
                 >
                   <option value="">All Categories</option>
                   {categories.map(category => (
-                    <option key={category._id} value={category._id}>{category.name}</option>
+                    <option key={category._id} value={category.id}>{category.name}</option>
                   ))}
                 </select>
               </div>

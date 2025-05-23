@@ -10,7 +10,7 @@ function Home({ children }) {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth >= 768) {
         // Auto-expand sidebar on larger screens
-        setIsSidebarExpanded(true);
+        setIsSidebarExpanded(false);
       } else {
         // Auto-collapse sidebar on mobile
         setIsSidebarExpanded(false);
