@@ -66,7 +66,7 @@ function PairedProducts({ product }) {
   }
 
   return (
-    <div className="overflow-x-auto bg-gray-800 rounded-lg">
+    <div className="overflow-x-auto bg-gray-800 rounded-lg max-w-4xl mx-auto">
       <table className="min-w-full divide-y divide-gray-700">
         <thead className="bg-gray-700">
           <tr>
@@ -88,7 +88,7 @@ function PairedProducts({ product }) {
           {pairedProducts.map((item) => (
             <tr key={item.id} className="hover:bg-gray-700">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-200">{item.paired_product_details.paired_product_name || 'Unknown Product'}</div>
+                <div className="text-sm font-medium text-gray-200">{item.paired_product_details.name || 'Unknown Product'}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">

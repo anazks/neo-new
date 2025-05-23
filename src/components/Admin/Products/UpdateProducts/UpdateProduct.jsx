@@ -23,9 +23,9 @@ import Alert from "../../../user/Alert/Alert";
 import Paired from "./Paired";
 import SetRecomendation from "./SetRecomendation";
 import ViewImages from "../ViewProducts/ViewImages";
-import Variant from '../ViewProducts/Varient';
-import PairedProducts from '../ViewProducts/PairedProdcuts';
-import ViewVideos from '../ViewProducts/ViewVideos'
+import Variant from "../ViewProducts/Varient";
+import PairedProducts from "../ViewProducts/PairedProdcuts";
+import ViewVideos from "../ViewProducts/ViewVideos";
 import ProductOverView from "./ProductOverView";
 
 function UpdateProduct() {
@@ -384,7 +384,7 @@ function UpdateProduct() {
 
       if (overViewResponse) {
         setALertStatus(true);
-        setAlertMessage("Overview added successfully");
+        setAlertMessage("over view data added success");
       }
 
       setShowOverviewModal(false);
@@ -559,6 +559,7 @@ function UpdateProduct() {
             </select>
           </div>
 
+
           <div>
             <label htmlFor="brand" className="block mb-2">
               Brand
@@ -690,86 +691,20 @@ function UpdateProduct() {
             rows="3"
           />
         </div>
-
-        {/* Action Buttons */}
-        <div className="gap-3 mb-6" style={{display:'flex',flexDirection:"column"}}>
-          <div style={{ overflow: "scroll" }}>
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-              onClick={() => setShowPhotosModal(true)}
-            >
-              Add Photos
-            </button>
-            <ViewImages product={product} />
-          </div>
-          <div style={{ overflow: "scroll" }}>
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-              onClick={() => setShowVideoModal(true)}
-            >
-              Add Video
-            </button>
-            <ViewVideos product={product}/>
-          </div>
-          <div style={{ overflow: "scroll" }}>
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-              onClick={() => setShowVariantModal(true)}
-            >
-              Add Variant
-            </button>
-
-            <Variant product={product}/>
-          </div>
-          <div style={{ overflow: "scroll" }}>
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-              onClick={() => setShowOverviewModal(true)}
-            >
-              Add Overview
-            </button>
-          </div>
-          <div style={{ overflow: "scroll" }}>
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-              onClick={() => setShowPairingModal(true)}
-            >
-              Add Pairing
-            </button>
-
-            <PairedProducts product={product}/>
-          </div>
-          <div style={{ overflow: "scroll" }}>
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-              onClick={() => setRecommendationMoal(true)}
-            >
-              Add Recommendation
-            </button>
-          </div>
-        </div>
-
         {/* Availability Toggle */}
-        <div className="flex items-center mb-6">
-          <input
-            type="checkbox"
-            id="is_available"
-            name="is_available"
-            checked={formData.is_available}
-            onChange={handleChange}
-            className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
-          />
-          <label htmlFor="is_available" className="ml-2">
-            Available for sale
-          </label>
-        </div>
-
+      <div className="flex items-center mb-6">
+        <input
+          type="checkbox"
+          id="is_available"
+          name="is_available"
+          checked={formData.is_available}
+          onChange={handleChange}
+          className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
+        />
+        <label htmlFor="is_available" className="ml-2">
+          Available for sale
+        </label>
+      </div>
         {/* Form Submission Buttons */}
         <div className="flex gap-3">
           <button
@@ -787,6 +722,95 @@ function UpdateProduct() {
           </button>
         </div>
       </form>
+
+      {/* Action Buttons */}
+      <div
+        className="gap-3 mb-6"
+        style={{ display: "flex", flexDirection: "column",margin:"10px" }}
+      >
+        <div style={{ overflow: "scroll", marginBottom:"10px", border:".5px solid gray", padding:"10px" }}>
+           <h3 className="text-xl font-bold mb-8 text-white text-center">Product Photos</h3>
+          <button
+            type="button"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+            style={{ marginBottom: "20px" }}
+            onClick={() => setShowPhotosModal(true)}
+          >
+            Add Photos
+          </button>
+          <ViewImages product={product} />
+
+          <hr />
+        </div>
+        <div style={{ overflow: "scroll", marginBottom:"10px", border:".5px solid gray", padding:"10px" }}>
+           <h3 className="text-xl font-bold mb-8 text-white text-center">Videos</h3>
+          <button
+            type="button"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+            style={{ marginBottom: "20px" }}
+            onClick={() => setShowVideoModal(true)}
+          >
+            Add Video
+          </button>
+          <ViewVideos product={product} />
+
+          <br />
+        </div>
+        <div style={{ overflow: "scroll", marginBottom:"10px", border:".5px solid gray", padding:"10px" }}>
+           <h3 className="text-xl font-bold mb-8 text-white text-center">Product Variants</h3>
+          <button
+            type="button"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+            style={{ marginBottom: "20px" }}
+            onClick={() => setShowVariantModal(true)}
+          >
+            Add Variant
+          </button>
+
+          <Variant product={product} />
+          <hr />
+        </div>
+        <div style={{ overflow: "scroll", marginBottom:"10px", border:".5px solid gray", padding:"10px" }}>
+           <h3 className="text-xl font-bold mb-8 text-white text-center">Product Overview</h3>
+          <button
+            type="button"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+            style={{ marginBottom: "20px" }}
+            onClick={() => setShowOverviewModal(true)}
+          >
+            Add Overview
+          </button>
+          <ProductOverView product={product} />
+          <hr />
+        </div>
+        <div style={{ overflow: "scroll", marginBottom:"10px", border:".5px solid gray", padding:"10px" }}>
+           <h3 className="text-xl font-bold mb-8 text-white text-center">Product Pair</h3>
+
+          <button
+            type="button"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+            style={{ marginBottom: "20px" }}
+            onClick={() => setShowPairingModal(true)}
+          >
+            Add Pairing
+          </button>
+
+          <PairedProducts product={product} />
+          <hr />
+        </div>
+        {/* <div style={{ overflow: "scroll" }}>
+            <button
+              type="button"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
+              style={{marginBottom:"20px"}}
+              onClick={() => setRecommendationMoal(true)}
+            >
+              Add Recommendation
+            </button>
+          </div> */}
+      </div>
+
+      
 
       {/* Modals (keep the same as before) */}
       {RecommendationModal && (
@@ -1119,7 +1143,11 @@ function UpdateProduct() {
                     <option value="">Select Overview Content</option>
                     {overViewContents.map((content) => (
                       <option key={content.id} value={content.id}>
-                        {content.category.name} - {content.name}
+                        {/* Fixed: Added safe navigation and fallback */}
+                        {content.category?.name
+                          ? `${content.category.name} - `
+                          : ""}
+                        {content.name || "Unnamed Content"}
                       </option>
                     ))}
                   </select>
@@ -1128,7 +1156,7 @@ function UpdateProduct() {
                 {selectedOverview && (
                   <div className="mb-4">
                     <label className="block mb-2">
-                      Enter Value for {selectedOverview.name}
+                      Enter Value for {selectedOverview.name || "Selected Item"}
                     </label>
                     <input
                       type="text"
