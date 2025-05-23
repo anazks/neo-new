@@ -716,13 +716,13 @@ function ProductInventory() {
                     </td>
                     <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                       <div className="flex space-x-1 lg:space-x-2">
-                        <button 
+                        {/* <button 
                           className="text-blue-400 hover:text-blue-300 p-1 lg:p-2 rounded hover:bg-gray-700 transition-colors"
                           onClick={() => handleView(product.id || product._id)}
                           title="View Product"
                         >
                           <FiEye className="text-base lg:text-lg" />
-                        </button>
+                        </button> */}
                         <button 
                           className="text-yellow-400 hover:text-yellow-300 p-1 lg:p-2 rounded hover:bg-gray-700 transition-colors"
                           onClick={() => handleEdit(product.id || product._id)}

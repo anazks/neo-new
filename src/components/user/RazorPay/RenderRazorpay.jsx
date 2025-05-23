@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import Axios from '../../../Axios/Axios';
 import PaymentDone from '../PaymentDone/PaymentDone';
-import {payemntCallBack} from '../../../Services/Products'
+import { payemntCallBack } from '../../../Services/Products';
+
 const loadScript = (src) => new Promise((resolve) => {
   const script = document.createElement('script');
   script.src = src;
@@ -30,9 +30,17 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
       console.log('Razorpay SDK failed to load. Are you online?');
       return;
     }
-   
+
     console.log('Order Details:', orderDetails);
-    let {data} = orderDetails
+    let { data } = orderDetails;
+
+    // Check if key is defined
+    if (!data?.key) {
+      console.error('Razorpay key is undefined. Redirecting to failed page.');
+      window.location.href = "/failed";
+      return;
+    }
+
     const options = {
       key: data.key,
       amount: data.amount,
@@ -50,14 +58,12 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
           razorpay_signature: response.razorpay_signature,
           raz_order_id: data.raz_order_id,
         });
-        
-        // Close the Razorpay modal
+
         if (rzpInstance.current) {
           rzpInstance.current.close();
         }
-        setDisplayRazorpay(false)
-        
-        // Set payment success to true after handling payment
+
+        setDisplayRazorpay(false);
         setPaymentSuccess(true);
       },
       prefill: {
@@ -72,7 +78,6 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
         color: "#528FF0",
       },
       modal: {
-        // This ensures the modal closes when payment is successful
         ondismiss: () => {
           if (!paymentSuccess) {
             setDisplayRazorpay(false);
@@ -89,12 +94,8 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
 
     rzpInstance.current.on('payment.failed', async (response) => {
       console.log("Payment Failed:", response.error);
-       window.location.href = "/failed";
+      window.location.href = "/failed";
       paymentId.current = response.error.metadata?.payment_id || null;
-      // await handlePayment("failed", {
-      //   ...response.error,
-      //   raz_order_id: orderDetails.raz_order_id,
-      // });
       rzpInstance.current.close();
       setDisplayRazorpay(false);
     });
@@ -104,10 +105,10 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
 
   const handlePayment = async (status, paymentDetails) => {
     try {
-      console.log(paymentDetails,"paymentDetails from function")
-      let data = paymentDetails
-      data.status = status
-      data.paymentMethod = paymentMethod.current
+      console.log(paymentDetails, "paymentDetails from function");
+      let data = paymentDetails;
+      data.status = status;
+      data.paymentMethod = paymentMethod.current;
 
       console.log("Sending payment result to server:", data);
       const response = await payemntCallBack(data);
@@ -116,7 +117,7 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
       if (response.data.payment === true) {
         window.location.href = "/payed";
         localStorage.setItem("payed", true);
-        console.log("Payment status updated successfully on server.");  
+        console.log("Payment status updated successfully on server.");
       } else {
         console.error("Failed to update payment status on server:", response.data.message);
       }
@@ -134,7 +135,6 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
     }
 
     return () => {
-      // Clean up Razorpay instance when component unmounts
       if (rzpInstance.current) {
         rzpInstance.current.close();
       }
@@ -157,10 +157,11 @@ const RenderRazorpay = ({ orderDetails, setDisplayRazorpay }) => {
 
 RenderRazorpay.propTypes = {
   orderDetails: PropTypes.shape({
-    keyId: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
-    razorpayOrderId: PropTypes.string.isRequired,
-    raz_order_id: PropTypes.string.isRequired,
+    keyId: PropTypes.string,
+    amount: PropTypes.number,
+    razorpayOrderId: PropTypes.string,
+    raz_order_id: PropTypes.string,
+    key: PropTypes.string // Optional but included for clarity
   }).isRequired,
   setDisplayRazorpay: PropTypes.func.isRequired,
 };

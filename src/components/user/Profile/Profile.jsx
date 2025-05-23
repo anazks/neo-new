@@ -40,15 +40,21 @@ function UserProfile() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
 
-const deleteAddress = async(id)=>{
+const deleteAddress = async (id) => {
   try {
-      console.log(id)
-      let response = await deletAddress(id)
-      console.log(response)
-  } catch (error) {
-    console.log(error)
+    if (!window.confirm("Are you sure you want to delete this address?")) {
+    return;
   }
-}
+    const response = await deletAddress(id);
+    if (response.status === 200 || response.status === 204) {
+      // Update the UI by filtering out the deleted address
+      setUserAddresses(prev => prev.filter(address => address.id !== id));
+    }
+  } catch (error) {
+    console.error("Error deleting address:", error);
+    // Optionally show an error message to the user
+  }
+};
 
 
   const { token, setToken } = useAuth();
@@ -886,24 +892,25 @@ const ViewProfile = ({
                     ></path>
                   </svg>
                 </button>
-                <button className="p-1.5 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">
-                  <svg
-                    className="w-4 h-4 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
+               <button 
+                    onClick={() => deleteAddress(address.id)}
+                    className="p-1.5 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
                   >
-                    <path
-                    onClick={()=>deleteAddress(address.id)}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    ></path>
-                  </svg>
-                </button>
-                
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      ></path>
+                    </svg>
+                  </button>
               </div>
             </div>
           ))}

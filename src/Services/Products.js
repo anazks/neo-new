@@ -409,12 +409,46 @@ const getImage = async(id)=>{
        return error 
     }
 }
+
+const TogglePrimaryImage = async(data)=>{
+    try {
+        console.log(data)
+        let {imageId}= data
+        let {productid} = data
+      let response =  await Axios.get(`/inventory/products/${productid}/set-primary-image/${imageId}/`)
+      return response
+    } catch (error) {
+       return error 
+    }
+}
+
+const getVideos = async(id)=>{
+    try {
+      let response =  await Axios.get(`/inventory/products/${id}/videos/`)
+      return response
+    } catch (error) {
+       return error 
+    }
+}
 const deleteImage = async(data)=>{
     try {
         console.log(data)
         let {imageId}= data
         let {productid} = data
         let response = await Axios.delete(`/inventory/products/${productid}/delete-image/${imageId}/`)
+        console.log(response,"deleted")
+    } catch (error) {
+        
+    }
+}
+
+
+const deleteVideo = async(data)=>{
+    try {
+        console.log(data)
+        let {videoId}= data
+        let {productid} = data
+        let response = await Axios.delete(`/inventory/products/${productid}/delete-video/${videoId}/`)
         console.log(response,"deleted")
     } catch (error) {
         
@@ -445,4 +479,4 @@ const dashBoardSummary = async()=>{
         return error
     }
 }
-export {dashBoardSummary,getAllProductAdmin,featuredProduct,getReview,deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct };
+export {dashBoardSummary,getAllProductAdmin,featuredProduct,getReview,deleteImage,getImage,deleteVarient,getVarient,payemntCallBack,Addrecomendation,deletePairedProduct,recomendation,recentlyViewed,getPairedProduct,pairProdcut,productDelete,productUpdate,uploadImage,getAttribute,updateVideo,getOverViewCategory,UpdateProductOverview,AddVarient,addRelationShip,relationShip,addProductOverview,addProductVariant,addProductVideo, uploadProductPhotos,getAllProduct, getSingleProduct,AddOverViewCategory,viewOverView,addoverViewCate,updateProduct,deleteVideo,getVideos, TogglePrimaryImage };
