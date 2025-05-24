@@ -91,7 +91,7 @@ function ViewVideos({ product, onVideoDelete }) {
   }
 
   return (
-    <div className="overflow-x-auto bg-gray-900 rounded-lg">
+    <div className="overflow-x-auto bg-gray-900 rounded-lg max-w-4xl mx-auto">
       <table className="min-w-full divide-y divide-gray-700">
         <thead className="bg-gray-800">
           <tr>
